@@ -1,0 +1,106 @@
+body {
+	font-family: Arial, Tahoma, Verdana, sans-serif;
+	font-size: medium;
+}
+
+table {
+	border-collapse: collapse;
+	border-top: 0.1em solid black;
+	border-bottom: 0.1em solid black;
+	border-left: none;
+	border-right: none;
+}
+
+th {
+	font-weight: bold;
+	padding: 0.5em;
+	background-color: white;
+	border: none;
+	white-space: nowrap;
+}
+
+thead {
+	border-bottom: 0.1em solid black;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+}
+
+td {
+	vertical-align: top;
+	text-align: left;
+	border: none;
+	padding: 0.25em 0.5em 0.25em 0.5em;
+}
+
+tbody tr:hover {
+	background-color: lightgray;
+}
+
+.online td:nth-child(3), .online td:nth-child(4) {
+	white-space: nowrap;
+}
+
+.online td:nth-child(4) {
+	text-align: right;
+}
+
+.offline td:nth-child(2), .offline td:nth-child(3) {
+	white-space: nowrap;
+}
+
+.offline td:nth-child(3) {
+	text-align: right;
+}
+
+#menu {
+	list-style-type: none;
+	padding: 0;
+	overflow: hidden;
+}
+
+#menu li {
+	float: left;
+	background: lightskyblue;
+	text-align: center;
+	height: 2.9em;
+}
+
+#menu li a {
+	display: block;
+	padding: 0.75em;
+	text-decoration: none;
+	color: black;
+}
+
+#menu li.active {
+	background: deepskyblue;
+	font-weight: bold;
+}
+
+#menu li a:hover {
+	border-bottom: 0.25em solid blue;
+}
+
+.tag-example {
+	width: 46em;
+	height: 15em;
+}
+
+kbd {
+	font-family: "Courier New", Courier, monospace;
+	background-color: gainsboro;
+}
+
+dt {
+	float: left;
+	width: 6em;
+}
+
+dd {
+	margin-left: 6em;
+}
+
+.del {
+	text-decoration: line-through;
+}

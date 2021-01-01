@@ -1,0 +1,47 @@
+plugins {
+	id "java"
+	id "application"
+	id "eclipse"
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		url "https://jitpack.io"
+	}
+}
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+application {
+	mainClass = "org.spider.Main"
+}
+
+distZip {
+	into(project.name + "/bin/") {
+		from "."
+		include "activelink.png"
+		include "spider.properties"
+		include "style.css"
+	}
+}
+
+dependencies {
+	implementation("org.slf4j:slf4j-api:1.7.30")
+	implementation("org.slf4j:jul-to-slf4j:1.7.30");
+	implementation("ch.qos.logback:logback-core:1.2.3")
+	implementation("ch.qos.logback:logback-classic:1.2.3")
+	implementation("org.jsoup:jsoup:1.13.1")
+	implementation("org.xerial:sqlite-jdbc:3.34.0")
+	implementation("com.github.Bombe:jFCPlib:v0.1.6")
+	implementation("org.freemarker:freemarker:2.3.30")
+	implementation("org.apache.commons:commons-text:1.9");
+	implementation("org.apache.commons:commons-lang3:3.11");
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
+}
+
+test {
+	useJUnitPlatform()
+}
