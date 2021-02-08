@@ -10,7 +10,7 @@
 			<#t><tr>
 				<#t><th>Title (Language)<br/>Author</th>
 				<#t><#if outputType != "OFFLINE"><th>Description<br/>Keywords</th></#if>
-				<#t><th>Crawled (<abbr title="Coordinated Universal Time">UTC</abbr>)<br/>Added (<abbr title="Coordinated Universal Time">UTC</abbr>)</th>
+				<#t><th>Crawled<br/>Added</th>
 				<#t><#if outputType != "OFFLINE"><th>Pages / Online %<br/>Freesites: In / Out</th><#else><th>Freesites: In</th></#if>
 			<#lt></tr>
 		</thead>
@@ -29,8 +29,8 @@
 					<#t><#if freesite.keywords?has_content><br/>Keywords: ${freesite.keywords}</#if>
 				</td></#if><#t>
 				<#t><td>
-					<#t>${freesite.crawled?datetime}<br/>
-					<#t>${freesite.added?datetime}
+					<#t>${freesite.crawled?date}<br/>
+					<#t>${freesite.added?date}
 				<#t></td>
 				<#t><td>
 					<#t><#if outputType != "OFFLINE">${freesite.pathList?size} / <@format.percent value=freesite.pathOnlinePercent/><br/></#if>
