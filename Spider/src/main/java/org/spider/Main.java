@@ -182,7 +182,7 @@ public class Main {
 				System.out.println(
 						String.format(HELP_FORMAT_EXTRA, Task.ADD_FREESITE, "<freesite>", "Add freesite <freesite>."));
 				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.ADD_FREESITE_FROM_FILE, "<filename>",
-						"Read freesites from text-file <filename> (one freesite per line) and adds them."));
+						"Read freesites from text-file <filename> and adds them."));
 				System.out.println(String.format(HELP_FORMAT, Task.ADD_FREESITE_FROM_FMS,
 						"Searches the database of FMS for freesites and adds them."));
 				System.out.println("");
