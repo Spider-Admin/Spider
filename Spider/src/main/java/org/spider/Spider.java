@@ -142,7 +142,7 @@ public class Spider implements AutoCloseable {
 		addFreesiteFromString(content);
 	}
 
-	public void addFreesiteFromFMS() {
+	public void addFreesiteFromFMS() throws SQLException {
 		log.info("Add freesites from FMS");
 		String fmsFilename = settings.getString(Settings.FMS_DATABASE_FILE);
 		try (Connection fmsConnection = Database.getConnection(fmsFilename, true);
@@ -151,8 +151,6 @@ public class Spider implements AutoCloseable {
 			while (resultSet.next()) {
 				addFreesiteFromString(resultSet.getString("Body"));
 			}
-		} catch (SQLException e) {
-			log.error("Database-Error!", e);
 		}
 	}
 
