@@ -19,7 +19,6 @@ package org.spider;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -141,7 +140,6 @@ public class Spider implements AutoCloseable {
 		log.info("Add freesites from file {}", filename);
 		String content = Files.readString(Paths.get(filename), settings.getCharset());
 		addFreesiteFromString(content);
-		Files.delete(Path.of(filename));
 	}
 
 	public void addFreesiteFromFMS() {
