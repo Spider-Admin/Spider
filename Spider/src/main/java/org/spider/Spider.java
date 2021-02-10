@@ -51,6 +51,8 @@ public class Spider implements AutoCloseable {
 
 	private static final String IMPORT_FMS = "SELECT `Body` FROM `tblMessage` WHERE `Body` LIKE '%USK@%'";
 
+	private static final ArrayList<String> FROST_LOGS;
+
 	private static final String ACTIVE_LINK = "activelink.png";
 
 	private static final String INDEX_PATH = "";
@@ -58,6 +60,12 @@ public class Spider implements AutoCloseable {
 	public static enum UpdateType {
 		ALL, EDITION_ZERO, ONLINE, OFFLINE
 	};
+
+	static {
+		FROST_LOGS = new ArrayList<>();
+		FROST_LOGS.add("frost0.log");
+		FROST_LOGS.add("frost1.log");
+	}
 
 	private Storage storage;
 	private Settings settings;
@@ -151,6 +159,14 @@ public class Spider implements AutoCloseable {
 			while (resultSet.next()) {
 				addFreesiteFromString(resultSet.getString("Body"));
 			}
+		}
+	}
+
+	public void addFreesiteFromFrost() throws SQLException, IOException {
+		log.info("Add freesites from Frost");
+		String frostPath = settings.getString(Settings.FROST_PATH);
+		for (String filename : FROST_LOGS) {
+			addFreesiteFromFile(frostPath + filename);
 		}
 	}
 

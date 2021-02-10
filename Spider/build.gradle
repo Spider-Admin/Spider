@@ -22,6 +22,7 @@ distZip {
 	into(project.name + "/bin/") {
 		from "."
 		include "activelink.png"
+		include "patches/Frost/Log-Found-Messages.patch"
 		include "spider.properties"
 		include "style.css"
 	}

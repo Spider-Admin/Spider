@@ -43,9 +43,9 @@ public class Main {
 
 	public enum Task {
 		INIT("init"), ADD_FREESITE("add-freesite"), ADD_FREESITE_FROM_FILE("add-freesite-from-file"),
-		ADD_FREESITE_FROM_FMS("add-freesite-from-fms"), RESET_ALL_OFFLINE("reset-all-offline"),
-		RESET_OFFLINE("reset-offline"), UPDATE("update"), UPDATE_0("update-0"), UPDATE_ONLINE("update-online"),
-		UPDATE_OFFLINE("update-offline"), SPIDER("spider"), OUTPUT_TEST("output-test"),
+		ADD_FREESITE_FROM_FMS("add-freesite-from-fms"), ADD_FREESITE_FROM_FROST("add-freesite-from-frost"),
+		RESET_ALL_OFFLINE("reset-all-offline"), RESET_OFFLINE("reset-offline"), UPDATE("update"), UPDATE_0("update-0"),
+		UPDATE_ONLINE("update-online"), UPDATE_OFFLINE("update-offline"), SPIDER("spider"), OUTPUT_TEST("output-test"),
 		OUTPUT_RELEASE("output-release"), HELP("help");
 
 		private String name;
@@ -105,6 +105,7 @@ public class Main {
 			case ADD_FREESITE:
 			case ADD_FREESITE_FROM_FILE:
 			case ADD_FREESITE_FROM_FMS:
+			case ADD_FREESITE_FROM_FROST:
 			case RESET_ALL_OFFLINE:
 			case RESET_OFFLINE:
 				try (Connection connection = Database.getConnection(); Spider spider = new Spider(connection);) {
@@ -116,6 +117,8 @@ public class Main {
 						spider.addFreesiteFromFile(extra);
 					} else if (task == Task.ADD_FREESITE_FROM_FMS) {
 						spider.addFreesiteFromFMS();
+					} else if (task == Task.ADD_FREESITE_FROM_FROST) {
+						spider.addFreesiteFromFrost();
 					} else if (task == Task.RESET_ALL_OFFLINE) {
 						spider.resetAllOfflineFreesites();
 					} else if (task == Task.RESET_OFFLINE) {
@@ -185,6 +188,8 @@ public class Main {
 						"Read freesites from text-file <filename> and adds them."));
 				System.out.println(String.format(HELP_FORMAT, Task.ADD_FREESITE_FROM_FMS,
 						"Searches the database of FMS for freesites and adds them."));
+				System.out.println(String.format(HELP_FORMAT, Task.ADD_FREESITE_FROM_FROST,
+						"Searches the logfiles of Frost for freesites and adds them."));
 				System.out.println("");
 				System.out.println(String.format(HELP_FORMAT, Task.RESET_ALL_OFFLINE,
 						"Resets the state of all offline freesites, such that they can be crawled again."));
