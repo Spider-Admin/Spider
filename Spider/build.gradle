@@ -36,7 +36,7 @@ dependencies {
 	implementation("org.jsoup:jsoup:1.13.1")
 	implementation("org.xerial:sqlite-jdbc:3.34.0")
 	implementation("com.github.Bombe:jFCPlib:v0.1.6")
-	implementation("org.freemarker:freemarker:2.3.30")
+	implementation("org.freemarker:freemarker:2.3.31")
 	implementation("org.apache.commons:commons-text:1.9");
 	implementation("org.apache.commons:commons-lang3:3.11");
 	testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
