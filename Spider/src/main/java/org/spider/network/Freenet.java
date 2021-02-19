@@ -17,6 +17,7 @@
 package org.spider.network;
 
 import java.io.IOException;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.spider.Settings;
 
@@ -25,14 +26,16 @@ import net.pterodactylus.fcp.highlevel.FcpException;
 
 public class Freenet {
 
-	private static final String CLIENT_NAME = "Spider";
+	private static String getClientName() {
+		return String.format("Spider-%d", ThreadLocalRandom.current().nextInt());
+	}
 
 	public static FcpClient getConnection() throws IOException, FcpException {
 		Settings settings = Settings.getInstance();
 
 		FcpClient connection = new FcpClient(settings.getString(Settings.FREENET_HOST),
 				settings.getInteger(Settings.FREENET_PORT_FCP));
-		connection.connect(CLIENT_NAME);
+		connection.connect(getClientName());
 		return connection;
 	}
 
