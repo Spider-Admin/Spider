@@ -74,9 +74,13 @@ public class Main {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 
+		// TODO Ctrl+C from Gradle does NOT call the ShutdownHook
+		// Gradle uses Process.destroy(), which is platform-dependent:
+		// - Windows platforms support a forcible kill signal.
+		// - Linux platforms support a normal (non-forcible) kill signal.
+		// Details: {@link Process#supportsNormalTermination()}
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				// TODO Ctrl+C from Gradle does NOT call the ShutdownHook
 				// TODO Close open database-connections (if any). Use PooledConnection?
 				log.info("Spider finished.");
 			}
@@ -86,8 +90,6 @@ public class Main {
 		// - Spider-Admin@msXvLpwmDqprlrYZ5ZRZyi7VUcWQ~Wisznv9JkQuSXY.freemail?
 		// - spider-admin@tlc66lu4eyhku24wwym6lfczzixnkuofsd4wrlgopp6smrbojf3a.freemail?
 		// Asked Bombe, the author of Sone, but no response.
-
-		// TODO Cancel the update- and spider-task with Esc? (or fix Ctrl-C in Gradle)
 
 		Task defaultTask = Task.SPIDER;
 		Task task = defaultTask;
