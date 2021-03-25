@@ -152,7 +152,10 @@ public class Main {
 			case UPDATE_ONLINE:
 			case UPDATE_OFFLINE:
 				Settings settings = Settings.getInstance();
-				Integer maxUpdateWaitTime = settings.getInteger(Settings.MAX_UPDATE_WAIT_TIME) * 1000;
+				Integer updateWaitTime = settings.getInteger(Settings.MAX_UPDATE_WAIT_TIME) * 1000;
+				if (!extra.isEmpty()) {
+					updateWaitTime = Integer.parseInt(extra) * 1000;
+				}
 
 				try (Connection connection = Database.getConnection();
 						Spider spider = new Spider(connection);
@@ -168,7 +171,7 @@ public class Main {
 					} else if (task == Task.UPDATE_OFFLINE) {
 						spider.updateFreesites(freenet, UpdateType.OFFLINE);
 					}
-					Thread.sleep(maxUpdateWaitTime);
+					Thread.sleep(updateWaitTime);
 					freenet.removeFcpListener(listener);
 				}
 				break;
@@ -227,6 +230,8 @@ public class Main {
 			log.error("Thread-Error!", e);
 		} catch (TemplateException e) {
 			log.error("Template-Error!", e);
+		} catch (NumberFormatException e) {
+			log.error("Invalid number \"{}\"!", args[1]);
 		} catch (IllegalArgumentException e) {
 			log.error("Unknown task \"{}\"!", args[0]);
 		}
