@@ -91,17 +91,17 @@ public class Main {
 		// - spider-admin@tlc66lu4eyhku24wwym6lfczzixnkuofsd4wrlgopp6smrbojf3a.freemail?
 		// Asked Bombe, the author of Sone, but no response.
 
-		Task defaultTask = Task.SPIDER;
-		Task task = defaultTask;
-		if (args.length >= 1) {
-			task = Task.getTask(args[0]);
-		}
-		String extra = "";
-		if (args.length >= 2) {
-			extra = args[1];
-		}
-
 		try {
+			Task defaultTask = Task.SPIDER;
+			Task task = defaultTask;
+			if (args.length >= 1) {
+				task = Task.getTask(args[0]);
+			}
+			String extra = "";
+			if (args.length >= 2) {
+				extra = args[1];
+			}
+
 			switch (task) {
 			case INIT:
 			case ADD_FREESITE:
@@ -227,6 +227,8 @@ public class Main {
 			log.error("Thread-Error!", e);
 		} catch (TemplateException e) {
 			log.error("Template-Error!", e);
+		} catch (IllegalArgumentException e) {
+			log.error("Unknown task \"{}\"!", args[0]);
 		}
 	}
 }
