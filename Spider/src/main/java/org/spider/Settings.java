@@ -67,7 +67,7 @@ public class Settings {
 
 	public static final String FAKE_KEY_MAX_DIFF = "fake.key.max.diff";
 
-	public static final String MAX_UPDATE_WAIT_TIME = "max.update.wait.time";
+	public static final String UPDATE_WAIT_TIME = "update.wait.time";
 
 	private static final String SETTINGS_FILENAME = "spider.properties";
 

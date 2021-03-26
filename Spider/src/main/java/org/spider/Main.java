@@ -152,7 +152,7 @@ public class Main {
 			case UPDATE_ONLINE:
 			case UPDATE_OFFLINE:
 				Settings settings = Settings.getInstance();
-				Integer updateWaitTime = settings.getInteger(Settings.MAX_UPDATE_WAIT_TIME) * 1000;
+				Integer updateWaitTime = settings.getInteger(Settings.UPDATE_WAIT_TIME) * 1000;
 				if (!extra.isEmpty()) {
 					updateWaitTime = Integer.parseInt(extra) * 1000;
 				}
