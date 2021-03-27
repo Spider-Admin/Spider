@@ -24,7 +24,7 @@ diff --recursive --strip-trailing-cr --unified --recursive --unified a/frost.cor
                  // add msg to table
 +                String content = msg.getMessageObject().getContent();
 +                String contentWithoutSignature = content.substring(content.indexOf('\n') + 1);
-+                logger.log(Level.INFO, "Found message: " + contentWithoutSignature);
++                logger.warning("Found message: " + contentWithoutSignature);
                  getSearchMessagesTableModel().addRow(msg);
                  resultCount++;
                  updateResultCountLabel(resultCount);
