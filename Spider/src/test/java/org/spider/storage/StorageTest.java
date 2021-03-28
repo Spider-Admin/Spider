@@ -92,7 +92,7 @@ public class StorageTest {
 			storage.addFreesite(key1, DateUtility.getDate(2020, 4, 1, 0, 0, 0));
 
 			storage.updateFreesite(key1, "author", "title", "keywords", "description", "language", true, false, true,
-					false, false, DateUtility.getDate(2020, 4, 1, 12, 0, 0), null);
+					false, false, false, DateUtility.getDate(2020, 4, 1, 12, 0, 0), null);
 
 			Integer id = storage.getFreesiteID(key1);
 
@@ -121,6 +121,7 @@ public class StorageTest {
 			assertFalse(freesite.isObsolete());
 			assertFalse(freesite.ignoreResetOffline());
 			assertFalse(freesite.crawlOnlyIndex());
+			assertFalse(freesite.isHighlight());
 			assertEquals(DateUtility.getDate(2020, 4, 1, 0, 0, 0), freesite.getAdded());
 			assertEquals(DateUtility.getDate(2020, 4, 1, 12, 0, 0), freesite.getCrawled());
 			assertNull(freesite.getComment());
@@ -389,17 +390,17 @@ public class StorageTest {
 			Key key1 = new Key("USK@something1/site/1/");
 			storage.addFreesite(key1, DateUtility.getDate(2020, 4, 1, 0, 0, 0));
 			storage.updateFreesite(key1, "author1", "title1", "k11,k12,k13 k14", "description1", "language1", true,
-					true, true, true, true, DateUtility.getDate(2020, 4, 1, 12, 0, 0), null);
+					true, true, true, true, true, DateUtility.getDate(2020, 4, 1, 12, 0, 0), null);
 
 			Key key2 = new Key("USK@something2/site/2/");
 			storage.addFreesite(key2, DateUtility.getDate(2020, 4, 2, 0, 0, 0));
 			storage.updateFreesite(key2, "author2", "title2", "k21 k22", "description2", "language2", false, false,
-					false, false, false, DateUtility.getDate(2020, 4, 2, 12, 0, 0), null);
+					false, false, false, false, DateUtility.getDate(2020, 4, 2, 12, 0, 0), null);
 
 			Key key3 = new Key("USK@something3/site/3/");
 			storage.addFreesite(key3, DateUtility.getDate(2020, 4, 3, 0, 0, 0));
 			storage.updateFreesite(key3, "author3", "title3", "k31, k32", "description3", "language3", null, null, null,
-					null, null, DateUtility.getDate(2020, 4, 3, 12, 0, 0), null);
+					null, null, null, DateUtility.getDate(2020, 4, 3, 12, 0, 0), null);
 
 			// Add some extra stuff
 			key2.setPath("index.htm");
@@ -436,6 +437,7 @@ public class StorageTest {
 			assertTrue(freesite.isObsolete());
 			assertTrue(freesite.ignoreResetOffline());
 			assertFalse(freesite.crawlOnlyIndex());
+			assertTrue(freesite.isHighlight());
 			assertEquals(DateUtility.getDate(2020, 4, 1, 0, 0, 0), freesite.getAdded());
 			assertEquals(DateUtility.getDate(2020, 4, 1, 12, 0, 0), freesite.getCrawled());
 			assertNull(freesite.getComment());
@@ -445,6 +447,10 @@ public class StorageTest {
 			assertEquals(0, freesite.getPathList().size());
 			assertEquals(0, freesite.getPathOnlineSize());
 			assertEquals(0, freesite.getPathOnlinePercent(), 0.001);
+
+			storage.resetHighlight(freesite.getKeyObj());
+			freesite = storage.getFreesite(freesite.getKeyObj());
+			assertFalse(freesite.isHighlight());
 
 			freesite = freesiteList.get(1);
 			assertNotNull(freesite.getID());
@@ -462,6 +468,7 @@ public class StorageTest {
 			assertFalse(freesite.isObsolete());
 			assertFalse(freesite.ignoreResetOffline());
 			assertFalse(freesite.crawlOnlyIndex());
+			assertFalse(freesite.isHighlight());
 			assertEquals(DateUtility.getDate(2020, 4, 2, 0, 0, 0), freesite.getAdded());
 			assertEquals(DateUtility.getDate(2020, 4, 2, 12, 0, 0), freesite.getCrawled());
 			assertNull(freesite.getComment());
@@ -488,6 +495,7 @@ public class StorageTest {
 			assertNull(freesite.isObsolete());
 			assertNull(freesite.ignoreResetOffline());
 			assertFalse(freesite.crawlOnlyIndex());
+			assertNull(freesite.isHighlight());
 			assertEquals(DateUtility.getDate(2020, 4, 3, 0, 0, 0), freesite.getAdded());
 			assertEquals(DateUtility.getDate(2020, 4, 3, 12, 0, 0), freesite.getCrawled());
 			assertNull(freesite.getComment());

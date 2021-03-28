@@ -39,6 +39,7 @@ public class Freesite {
 	private Boolean obsolete;
 	private Boolean ignoreResetOffline;
 	private Boolean crawlOnlyIndex;
+	private Boolean highlight;
 	private Date added;
 	private Date crawled;
 	private String comment;
@@ -52,7 +53,8 @@ public class Freesite {
 
 	public Freesite(Integer id, Key key, String author, String title, String keywords, String description,
 			String language, Boolean fms, Boolean activeLink, Boolean online, Boolean obsolete,
-			Boolean ignoreResetOffline, Boolean crawlOnlyIndex, Date added, Date crawled, String comment) {
+			Boolean ignoreResetOffline, Boolean crawlOnlyIndex, Boolean highlight, Date added, Date crawled,
+			String comment) {
 		this.id = id;
 		this.key = key;
 		this.author = author;
@@ -66,6 +68,7 @@ public class Freesite {
 		this.obsolete = obsolete;
 		this.ignoreResetOffline = ignoreResetOffline;
 		this.crawlOnlyIndex = crawlOnlyIndex;
+		this.highlight = highlight;
 		this.added = added;
 		this.crawled = crawled;
 		this.comment = comment;
@@ -155,6 +158,10 @@ public class Freesite {
 
 	public Boolean crawlOnlyIndex() {
 		return crawlOnlyIndex;
+	}
+
+	public Boolean isHighlight() {
+		return highlight;
 	}
 
 	public Date getAdded() {

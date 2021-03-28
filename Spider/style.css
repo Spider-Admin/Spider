@@ -37,6 +37,14 @@ tbody tr:hover {
 	background-color: lightgray;
 }
 
+tbody tr.highlight, span.highlight {
+	background-color: lightgoldenrodyellow;
+}
+
+tbody tr.highlight:hover {
+	background-color: #E7E7D3;
+}
+
 .online td:nth-child(3), .online td:nth-child(4) {
 	white-space: nowrap;
 }

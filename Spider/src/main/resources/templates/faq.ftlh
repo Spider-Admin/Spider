@@ -58,6 +58,11 @@
 			A "Fake-Key" is a key, which looks correct, but did not work, because someone changed some characters of the key. My spider calculates the <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein distance</a> for all offline keys. Keys which have a distance greater then a given threshold are flagged as "Fake-Key".
 		</p>
 
+		<h3>Why have some freesites a yellow background?</h3>
+		<p>
+			Freesites will be <span class="highlight">highlighted in yellow</span>, if they are new or changed their online-status (from online to offline or vise versa).
+		</p>
+
 		<h2><abbr title="Frequently Asked Questions">FAQ</abbr> for (future) freesite-authors</h2>
 
 		<h3>How can I add my freesite to your index?</h3>

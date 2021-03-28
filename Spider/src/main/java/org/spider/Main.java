@@ -46,7 +46,8 @@ public class Main {
 		ADD_FREESITE_FROM_FMS("add-freesite-from-fms"), ADD_FREESITE_FROM_FROST("add-freesite-from-frost"),
 		RESET_ALL_OFFLINE("reset-all-offline"), RESET_OFFLINE("reset-offline"), UPDATE("update"), UPDATE_0("update-0"),
 		UPDATE_ONLINE("update-online"), UPDATE_OFFLINE("update-offline"), SPIDER("spider"), OUTPUT_TEST("output-test"),
-		OUTPUT_RELEASE("output-release"), HELP("help");
+		OUTPUT_RELEASE("output-release"), HELP("help"), RESET_ALL_HIGHLIGHT("reset-all-highlight"),
+		RESET_HIGHLIGHT("reset-highlight");
 
 		private String name;
 
@@ -110,6 +111,8 @@ public class Main {
 			case ADD_FREESITE_FROM_FROST:
 			case RESET_ALL_OFFLINE:
 			case RESET_OFFLINE:
+			case RESET_ALL_HIGHLIGHT:
+			case RESET_HIGHLIGHT:
 				try (Connection connection = Database.getConnection(); Spider spider = new Spider(connection);) {
 					if (task == Task.INIT) {
 						spider.init();
@@ -125,6 +128,10 @@ public class Main {
 						spider.resetAllOfflineFreesites();
 					} else if (task == Task.RESET_OFFLINE) {
 						spider.resetOfflineFreesites(extra);
+					} else if (task == Task.RESET_ALL_HIGHLIGHT) {
+						spider.resetAllHighlight();
+					} else if (task == Task.RESET_HIGHLIGHT) {
+						spider.resetHighlight(extra);
 					}
 					connection.commit();
 				}
@@ -216,6 +223,11 @@ public class Main {
 						"Generated the test-output. It contains the IDs of all freesites and clickable absolute links."));
 				System.out.println(String.format(HELP_FORMAT, Task.OUTPUT_RELEASE,
 						"Generates the release-output. This version is meant to published in Freenet."));
+				System.out.println("");
+				System.out.println(String.format(HELP_FORMAT, Task.RESET_ALL_HIGHLIGHT,
+						"Resets the highlight-flag of all freesites. Call this after releasing an edition."));
+				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.RESET_HIGHLIGHT, "<ID1>,<ID2>,...",
+						"Resets the highlight-flag of freesites with the given IDs. The IDs can be seen in the test-output. Call this after releasing an edition."));
 				System.out.println(StringUtils.leftPad("", HELP_WIDTH, "-"));
 				System.out.println("");
 				break;

@@ -409,8 +409,15 @@ public class Spider implements AutoCloseable {
 		Key key = new Key(freesite);
 		Boolean isFMS = (title != null && (title.contains("FMS Site") || title.contains("FMS Recent Messages")))
 				|| (description != null && description.contains("FMS-generated"));
+
+		Freesite oldFreesite = storage.getFreesite(key);
+		Boolean oldIsOnline = oldFreesite.isOnline();
+		Boolean oldIsHighlight = oldFreesite.isHighlight();
+		Boolean isHighLight = (oldIsHighlight != null && oldIsHighlight) || (oldIsOnline == null && isOnline != null)
+				|| (oldIsOnline != null && isOnline != null && oldIsOnline != isOnline);
+
 		storage.updateFreesite(key, author, title, keywords, description, language, isFMS, hasActiveLink, isOnline,
-				isObsolete, ignoreResetOffline, new Date(), comment);
+				isObsolete, ignoreResetOffline, isHighLight, new Date(), comment);
 	}
 
 	public Boolean updateFreesiteEdition(String freesite, Boolean searchNew) throws SQLException {
@@ -567,6 +574,33 @@ public class Spider implements AutoCloseable {
 
 	public String decodeURL(String url) {
 		return URLDecoder.decode(url, settings.getCharset());
+	}
+
+	public void resetAllHighlight() throws SQLException {
+		log.info("Reset highlight-flag of all freesites");
+
+		ArrayList<Freesite> freesites = storage.getAllFreesite(false);
+		for (Freesite freesite : freesites) {
+			log.debug("Reset highlight-flag of freesite {}", freesite.getKeyObj().getKey());
+			storage.resetHighlight(freesite.getKeyObj());
+		}
+	}
+
+	public void resetHighlight(String rawIDs) throws SQLException {
+		log.info("Reset highlight-flag of freesites");
+
+		ArrayList<Integer> ids = new ArrayList<>();
+		for (String rawID : rawIDs.split(",")) {
+			ids.add(Integer.parseInt(rawID));
+		}
+
+		ArrayList<Freesite> freesites = storage.getAllFreesite(false);
+		for (Freesite freesite : freesites) {
+			if (ids.contains(freesite.getID())) {
+				log.debug("Reset highlight-flag of freesite {}", freesite.getKeyObj().getKey());
+				storage.resetHighlight(freesite.getKeyObj());
+			}
+		}
 	}
 
 	@Override

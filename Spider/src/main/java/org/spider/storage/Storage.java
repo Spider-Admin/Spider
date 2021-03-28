@@ -31,19 +31,21 @@ public class Storage implements AutoCloseable {
 	private static final String SELECT_DATABASE_VERSION_SQL = "SELECT `Version` FROM `DatabaseVersion` WHERE `ID` = 1";
 	private static final String SET_DATABASE_VERSION_SQL = "INSERT OR REPLACE INTO `DatabaseVersion` (`ID`, `Version`) VALUES (1, ?)";
 
-	private static final String CREATE_FREESITE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024))";
+	private static final String CREATE_FREESITE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Highlight` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024))";
 	private static final String INSERT_FREESITE_SQL = "INSERT INTO `Freesite` (`Key`, `Edition`, `EditionHint`, `Added`, `IgnoreResetOffline`, `CrawlOnlyIndex`) VALUES (?, ?, ?, ?, ?, ?)";
-	private static final String UPDATE_FREESITE_SQL = "UPDATE `Freesite` SET `Author` = ?, `Title` = ?, `Keywords` = ?, `Description` = ?, `Language` = ?, `FMS` = ?, `ActiveLink` = ?, `Online` = ?, `Obsolete` = ?, `IgnoreResetOffline` = ?, `Crawled` = ?, `Comment` = ? WHERE `Key` = ?";
+	private static final String UPDATE_FREESITE_SQL = "UPDATE `Freesite` SET `Author` = ?, `Title` = ?, `Keywords` = ?, `Description` = ?, `Language` = ?, `FMS` = ?, `ActiveLink` = ?, `Online` = ?, `Obsolete` = ?, `IgnoreResetOffline` = ?, `Highlight` = ?, `Crawled` = ?, `Comment` = ? WHERE `Key` = ?";
 	private static final String UPDATE_FREESITE_EDITION_SQL = "UPDATE `Freesite` SET `Edition` = ?, `EditionHint` = ?, `Crawled` = ? WHERE `Key` = ?";
 	private static final String GET_FREESITE_ID_SQL = "SELECT `ID` FROM `Freesite` WHERE `Key` = ?";
 	private static final String GET_FREESITE_KEY_SQL = "SELECT `Key`, `Edition`, `EditionHint` FROM `Freesite` WHERE `Key` = ?";
 
-	private static final String FREESITE_FIELD_LIST = "`ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, `ActiveLink`, `Online`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, `Added`, `Crawled`, `Comment`";
+	private static final String FREESITE_FIELD_LIST = "`ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, `ActiveLink`, `Online`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, `Highlight`, `Added`, `Crawled`, `Comment`";
 	private static final String GET_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST + " FROM `Freesite` WHERE `Key` = ?";
 	private static final String FIND_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST
 			+ " FROM `Freesite` WHERE `Key` LIKE ?";
 	private static final String GET_ALL_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST
 			+ " FROM `Freesite` ORDER BY `Crawled` DESC ";
+
+	private static final String RESET_HIGHLIGHT_SQL = "UPDATE `Freesite` SET `Highlight` = ? WHERE `Key` = ?";
 
 	private static final String CREATE_PATH_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `Path` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Path` VARCHAR(1024), `Online` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, UNIQUE(`FreesiteID`, `Path`))";
 	private static final String INSERT_PATH_SQL = "INSERT INTO `Path` (`FreesiteID`, `Path`, `Added`) VALUES (?, ?, ?)";
@@ -74,6 +76,7 @@ public class Storage implements AutoCloseable {
 	private PreparedStatement getFreesite;
 	private PreparedStatement findFreesite;
 	private PreparedStatement getAllFreesite;
+	private PreparedStatement resetHighlight;
 	private PreparedStatement insertPath;
 	private PreparedStatement updatePath;
 	private PreparedStatement deleteAllPath;
@@ -107,6 +110,7 @@ public class Storage implements AutoCloseable {
 		getFreesite = connection.prepareStatement(GET_FREESITE_SQL);
 		findFreesite = connection.prepareStatement(FIND_FREESITE_SQL);
 		getAllFreesite = connection.prepareStatement(GET_ALL_FREESITE_SQL);
+		resetHighlight = connection.prepareStatement(RESET_HIGHLIGHT_SQL);
 
 		insertPath = connection.prepareStatement(INSERT_PATH_SQL);
 		updatePath = connection.prepareStatement(UPDATE_PATH_SQL);
@@ -161,7 +165,7 @@ public class Storage implements AutoCloseable {
 
 	public void updateFreesite(Key key, String author, String title, String keywords, String description,
 			String language, Boolean FMS, Boolean activeLink, Boolean online, Boolean obsolete,
-			Boolean ignoreResetOffline, Date crawled, String comment) throws SQLException {
+			Boolean ignoreResetOffline, Boolean highlight, Date crawled, String comment) throws SQLException {
 		updateFreesite.setString(1, author);
 		updateFreesite.setString(2, title);
 		updateFreesite.setString(3, keywords);
@@ -172,9 +176,10 @@ public class Storage implements AutoCloseable {
 		Database.setBoolean(updateFreesite, 8, online);
 		Database.setBoolean(updateFreesite, 9, obsolete);
 		Database.setBoolean(updateFreesite, 10, ignoreResetOffline);
-		Database.setDate(updateFreesite, 11, crawled);
-		updateFreesite.setString(12, comment);
-		updateFreesite.setString(13, key.getKey());
+		Database.setBoolean(updateFreesite, 11, highlight);
+		Database.setDate(updateFreesite, 12, crawled);
+		updateFreesite.setString(13, comment);
+		updateFreesite.setString(14, key.getKey());
 		updateFreesite.executeUpdate();
 	}
 
@@ -227,12 +232,13 @@ public class Storage implements AutoCloseable {
 		Boolean isObsolete = Database.getBoolean(resultSet, "Obsolete");
 		Boolean ignoreResetOffline = Database.getBoolean(resultSet, "IgnoreResetOffline");
 		Boolean crawlOnlyIndex = Database.getBoolean(resultSet, "CrawlOnlyIndex");
+		Boolean highlight = Database.getBoolean(resultSet, "Highlight");
 		Date added = Database.getDate(resultSet, "Added");
 		Date crawled = Database.getDate(resultSet, "Crawled");
 		String comment = resultSet.getString("Comment");
 		Key resultKey = new Key(rawKey, edition, editionHint);
 		return new Freesite(id, resultKey, author, title, keywords, description, language, isFMS, hasActiveLink,
-				isOnline, isObsolete, ignoreResetOffline, crawlOnlyIndex, added, crawled, comment);
+				isOnline, isObsolete, ignoreResetOffline, crawlOnlyIndex, highlight, added, crawled, comment);
 	}
 
 	public Freesite getFreesite(Key key, Boolean nullOnMissing) throws SQLException {
@@ -245,7 +251,7 @@ public class Storage implements AutoCloseable {
 		}
 		if (result == null && !nullOnMissing) {
 			result = new Freesite(0, key, null, key.getSitePath(), null, null, null, null, null, null, null, null, null,
-					null, null, null);
+					null, null, null, null);
 		}
 		return result;
 	}
@@ -407,6 +413,12 @@ public class Storage implements AutoCloseable {
 		return result;
 	}
 
+	public void resetHighlight(Key key) throws SQLException {
+		Database.setBoolean(resetHighlight, 1, false);
+		resetHighlight.setString(2, key.getKey());
+		resetHighlight.executeUpdate();
+	}
+
 	@Override
 	public void close() throws SQLException {
 		getDatabaseVersion.close();
@@ -419,6 +431,7 @@ public class Storage implements AutoCloseable {
 		getFreesite.close();
 		findFreesite.close();
 		getAllFreesite.close();
+		resetHighlight.close();
 		insertPath.close();
 		updatePath.close();
 		deleteAllPath.close();
