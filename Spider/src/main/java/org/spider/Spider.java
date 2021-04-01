@@ -170,34 +170,33 @@ public class Spider implements AutoCloseable {
 		}
 	}
 
-	public void resetAllOfflineFreesites() throws SQLException {
-		log.info("Reset status of all offline freesites ...");
+	private ArrayList<Integer> extractIDs(String rawIDs) {
+		ArrayList<Integer> ids = new ArrayList<>();
+		for (String rawID : rawIDs.split(",")) {
+			ids.add(Integer.parseInt(rawID));
+		}
+		return ids;
+	}
 
+	private void resetOfflineFreesites(ArrayList<Integer> onlyIDs) throws SQLException {
 		ArrayList<Freesite> freesites = storage.getAllFreesite(false);
 		for (Freesite freesite : freesites) {
-			if (freesite.isOnline() != null && !freesite.isOnline() && !freesite.ignoreResetOffline()) {
+			if (freesite.isOnline() != null && !freesite.isOnline() && !freesite.ignoreResetOffline()
+					&& (onlyIDs == null || onlyIDs.contains(freesite.getID()))) {
 				log.debug("Reset freesite {}", freesite.getKeyObj().getKey());
 				storage.updatePath(freesite.getKeyObj(), null, null);
 			}
 		}
 	}
 
-	public void resetOfflineFreesites(String rawIDs) throws SQLException {
-		log.info("Reset status of offline freesites ...");
+	public void resetCertainOfflineFreesites(String rawIDs) throws SQLException {
+		log.info("Reset status of certain offline freesites ...");
+		resetOfflineFreesites(extractIDs(rawIDs));
+	}
 
-		ArrayList<Integer> ids = new ArrayList<>();
-		for (String rawID : rawIDs.split(",")) {
-			ids.add(Integer.parseInt(rawID));
-		}
-
-		ArrayList<Freesite> freesites = storage.getAllFreesite(false);
-		for (Freesite freesite : freesites) {
-			if (freesite.isOnline() != null && !freesite.isOnline() && !freesite.ignoreResetOffline()
-					&& ids.contains(freesite.getID())) {
-				log.debug("Reset freesite {}", freesite.getKeyObj().getKey());
-				storage.updatePath(freesite.getKeyObj(), null, null);
-			}
-		}
+	public void resetAllOfflineFreesites() throws SQLException {
+		log.info("Reset status of all offline freesites ...");
+		resetOfflineFreesites(null);
 	}
 
 	public void updateFreesites(FcpClient freenet, UpdateType type) throws IOException, SQLException {
@@ -576,31 +575,24 @@ public class Spider implements AutoCloseable {
 		return URLDecoder.decode(url, settings.getCharset());
 	}
 
-	public void resetAllHighlight() throws SQLException {
-		log.info("Reset highlight-flag of all freesites");
-
+	private void resetHighlight(ArrayList<Integer> onlyIDs) throws SQLException {
 		ArrayList<Freesite> freesites = storage.getAllFreesite(false);
 		for (Freesite freesite : freesites) {
-			log.debug("Reset highlight-flag of freesite {}", freesite.getKeyObj().getKey());
-			storage.resetHighlight(freesite.getKeyObj());
-		}
-	}
-
-	public void resetHighlight(String rawIDs) throws SQLException {
-		log.info("Reset highlight-flag of freesites");
-
-		ArrayList<Integer> ids = new ArrayList<>();
-		for (String rawID : rawIDs.split(",")) {
-			ids.add(Integer.parseInt(rawID));
-		}
-
-		ArrayList<Freesite> freesites = storage.getAllFreesite(false);
-		for (Freesite freesite : freesites) {
-			if (ids.contains(freesite.getID())) {
+			if (onlyIDs == null || onlyIDs.contains(freesite.getID())) {
 				log.debug("Reset highlight-flag of freesite {}", freesite.getKeyObj().getKey());
 				storage.resetHighlight(freesite.getKeyObj());
 			}
 		}
+	}
+
+	public void resetAllHighlight() throws SQLException {
+		log.info("Reset highlight-flag of all freesites");
+		resetHighlight(null);
+	}
+
+	public void resetCertainHighlight(String rawIDs) throws SQLException {
+		log.info("Reset highlight-flag of certain freesites");
+		resetHighlight(extractIDs(rawIDs));
 	}
 
 	@Override

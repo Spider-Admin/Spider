@@ -127,11 +127,11 @@ public class Main {
 					} else if (task == Task.RESET_ALL_OFFLINE) {
 						spider.resetAllOfflineFreesites();
 					} else if (task == Task.RESET_OFFLINE) {
-						spider.resetOfflineFreesites(extra);
+						spider.resetCertainOfflineFreesites(extra);
 					} else if (task == Task.RESET_ALL_HIGHLIGHT) {
 						spider.resetAllHighlight();
 					} else if (task == Task.RESET_HIGHLIGHT) {
-						spider.resetHighlight(extra);
+						spider.resetCertainHighlight(extra);
 					}
 					connection.commit();
 				}
