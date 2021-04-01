@@ -47,7 +47,7 @@ public class Main {
 		RESET_ALL_OFFLINE("reset-all-offline"), RESET_OFFLINE("reset-offline"), UPDATE("update"), UPDATE_0("update-0"),
 		UPDATE_ONLINE("update-online"), UPDATE_OFFLINE("update-offline"), SPIDER("spider"), OUTPUT_TEST("output-test"),
 		OUTPUT_RELEASE("output-release"), HELP("help"), RESET_ALL_HIGHLIGHT("reset-all-highlight"),
-		RESET_HIGHLIGHT("reset-highlight");
+		RESET_HIGHLIGHT("reset-highlight"), EXPORT_DATABASE("export-database");
 
 		private String name;
 
@@ -113,6 +113,7 @@ public class Main {
 			case RESET_OFFLINE:
 			case RESET_ALL_HIGHLIGHT:
 			case RESET_HIGHLIGHT:
+			case EXPORT_DATABASE:
 				try (Connection connection = Database.getConnection(); Spider spider = new Spider(connection);) {
 					if (task == Task.INIT) {
 						spider.init();
@@ -132,6 +133,8 @@ public class Main {
 						spider.resetAllHighlight();
 					} else if (task == Task.RESET_HIGHLIGHT) {
 						spider.resetCertainHighlight(extra);
+					} else if (task == Task.EXPORT_DATABASE) {
+						spider.exportDatabase();
 					}
 					connection.commit();
 				}
@@ -228,6 +231,9 @@ public class Main {
 						"Resets the highlight-flag of all freesites. Call this after releasing an edition."));
 				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.RESET_HIGHLIGHT, "<ID1>,<ID2>,...",
 						"Resets the highlight-flag of freesites with the given IDs. The IDs can be seen in the test-output. Call this after releasing an edition."));
+				System.out.println("");
+				System.out.println(String.format(HELP_FORMAT, Task.EXPORT_DATABASE,
+						"Exports the database as sql-dump to Spider-<YYYY-MM-DD>.sql."));
 				System.out.println(StringUtils.leftPad("", HELP_WIDTH, "-"));
 				System.out.println("");
 				break;

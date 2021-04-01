@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spider.network.Freenet;
 import org.spider.storage.Database;
+import org.spider.storage.Export;
 import org.spider.storage.Freesite;
 import org.spider.storage.Storage;
 
@@ -593,6 +595,14 @@ public class Spider implements AutoCloseable {
 	public void resetCertainHighlight(String rawIDs) throws SQLException {
 		log.info("Reset highlight-flag of certain freesites");
 		resetHighlight(extractIDs(rawIDs));
+	}
+
+	public void exportDatabase() throws SQLException, IOException {
+		String filename = String.format("%s.sql", settings.getString(Settings.SPIDER_NAME));
+		log.info("Export database to {}", filename);
+		Files.deleteIfExists(Paths.get(filename));
+		Files.writeString(Paths.get(filename), Export.dumpDatabase(connection), settings.getCharset(),
+				StandardOpenOption.CREATE_NEW);
 	}
 
 	@Override

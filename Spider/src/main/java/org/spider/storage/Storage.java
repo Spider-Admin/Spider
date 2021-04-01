@@ -27,11 +27,12 @@ import org.spider.Key;
 
 public class Storage implements AutoCloseable {
 
-	private static final String CREATE_DATABASE_VERSION_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `DatabaseVersion` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT, `Version` INTEGER)";
+	public static ArrayList<String> tables;
+	public static ArrayList<String> views;
+
 	private static final String SELECT_DATABASE_VERSION_SQL = "SELECT `Version` FROM `DatabaseVersion` WHERE `ID` = 1";
 	private static final String SET_DATABASE_VERSION_SQL = "INSERT OR REPLACE INTO `DatabaseVersion` (`ID`, `Version`) VALUES (1, ?)";
 
-	private static final String CREATE_FREESITE_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Highlight` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024))";
 	private static final String INSERT_FREESITE_SQL = "INSERT INTO `Freesite` (`Key`, `Edition`, `EditionHint`, `Added`, `IgnoreResetOffline`, `CrawlOnlyIndex`) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE_FREESITE_SQL = "UPDATE `Freesite` SET `Author` = ?, `Title` = ?, `Keywords` = ?, `Description` = ?, `Language` = ?, `FMS` = ?, `ActiveLink` = ?, `Online` = ?, `Obsolete` = ?, `IgnoreResetOffline` = ?, `Highlight` = ?, `Crawled` = ?, `Comment` = ? WHERE `Key` = ?";
 	private static final String UPDATE_FREESITE_EDITION_SQL = "UPDATE `Freesite` SET `Edition` = ?, `EditionHint` = ?, `Crawled` = ? WHERE `Key` = ?";
@@ -47,7 +48,6 @@ public class Storage implements AutoCloseable {
 
 	private static final String RESET_HIGHLIGHT_SQL = "UPDATE `Freesite` SET `Highlight` = ? WHERE `Key` = ?";
 
-	private static final String CREATE_PATH_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `Path` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Path` VARCHAR(1024), `Online` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, UNIQUE(`FreesiteID`, `Path`))";
 	private static final String INSERT_PATH_SQL = "INSERT INTO `Path` (`FreesiteID`, `Path`, `Added`) VALUES (?, ?, ?)";
 	private static final String UPDATE_PATH_SQL = "UPDATE `Path` SET `Online` = ?, `Crawled` = ? WHERE `FreesiteID` = ? AND `Path` = ?";
 	private static final String DELETE_ALL_PATH_SQL = "DELETE FROM `Path` WHERE `FreesiteID` = ?";
@@ -55,16 +55,29 @@ public class Storage implements AutoCloseable {
 	private static final String GET_PATH_SQL = "SELECT `Path`, `Online`, `Added`, `Crawled` FROM `Path` WHERE `FreesiteID` = ? AND `Path` = ?";
 	private static final String GET_ALL_PATH_SQL = "SELECT `Path`, `Online`, `Added`, `Crawled` FROM `Path` WHERE `FreesiteID` = ? ORDER BY `Crawled` DESC";
 
-	private static final String CREATE_NETWORK_TABLE_SQL = "CREATE TABLE IF NOT EXISTS `Network` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `TargetFreesiteID` INTEGER NOT NULL, UNIQUE(`FreesiteID`, `TargetFreesiteID`))";
 	private static final String INSERT_NETWORK_SQL = "INSERT INTO `Network` (`FreesiteID`, `TargetFreesiteID`) VALUES (?, ?)";
 	private static final String DELETE_ALL_NETWORK_SQL = "DELETE FROM `Network` WHERE `FreesiteID` = ?";
 	private static final String GET_IN_NETWORK_SQL = "SELECT `FreesiteID` FROM `Network` WHERE `TargetFreesiteID` = ? ORDER BY `FreesiteID` ASC";
 	private static final String GET_OUT_NETWORK_SQL = "SELECT `TargetFreesiteID` FROM `Network` WHERE `FreesiteID` = ? ORDER BY `TargetFreesiteID` ASC";
 
 	private static final String GET_NEXT_URL_SQL = "SELECT `Key`, `Edition`, `EditionHint`, `Path` FROM `Freesite` F INNER JOIN `Path` P ON F.`ID` = P.`FreesiteID` WHERE P.`Crawled` IS NULL ORDER BY F.`Crawled` DESC, F.`Added` ASC";
-	private static final String GET_NEXT_URL_VIEW_SQL = "CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL;
 
-	private static final String GET_UNKNOWN_FMS_VIEW_SQL = "CREATE VIEW IF NOT EXISTS `UnknownFMS` AS SELECT `ID`, `Key`, `Edition`, `Title` FROM `Freesite` WHERE `Key` LIKE '%/fms/%' AND `FMS` = 0 AND `Online` = 1";
+	static {
+		tables = new ArrayList<>();
+		tables.add(
+				"CREATE TABLE IF NOT EXISTS `DatabaseVersion` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT, `Version` INTEGER)");
+		tables.add(
+				"CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Highlight` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024))");
+		tables.add(
+				"CREATE TABLE IF NOT EXISTS `Path` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Path` VARCHAR(1024), `Online` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, UNIQUE(`FreesiteID`, `Path`))");
+		tables.add(
+				"CREATE TABLE IF NOT EXISTS `Network` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `TargetFreesiteID` INTEGER NOT NULL, UNIQUE(`FreesiteID`, `TargetFreesiteID`))");
+
+		views = new ArrayList<>();
+		views.add("CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
+		views.add(
+				"CREATE VIEW IF NOT EXISTS `UnknownFMS` AS SELECT `ID`, `Key`, `Edition`, `Title` FROM `Freesite` WHERE `Key` LIKE '%/fms/%' AND `FMS` = 0 AND `Online` = 1");
+	}
 
 	private PreparedStatement getDatabaseVersion;
 	private PreparedStatement setDatabaseVersion;
@@ -92,12 +105,12 @@ public class Storage implements AutoCloseable {
 	private static final int currentDatabaseVersion = 1;
 
 	public Storage(Connection connection) throws SQLException {
-		Database.execute(connection, CREATE_DATABASE_VERSION_TABLE_SQL);
-		Database.execute(connection, CREATE_FREESITE_TABLE_SQL);
-		Database.execute(connection, CREATE_PATH_TABLE_SQL);
-		Database.execute(connection, CREATE_NETWORK_TABLE_SQL);
-		Database.execute(connection, GET_NEXT_URL_VIEW_SQL);
-		Database.execute(connection, GET_UNKNOWN_FMS_VIEW_SQL);
+		for (String query : tables) {
+			Database.execute(connection, query);
+		}
+		for (String query : views) {
+			Database.execute(connection, query);
+		}
 
 		getDatabaseVersion = connection.prepareStatement(SELECT_DATABASE_VERSION_SQL);
 		setDatabaseVersion = connection.prepareStatement(SET_DATABASE_VERSION_SQL);
