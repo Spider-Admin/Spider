@@ -108,6 +108,9 @@
 			href="https://www.torproject.org/download/">Tor Browser</a> for
 			validating sensitive freesites.
 		</p>
+
+		<h2><abbr title="Frequently Asked Questions">FAQ</abbr> for technical users</h2>
+
 <#if selfSourceFreesite??>
 		<h3>Where can I get the source code?</h3>
 		<p>
