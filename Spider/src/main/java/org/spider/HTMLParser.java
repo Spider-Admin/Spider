@@ -161,4 +161,13 @@ public class HTMLParser {
 		}
 		return result;
 	}
+
+	public static String capitalizeKeyType(String url) {
+		Integer atPos = url.indexOf("@");
+
+		String keyType = url.substring(0, atPos).toUpperCase();
+		String keyRest = url.substring(atPos);
+
+		return keyType + keyRest;
+	}
 }

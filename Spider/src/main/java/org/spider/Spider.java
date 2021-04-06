@@ -130,6 +130,7 @@ public class Spider implements AutoCloseable {
 		Matcher addKeyMatcher = addKeyPattern.matcher(content);
 		while (addKeyMatcher.find()) {
 			String freesite = decodeURL(addKeyMatcher.group(0));
+			freesite = HTMLParser.capitalizeKeyType(freesite);
 			if (freesite.length() < 50) {
 				log.warn("Ignore invalid freesite {}", freesite);
 			} else {
@@ -383,6 +384,7 @@ public class Spider implements AutoCloseable {
 
 				if (linkKey.isKey()) {
 					log.debug("Found freesite: {}", linkKey);
+					path = HTMLParser.capitalizeKeyType(path);
 
 					if (key.getKey().equals(linkKey.getKey())) {
 						log.debug("Ignore update edition of {} from {} to {}", key.getKey(), key.getEdition(),

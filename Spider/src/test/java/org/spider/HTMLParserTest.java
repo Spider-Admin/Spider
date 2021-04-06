@@ -103,4 +103,17 @@ public class HTMLParserTest {
 		assertFalse(HTMLParser.isIgnored("/USK@something1/site/1/file.htm"));
 		assertFalse(HTMLParser.isIgnored("file.htm"));
 	}
+
+	@Test
+	public void capitalizeKeyType() {
+		assertEquals("/USK@something1/site/123/file.ext",
+				HTMLParser.capitalizeKeyType("/USK@something1/site/123/file.ext"));
+		assertEquals("/USK@something1/site/123/file.ext",
+				HTMLParser.capitalizeKeyType("/usk@something1/site/123/file.ext"));
+
+		assertEquals("USK@something1/site/123/file.ext",
+				HTMLParser.capitalizeKeyType("USK@something1/site/123/file.ext"));
+		assertEquals("USK@something1/site/123/file.ext",
+				HTMLParser.capitalizeKeyType("usk@something1/site/123/file.ext"));
+	}
 }
