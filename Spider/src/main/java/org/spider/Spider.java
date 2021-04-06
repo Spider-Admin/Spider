@@ -49,7 +49,7 @@ public class Spider implements AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(Spider.class);
 
-	private static final Pattern addKeyPattern = Pattern.compile("(USK@.*?\\/.*?\\/-?\\d+\\/)",
+	private static final Pattern addKeyPattern = Pattern.compile("(USK@[^@ ]*?\\/.*?\\/-?\\d+)",
 			Pattern.CASE_INSENSITIVE);
 
 	private static final String IMPORT_FMS = "SELECT `Body` FROM `tblMessage` WHERE `Body` LIKE '%USK@%'";
