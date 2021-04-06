@@ -16,6 +16,7 @@
 
 package org.spider;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
@@ -168,7 +169,10 @@ public class Spider implements AutoCloseable {
 		log.info("Add freesites from Frost");
 		String frostPath = settings.getString(Settings.FROST_PATH);
 		for (String filename : FROST_LOGS) {
-			addFreesiteFromFile(frostPath + filename);
+			String fullFilename = frostPath + filename;
+			if (new File(fullFilename).exists()) {
+				addFreesiteFromFile(fullFilename);
+			}
 		}
 	}
 
