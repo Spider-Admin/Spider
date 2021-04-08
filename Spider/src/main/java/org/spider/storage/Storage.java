@@ -44,7 +44,7 @@ public class Storage implements AutoCloseable {
 	private static final String FIND_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST
 			+ " FROM `Freesite` WHERE `Key` LIKE ?";
 	private static final String GET_ALL_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST
-			+ " FROM `Freesite` ORDER BY `Crawled` DESC ";
+			+ " FROM `Freesite` ORDER BY `Highlight` DESC, `Crawled` DESC ";
 
 	private static final String RESET_HIGHLIGHT_SQL = "UPDATE `Freesite` SET `Highlight` = ? WHERE `Key` = ?";
 

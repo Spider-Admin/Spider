@@ -418,10 +418,11 @@ public class StorageTest {
 			storage.addNetwork(key2, key3);
 			storage.addNetwork(key3, key2);
 
+			// Sort order: Highlight = true, highlight = false, highlight = null
 			ArrayList<Freesite> freesiteList = storage.getAllFreesite(true);
 			assertEquals(3, freesiteList.size());
 
-			Freesite freesite = freesiteList.get(2);
+			Freesite freesite = freesiteList.get(0);
 			assertNotNull(freesite.getID());
 			assertEquals("USK@something1/site/", freesite.getKeyObj().getKey());
 			assertEquals(1, freesite.getKeyObj().getEdition());
@@ -479,7 +480,7 @@ public class StorageTest {
 			assertEquals(2, freesite.getPathOnlineSize());
 			assertEquals(66.666, freesite.getPathOnlinePercent(), 0.001);
 
-			freesite = freesiteList.get(0);
+			freesite = freesiteList.get(2);
 			assertNotNull(freesite.getID());
 			assertEquals("USK@something3/site/", freesite.getKeyObj().getKey());
 			assertEquals(3, freesite.getKeyObj().getEdition());
@@ -507,37 +508,13 @@ public class StorageTest {
 			assertEquals(0, freesite.getPathOnlinePercent(), 0.001);
 
 			// Same tests as above, but without PathList, InNetwork, OutNetwork
+			// No freesite is highlighted -> New order.
 			///////////////////////////////////////////////////////////////////
 
 			freesiteList = storage.getAllFreesite(false);
 			assertEquals(3, freesiteList.size());
 
-			freesite = freesiteList.get(2);
-			assertNotNull(freesite.getID());
-			assertEquals("USK@something1/site/", freesite.getKeyObj().getKey());
-			assertEquals(1, freesite.getKeyObj().getEdition());
-			assertEquals("author1", freesite.getAuthor());
-			assertEquals("title1", freesite.getTitle());
-			assertEquals("k11,k12,k13 k14", freesite.getKeywordsRaw());
-			assertEquals("k11, k12, k13 k14", freesite.getKeywords());
-			assertEquals("description1", freesite.getDescription());
-			assertEquals("language1", freesite.getLanguage());
-			assertTrue(freesite.isFMS());
-			assertTrue(freesite.hasActiveLink());
-			assertTrue(freesite.isOnline());
-			assertTrue(freesite.isObsolete());
-			assertTrue(freesite.ignoreResetOffline());
-			assertFalse(freesite.crawlOnlyIndex());
-			assertEquals(DateUtility.getDate(2020, 4, 1, 0, 0, 0), freesite.getAdded());
-			assertEquals(DateUtility.getDate(2020, 4, 1, 12, 0, 0), freesite.getCrawled());
-			assertNull(freesite.getComment());
-			assertNull(freesite.getPathList());
-			assertNull(freesite.getInNetwork());
-			assertNull(freesite.getOutNetwork());
-			assertEquals(0, freesite.getPathOnlineSize());
-			assertEquals(0, freesite.getPathOnlinePercent(), 0.001);
-
-			freesite = freesiteList.get(1);
+			freesite = freesiteList.get(0);
 			assertNotNull(freesite.getID());
 			assertEquals("USK@something2/site/", freesite.getKeyObj().getKey());
 			assertEquals(2, freesite.getKeyObj().getEdition());
@@ -562,7 +539,32 @@ public class StorageTest {
 			assertEquals(0, freesite.getPathOnlineSize());
 			assertEquals(0, freesite.getPathOnlinePercent(), 0.001);
 
-			freesite = freesiteList.get(0);
+			freesite = freesiteList.get(1);
+			assertNotNull(freesite.getID());
+			assertEquals("USK@something1/site/", freesite.getKeyObj().getKey());
+			assertEquals(1, freesite.getKeyObj().getEdition());
+			assertEquals("author1", freesite.getAuthor());
+			assertEquals("title1", freesite.getTitle());
+			assertEquals("k11,k12,k13 k14", freesite.getKeywordsRaw());
+			assertEquals("k11, k12, k13 k14", freesite.getKeywords());
+			assertEquals("description1", freesite.getDescription());
+			assertEquals("language1", freesite.getLanguage());
+			assertTrue(freesite.isFMS());
+			assertTrue(freesite.hasActiveLink());
+			assertTrue(freesite.isOnline());
+			assertTrue(freesite.isObsolete());
+			assertTrue(freesite.ignoreResetOffline());
+			assertFalse(freesite.crawlOnlyIndex());
+			assertEquals(DateUtility.getDate(2020, 4, 1, 0, 0, 0), freesite.getAdded());
+			assertEquals(DateUtility.getDate(2020, 4, 1, 12, 0, 0), freesite.getCrawled());
+			assertNull(freesite.getComment());
+			assertNull(freesite.getPathList());
+			assertNull(freesite.getInNetwork());
+			assertNull(freesite.getOutNetwork());
+			assertEquals(0, freesite.getPathOnlineSize());
+			assertEquals(0, freesite.getPathOnlinePercent(), 0.001);
+
+			freesite = freesiteList.get(2);
 			assertNotNull(freesite.getID());
 			assertEquals("USK@something3/site/", freesite.getKeyObj().getKey());
 			assertEquals(3, freesite.getKeyObj().getEdition());
