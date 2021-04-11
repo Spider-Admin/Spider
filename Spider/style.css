@@ -112,3 +112,8 @@ dd {
 .del {
 	text-decoration: line-through;
 }
+
+.query {
+	width: 81.5em;
+	font-family: "Courier New", Courier, monospace;
+}

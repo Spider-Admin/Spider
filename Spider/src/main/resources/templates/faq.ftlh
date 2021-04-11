@@ -117,5 +117,23 @@
 			Download the source code from <a href="<@format.key freesite=selfSourceFreesite/>"><@format.title freesite=selfSourceFreesite/></a>.
 		</p>
 </#if>
+
+		<h3>Are there any details about the in/out-columns available?</h3>
+		<p>
+			At the moment only due a manual <abbr title="Structured Query Language">SQL</abbr>-query. Download the <abbr title="Structured Query Language">SQL</abbr>-dump, find the ID of the freesite (e.g. this freesite has the ID ${selfFreesite.ID}) and use the ID in the following queries:
+		</p>
+		<ul>
+			<li><label for="in-query">In = Which freesites has links to the freesite with the ID &lt;ID&gt;:</label><br/>
+				<input type="text" id="in-query" class="query" readonly="readonly" value="SELECT `Key`, `Edition`, `Title` FROM `Freesite` WHERE `ID` IN (SELECT `FreesiteID` FROM `Network` WHERE `TargetFreesiteID` = <ID>)"/></li>
+			<li><label for="out-query">Out = The freesite with the ID &lt;ID&gt; has links to these freesites:</label><br/>
+				<input type="text" id="out-query" class="query" readonly="readonly" value="SELECT `Key`, `Edition`, `Title` FROM `Freesite` WHERE `ID` IN (SELECT `TargetFreesiteID` FROM `Network` WHERE `FreesiteID` = <ID>)" /></li>
+		</ul>
+
+<#if selfDatabaseKey?has_content>
+		<h3>Where can I get the database of your index?</h3>
+		<p>
+			Download a <abbr title="Structured Query Language">SQL</abbr>-dump using this key <a href="${keyPrefix}/${selfDatabaseKey}">${selfDatabaseKey}</a>.
+		</p>
+</#if>
 	</body>
 </html>

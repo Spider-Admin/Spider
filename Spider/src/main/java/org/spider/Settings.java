@@ -60,6 +60,7 @@ public class Settings {
 	public static final String SPIDER_NAME = "spider.name";
 	public static final String SPIDER_KEY = "spider.key";
 	public static final String SPIDER_SOURCE_KEY = "spider.source.key";
+	public static final String SPIDER_DATABASE_KEY = "spider.database.key";
 
 	public static final String FAQ_TPI_KEY = "faq.tpi.key";
 	public static final String FAQ_PUBLISH_KEY = "faq.publish.key";

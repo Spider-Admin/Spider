@@ -124,9 +124,10 @@ public class Output implements AutoCloseable {
 		params.put("fmsPublicKey", settings.getString(Settings.CONTACT_FMS_PUBLIC_KEY));
 		params.put("fmsFreesite", fmsFreesite);
 		params.put("sone", settings.getString(Settings.CONTACT_SONE));
+		params.put("selfName", settings.getString(Settings.SPIDER_NAME));
 		params.put("selfFreesite", selfFreesite);
 		params.put("selfSourceFreesite", selfSourceFreesite);
-		params.put("selfName", settings.getString(Settings.SPIDER_NAME));
+		params.put("selfDatabaseKey", settings.getString(Settings.SPIDER_DATABASE_KEY));
 		params.put("tpiFreesite", tpiFreesite);
 		params.put("publishFreesite", publishFreesite);
 		params.put("jsiteFreesite", jsiteFreesite);
