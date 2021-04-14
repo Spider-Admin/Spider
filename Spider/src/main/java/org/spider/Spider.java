@@ -145,7 +145,7 @@ public class Spider implements AutoCloseable {
 	}
 
 	public void addFreesite(String freesite) throws SQLException {
-		addFreesite(freesite, null);
+		addFreesiteFromString(freesite);
 	}
 
 	public void addFreesiteFromFile(String filename) throws IOException, SQLException {
