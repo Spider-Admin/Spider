@@ -28,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -223,9 +224,11 @@ public class Spider implements AutoCloseable {
 		}
 		log.info("Updating freesites{} ...", logMsg);
 
-		Integer count = 0;
 		ArrayList<Freesite> freesites = storage.getAllFreesite(false);
-		for (Freesite freesite : freesites) {
+		connection.rollback();
+		Iterator<Freesite> iterator = freesites.iterator();
+		while (iterator.hasNext()) {
+			Freesite freesite = iterator.next();
 			Boolean checkUpdate = false;
 			switch (type) {
 			case ALL:
@@ -249,12 +252,15 @@ public class Spider implements AutoCloseable {
 				}
 				break;
 			}
-			if (checkUpdate) {
-				count = count + 1;
-				subscribeUSK(freenet, freesite.getKeyObj().toString());
+			if (!checkUpdate) {
+				iterator.remove();
 			}
 		}
-		log.info("Subscribed {} freesites", count);
+
+		for (Freesite freesite : freesites) {
+			subscribeUSK(freenet, freesite.getKeyObj().toString());
+		}
+		log.info("Subscribed {} freesites", freesites.size());
 	}
 
 	public void spider(FcpClient freenet) throws SQLException, IOException, FcpException {
@@ -263,6 +269,7 @@ public class Spider implements AutoCloseable {
 		String url;
 		HTMLParser parser = new HTMLParser();
 		while ((url = getNextURL()) != null) {
+			connection.rollback();
 
 			log.info("Spider {}", url);
 
@@ -292,7 +299,6 @@ public class Spider implements AutoCloseable {
 				realURL = decodeURL(realURL);
 				key = new Key(realURL);
 				Boolean isUpdated = updateFreesiteEdition(key.toString(), false);
-				connection.commit();
 				if (!isUpdated) {
 					log.info("Skip key, since there was no update.");
 					Freesite freesite = storage.getFreesite(key);
@@ -304,7 +310,6 @@ public class Spider implements AutoCloseable {
 				// Update: editionHint = 0 -> edition = 0
 				if (key.getEdition() == 0 && key.getPath().isEmpty()) {
 					updateFreesiteEdition(key.toString(), false);
-					connection.commit();
 				}
 			}
 
@@ -328,7 +333,6 @@ public class Spider implements AutoCloseable {
 				if (!redirect.isEmpty()) {
 					log.debug("Found redirect in HTML: {}", redirect);
 					addPath(key.toString(), redirect, key.toString());
-					connection.commit();
 				}
 
 				Freesite freesite = storage.getFreesite(key);
@@ -364,7 +368,6 @@ public class Spider implements AutoCloseable {
 
 				updateFreesite(key.toString(), author, title, keywords, description, language, hasActiveLink, isOnline,
 						false, ignoreResetOffline, comment);
-				connection.commit();
 			}
 
 			ArrayList<String> paths = parser.getPaths();
@@ -398,11 +401,9 @@ public class Spider implements AutoCloseable {
 						log.debug("Found link from key: {}", linkKey.getPath());
 						addPath(linkKey.toString(), linkKey.getPath(), key.toString());
 					}
-					connection.commit();
 				} else {
 					log.debug("Found link: {}", key.getPathWithoutFilename() + linkKey.getPath());
 					addPath(key.toString(), key.getPathWithoutFilename() + linkKey.getPath(), key.toString());
-					connection.commit();
 				}
 			}
 			updatePath(key.toString(), key.getPath(), isOnline);
