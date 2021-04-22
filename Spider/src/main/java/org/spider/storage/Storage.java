@@ -71,7 +71,7 @@ public class Storage implements AutoCloseable {
 		tables.add(
 				"CREATE TABLE IF NOT EXISTS `Path` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Path` VARCHAR(1024), `Online` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, UNIQUE(`FreesiteID`, `Path`))");
 		tables.add(
-				"CREATE TABLE IF NOT EXISTS `Network` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `TargetFreesiteID` INTEGER NOT NULL, UNIQUE(`FreesiteID`, `TargetFreesiteID`))");
+				"CREATE TABLE IF NOT EXISTS `Network` (`ID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `TargetFreesiteID` INTEGER NOT NULL, UNIQUE(`FreesiteID`, `TargetFreesiteID`), UNIQUE(`TargetFreesiteID`, `FreesiteID`))");
 
 		views = new ArrayList<>();
 		views.add("CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
