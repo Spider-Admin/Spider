@@ -27,7 +27,8 @@ import net.pterodactylus.fcp.highlevel.FcpException;
 public class Freenet {
 
 	private static String getClientName() {
-		return String.format("Spider-%d", ThreadLocalRandom.current().nextInt());
+		Settings settings = Settings.getInstance();
+		return String.format("%s-%d", settings.getString(Settings.SPIDER_NAME), ThreadLocalRandom.current().nextInt());
 	}
 
 	public static FcpClient getConnection() throws IOException, FcpException {

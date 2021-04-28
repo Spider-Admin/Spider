@@ -83,7 +83,8 @@ public class Main {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				// TODO Close open database-connections (if any). Use PooledConnection?
-				log.info("Spider finished.");
+				Settings settings = Settings.getInstance();
+				log.info("{} finished.", settings.getString(Settings.SPIDER_NAME));
 			}
 		});
 

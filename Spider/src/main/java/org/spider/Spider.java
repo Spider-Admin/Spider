@@ -264,14 +264,14 @@ public class Spider implements AutoCloseable {
 	}
 
 	public void spider(FcpClient freenet) throws SQLException, IOException, FcpException {
-		log.info("Start spider ...");
+		log.info("Start crawling ...");
 
 		String url;
 		HTMLParser parser = new HTMLParser();
 		while ((url = getNextURL()) != null) {
 			connection.rollback();
 
-			log.info("Spider {}", url);
+			log.info("Crawl {}", url);
 
 			Key key = new Key(url);
 			GetResult site = null;
