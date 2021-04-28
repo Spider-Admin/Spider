@@ -604,8 +604,12 @@ public class Spider implements AutoCloseable {
 		resetHighlight(extractIDs(rawIDs));
 	}
 
+	public static String getExportFilename() {
+		return String.format("%s.sql", Settings.getInstance().getString(Settings.SPIDER_NAME));
+	}
+
 	public void exportDatabase() throws SQLException, IOException {
-		String filename = String.format("%s.sql", settings.getString(Settings.SPIDER_NAME));
+		String filename = getExportFilename();
 		log.info("Export database to {}", filename);
 		Files.deleteIfExists(Paths.get(filename));
 		Files.writeString(Paths.get(filename), Export.dumpDatabase(connection), settings.getCharset(),
