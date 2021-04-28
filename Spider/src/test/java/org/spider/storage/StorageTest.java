@@ -412,7 +412,7 @@ public class StorageTest {
 			key2.setPath("offlline.htm");
 			storage.addPath(key2, new Date());
 			storage.updatePath(key2, false, new Date());
-			key2.setPath("not-spidered.htm");
+			key2.setPath("not-crawled.htm");
 			storage.addPath(key2, new Date());
 			storage.addNetwork(key2, key1);
 			storage.addNetwork(key2, key3);
