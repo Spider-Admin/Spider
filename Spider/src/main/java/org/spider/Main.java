@@ -233,7 +233,7 @@ public class Main {
 						"Resets the highlight-flag of freesites with the given IDs. The IDs can be seen in the test-output. Call this after releasing an edition."));
 				System.out.println("");
 				System.out.println(String.format(HELP_FORMAT, Task.EXPORT_DATABASE,
-						"Exports the database as sql-dump to Spider-<YYYY-MM-DD>.sql."));
+						"Exports the database as sql-dump to Spider.sql."));
 				System.out.println(StringUtils.leftPad("", HELP_WIDTH, "-"));
 				System.out.println("");
 				break;
