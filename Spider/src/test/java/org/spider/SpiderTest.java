@@ -70,11 +70,11 @@ public class SpiderTest {
 			ArrayList<Freesite> freesites = storage.getAllFreesite(false);
 			assertEquals(0, freesites.size());
 
-			spider.addFreesite("/USK@something1/site/1/file.ext");
-			spider.addFreesite("/USK@something2/site/1/");
-			spider.addFreesite("/USK@something3/site/-1/");
-			spider.addFreesite("/CHK@something/file.ext");
-			spider.addFreesite("/CHK@something/file.ext");
+			spider.addFreesite("/USK@something1something1something1something1/site/1/file.ext");
+			spider.addFreesite("/USK@something2something2something2something2/site/1/");
+			spider.addFreesite("/USK@something3something3something3something3/site/-1/");
+			spider.addFreesite("CHK@somethingsomethingsomethingsomething/file.ext");
+			spider.addFreesite("CHK@somethingsomethingsomethingsomething/file.ext");
 
 			freesites = storage.getAllFreesite(false);
 			assertEquals(3, freesites.size());
@@ -82,7 +82,7 @@ public class SpiderTest {
 			Freesite freesite = freesites.get(0);
 			Key key = freesite.getKeyObj();
 
-			assertEquals("USK@something1/site/", key.getKey());
+			assertEquals("USK@something1something1something1something1/site/", key.getKey());
 			assertNull(key.getEdition());
 			assertEquals(-1, key.getEditionHint());
 			assertEquals("", key.getPath());
