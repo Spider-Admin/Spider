@@ -263,7 +263,7 @@ public class Spider implements AutoCloseable {
 		log.info("Subscribed {} freesites", freesites.size());
 	}
 
-	public void spider(FcpClient freenet) throws SQLException, IOException, FcpException {
+	public void crawl(FcpClient freenet) throws SQLException, IOException, FcpException {
 		log.info("Start crawling ...");
 
 		String url;

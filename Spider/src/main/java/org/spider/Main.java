@@ -45,7 +45,7 @@ public class Main {
 		INIT("init"), ADD_FREESITE("add-freesite"), ADD_FREESITE_FROM_FILE("add-freesite-from-file"),
 		ADD_FREESITE_FROM_FMS("add-freesite-from-fms"), ADD_FREESITE_FROM_FROST("add-freesite-from-frost"),
 		RESET_ALL_OFFLINE("reset-all-offline"), RESET_OFFLINE("reset-offline"), UPDATE("update"), UPDATE_0("update-0"),
-		UPDATE_ONLINE("update-online"), UPDATE_OFFLINE("update-offline"), SPIDER("spider"), OUTPUT_TEST("output-test"),
+		UPDATE_ONLINE("update-online"), UPDATE_OFFLINE("update-offline"), CRAWL("crawl"), OUTPUT_TEST("output-test"),
 		OUTPUT_RELEASE("output-release"), HELP("help"), RESET_ALL_HIGHLIGHT("reset-all-highlight"),
 		RESET_HIGHLIGHT("reset-highlight"), EXPORT_DATABASE("export-database");
 
@@ -94,7 +94,7 @@ public class Main {
 		// Asked Bombe, the author of Sone, but no response.
 
 		try {
-			Task defaultTask = Task.SPIDER;
+			Task defaultTask = Task.CRAWL;
 			Task task = defaultTask;
 			if (args.length >= 1) {
 				task = Task.getTask(args[0]);
@@ -151,11 +151,11 @@ public class Main {
 					connection.rollback();
 				}
 				break;
-			case SPIDER:
+			case CRAWL:
 				try (Connection connection = Database.getConnection();
 						Spider spider = new Spider(connection);
 						FcpClient freenet = Freenet.getConnection();) {
-					spider.spider(freenet);
+					spider.crawl(freenet);
 				}
 				break;
 			case UPDATE:
@@ -221,7 +221,7 @@ public class Main {
 				System.out.println(String.format(HELP_FORMAT, Task.UPDATE_OFFLINE,
 						"Check for new editions of freesites by subscribing to all freesite which are offline."));
 				System.out.println("");
-				System.out.println(String.format(HELP_FORMAT, Task.SPIDER, "Crawls freesites."));
+				System.out.println(String.format(HELP_FORMAT, Task.CRAWL, "Crawls freesites."));
 				System.out.println("");
 				System.out.println(String.format(HELP_FORMAT, Task.OUTPUT_TEST,
 						"Generated the test-output. It contains the IDs of all freesites and clickable absolute links."));
