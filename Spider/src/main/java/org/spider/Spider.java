@@ -61,6 +61,8 @@ public class Spider implements AutoCloseable {
 
 	private static final String INDEX_PATH = "";
 
+	private static final String FAKE_KEY = "Fake-Key";
+
 	public static enum UpdateType {
 		ALL, EDITION_ZERO, ONLINE, OFFLINE
 	};
@@ -296,13 +298,23 @@ public class Spider implements AutoCloseable {
 
 			String realURL = site.getRealUri();
 			if (realURL != null) {
-				realURL = decodeURL(realURL);
-				key = new Key(realURL);
-				Boolean isUpdated = updateFreesiteEdition(key.toString(), false);
-				if (!isUpdated) {
-					log.info("Skip key, since there was no update.");
-					Freesite freesite = storage.getFreesite(key);
-					storage.updatePath(key, storage.getPath(key).isOnline(), freesite.getCrawled());
+				// Sometimes getRealUri returns a similar, but different key
+				if (key.getKeyOnly().equals(new Key(realURL).getKeyOnly())) {
+					realURL = decodeURL(realURL);
+					key = new Key(realURL);
+
+					Boolean isUpdated = updateFreesiteEdition(key.toString(), false);
+					if (!isUpdated) {
+						log.info("Skip key, since there was no update.");
+						Freesite freesite = storage.getFreesite(key);
+						storage.updatePath(key, storage.getPath(key).isOnline(), freesite.getCrawled());
+						connection.commit();
+						continue;
+					}
+				} else {
+					log.info("Invalid redirect. Mark key as fake");
+					updatePath(key.toString(), key.getPath(), false);
+					updateFreesite(key.toString(), "", "", "", "", "", false, false, false, true, FAKE_KEY);
 					connection.commit();
 					continue;
 				}
@@ -348,7 +360,7 @@ public class Spider implements AutoCloseable {
 						} else {
 							comment = "";
 						}
-						comment = comment + "Fake-Key";
+						comment = comment + FAKE_KEY;
 					}
 
 					ignoreResetOffline = comment != null;
