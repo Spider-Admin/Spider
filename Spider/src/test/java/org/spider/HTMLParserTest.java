@@ -101,7 +101,9 @@ public class HTMLParserTest {
 
 		assertFalse(HTMLParser.isIgnored("/USK@something1/site/1/"));
 		assertFalse(HTMLParser.isIgnored("/USK@something1/site/1/file.htm"));
+		assertFalse(HTMLParser.isIgnored("/USK@something1/site/1/file.xhtm"));
 		assertFalse(HTMLParser.isIgnored("file.htm"));
+		assertFalse(HTMLParser.isIgnored("file.xhtm"));
 	}
 
 	@Test
