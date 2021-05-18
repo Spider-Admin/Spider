@@ -56,6 +56,9 @@ public class Freenet {
 			// @see freenet.client.ArchiveFailureException
 			result = "ArchiveFailureException";
 			break;
+		case 9: // TOO_MUCH_RECURSION
+			result = "Too much recursion";
+			break;
 		case 10: // NOT_IN_ARCHIVE
 			result = "Not in archive";
 			break;
