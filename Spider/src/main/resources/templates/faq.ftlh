@@ -55,7 +55,7 @@
 
 		<h3>What is a "Fake-Key"?</h3>
 		<p>
-			A "Fake-Key" is a key, which looks correct, but did not work, because someone changed some characters of the key. My spider calculates the <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein distance</a> for all offline keys. Keys which have a distance greater then a given threshold are flagged as "Fake-Key".
+			A "Fake-Key" is a key, which looks correct, but did not work, because someone changed some characters of the key. My crawler calculates the <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein distance</a> for all offline keys. Keys which have a distance greater then a given threshold are flagged as "Fake-Key".
 		</p>
 
 		<h3>Why have some freesites a yellow background?</h3>
