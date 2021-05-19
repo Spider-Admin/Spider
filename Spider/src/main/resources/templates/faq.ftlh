@@ -60,7 +60,7 @@
 
 		<h3>Why have some freesites a yellow background?</h3>
 		<p>
-			Freesites will be <span class="highlight">highlighted in yellow</span>, if they are new or changed their online-status (from online to offline or vise versa).
+			Freesites will be <span class="highlight">highlighted in yellow</span>, if they are new or changed their online-status (from online to offline or vice versa).
 		</p>
 
 		<h2><abbr title="Frequently Asked Questions">FAQ</abbr> for (future) freesite-authors</h2>
