@@ -34,15 +34,20 @@ public class Settings {
 
 	private Properties properties;
 
-	public static final String FREENET_HOST = "freenet.host";
-	public static final String FREENET_PORT_FCP = "freenet.port.fcp";
-	public static final String FREENET_PORT_FPROXY = "freenet.port.fproxy";
+	public static final String INDEX_NAME = "index.name";
+	public static final String INDEX_KEY = "index.key";
+	public static final String INDEX_SOURCE_KEY = "index.source.key";
+	public static final String INDEX_DATABASE_KEY = "index.database.key";
 
 	public static final String DATABASE_FILE = "database.file";
 	public static final String DATABASE_FILE_TEST = "database.file.test";
 
-	public static final String FMS_DATABASE_FILE = "fms.database.file";
-	public static final String FROST_PATH = "frost.path";
+	public static final String FREENET_HOST = "freenet.host";
+	public static final String FREENET_PORT_FCP = "freenet.port.fcp";
+	public static final String FREENET_PORT_FPROXY = "freenet.port.fproxy";
+
+	public static final String IMPORT_FMS_DATABASE_FILE = "import.fms.database.file";
+	public static final String IMPORT_FROST_PATH = "import.frost.path";
 
 	public static final String OUTPUT_PATH_RELEASE = "output.path.release";
 	public static final String OUTPUT_PATH_TEST = "output.path.test";
@@ -52,15 +57,9 @@ public class Settings {
 	public static final String CONTACT_FROST = "contact.frost";
 	public static final String CONTACT_FMS_PUBLIC_KEY = "contact.fms.public.key";
 	public static final String CONTACT_FMS_FREESITE = "contact.fms.freesite";
-
 	public static final String CONTACT_SONE = "contact.sone";
 
 	public static final String SEED_KEY = "seed.key";
-
-	public static final String SPIDER_NAME = "spider.name";
-	public static final String SPIDER_KEY = "spider.key";
-	public static final String SPIDER_SOURCE_KEY = "spider.source.key";
-	public static final String SPIDER_DATABASE_KEY = "spider.database.key";
 
 	public static final String FAQ_TPI_KEY = "faq.tpi.key";
 	public static final String FAQ_PUBLISH_KEY = "faq.publish.key";

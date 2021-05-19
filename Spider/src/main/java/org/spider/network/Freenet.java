@@ -28,7 +28,7 @@ public class Freenet {
 
 	private static String getClientName() {
 		Settings settings = Settings.getInstance();
-		return String.format("%s-%d", settings.getString(Settings.SPIDER_NAME), ThreadLocalRandom.current().nextInt());
+		return String.format("%s-%d", settings.getString(Settings.INDEX_NAME), ThreadLocalRandom.current().nextInt());
 	}
 
 	public static FcpClient getConnection() throws IOException, FcpException {

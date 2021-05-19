@@ -109,9 +109,9 @@ public class Output implements AutoCloseable {
 		templateConfig.addAutoImport("format", "/macros/format.ftlh");
 		templateConfig.addAutoImport("include", "/macros/include.ftlh");
 
-		Freesite selfFreesite = storage.getFreesite(new Key(settings.getString(Settings.SPIDER_KEY)), false);
+		Freesite selfFreesite = storage.getFreesite(new Key(settings.getString(Settings.INDEX_KEY)), false);
 		selfFreesite.setEdition(selfFreesite.getEditionWithHint() + 1);
-		Freesite selfSourceFreesite = storage.getFreesite(new Key(settings.getString(Settings.SPIDER_SOURCE_KEY)));
+		Freesite selfSourceFreesite = storage.getFreesite(new Key(settings.getString(Settings.INDEX_SOURCE_KEY)));
 		Freesite fmsFreesite = storage.getFreesite(new Key(settings.getString(Settings.CONTACT_FMS_FREESITE)));
 		Freesite tpiFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_TPI_KEY)), false);
 		Freesite publishFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_PUBLISH_KEY)), false);
@@ -124,10 +124,10 @@ public class Output implements AutoCloseable {
 		params.put("fmsPublicKey", settings.getString(Settings.CONTACT_FMS_PUBLIC_KEY));
 		params.put("fmsFreesite", fmsFreesite);
 		params.put("sone", settings.getString(Settings.CONTACT_SONE));
-		params.put("selfName", settings.getString(Settings.SPIDER_NAME));
+		params.put("selfName", settings.getString(Settings.INDEX_NAME));
 		params.put("selfFreesite", selfFreesite);
 		params.put("selfSourceFreesite", selfSourceFreesite);
-		params.put("selfDatabaseKey", settings.getString(Settings.SPIDER_DATABASE_KEY));
+		params.put("selfDatabaseKey", settings.getString(Settings.INDEX_DATABASE_KEY));
 		params.put("tpiFreesite", tpiFreesite);
 		params.put("publishFreesite", publishFreesite);
 		params.put("jsiteFreesite", jsiteFreesite);

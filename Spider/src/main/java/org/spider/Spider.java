@@ -159,7 +159,7 @@ public class Spider implements AutoCloseable {
 
 	public void addFreesiteFromFMS() throws SQLException {
 		log.info("Add freesites from FMS");
-		String fmsFilename = settings.getString(Settings.FMS_DATABASE_FILE);
+		String fmsFilename = settings.getString(Settings.IMPORT_FMS_DATABASE_FILE);
 		try (Connection fmsConnection = Database.getConnection(fmsFilename, true);
 				PreparedStatement stmt = fmsConnection.prepareStatement(IMPORT_FMS);
 				ResultSet resultSet = stmt.executeQuery()) {
@@ -171,7 +171,7 @@ public class Spider implements AutoCloseable {
 
 	public void addFreesiteFromFrost() throws SQLException, IOException {
 		log.info("Add freesites from Frost");
-		String frostPath = settings.getString(Settings.FROST_PATH);
+		String frostPath = settings.getString(Settings.IMPORT_FROST_PATH);
 		for (String filename : FROST_LOGS) {
 			String fullFilename = frostPath + filename;
 			if (new File(fullFilename).exists()) {
@@ -617,7 +617,7 @@ public class Spider implements AutoCloseable {
 	}
 
 	public static String getExportFilename() {
-		return String.format("%s.sql", Settings.getInstance().getString(Settings.SPIDER_NAME));
+		return String.format("%s.sql", Settings.getInstance().getString(Settings.INDEX_NAME));
 	}
 
 	public void exportDatabase() throws SQLException, IOException {

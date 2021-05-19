@@ -84,7 +84,7 @@ public class Main {
 			public void run() {
 				// TODO Close open database-connections (if any). Use PooledConnection?
 				Settings settings = Settings.getInstance();
-				log.info("{} finished.", settings.getString(Settings.SPIDER_NAME));
+				log.info("{} finished.", settings.getString(Settings.INDEX_NAME));
 			}
 		});
 
