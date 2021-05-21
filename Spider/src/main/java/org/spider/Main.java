@@ -82,7 +82,6 @@ public class Main {
 		// Details: {@link Process#supportsNormalTermination()}
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				// TODO Close open database-connections (if any). Use PooledConnection?
 				Settings settings = Settings.getInstance();
 				log.info("{} finished.", settings.getString(Settings.INDEX_NAME));
 			}
