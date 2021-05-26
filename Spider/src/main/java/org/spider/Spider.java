@@ -279,6 +279,11 @@ public class Spider implements AutoCloseable {
 			GetResult site = null;
 			try {
 				site = freenet.getURI(url, true);
+				if (site.getErrorCode() == Freenet.TOO_MANY_PATH_COMPONENTS) {
+					String redirect = url.substring(0, url.length() - 1);
+					log.warn("{}. Try {}", Freenet.getErrorMessage(Freenet.TOO_MANY_PATH_COMPONENTS), redirect);
+					site = freenet.getURI(redirect, true);
+				}
 			} catch (FcpException e) {
 				// Handling of broken keys like
 				// USK@something<spaces>something/site/edition/

@@ -26,6 +26,8 @@ import net.pterodactylus.fcp.highlevel.FcpException;
 
 public class Freenet {
 
+	public static final int TOO_MANY_PATH_COMPONENTS = 11;
+
 	private static String getClientName() {
 		Settings settings = Settings.getInstance();
 		return String.format("%s-%d", settings.getString(Settings.INDEX_NAME), ThreadLocalRandom.current().nextInt());
@@ -62,7 +64,7 @@ public class Freenet {
 		case 10: // NOT_IN_ARCHIVE
 			result = "Not in archive";
 			break;
-		case 11: // TOO_MANY_PATH_COMPONENTS
+		case TOO_MANY_PATH_COMPONENTS:
 			// TODO Redirect in browser, but error in FCPLib?
 			result = "Too many path components";
 			break;
