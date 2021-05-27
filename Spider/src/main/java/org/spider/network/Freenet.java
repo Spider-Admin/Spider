@@ -65,7 +65,7 @@ public class Freenet {
 			result = "Not in archive";
 			break;
 		case TOO_MANY_PATH_COMPONENTS:
-			// TODO Redirect in browser, but error in FCPLib?
+			// TODO Freenet: Redirect in Fred, but error in FCPLib?
 			result = "Too many path components";
 			break;
 		case 13: // DATA_NOT_FOUND

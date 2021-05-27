@@ -111,7 +111,7 @@ public class Key {
 	 * @see https://github.com/freenet/wiki/wiki/Updatable-Subspace-Key
 	 */
 	public void setEditionHint(Long editionHint) {
-		// TODO: Check for updates of edition 0?
+		// TODO Freenet: Check for updates of edition 0?
 		// -1 does not work
 		this.editionHint = Math.abs(editionHint) * -1;
 	}

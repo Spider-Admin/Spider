@@ -75,11 +75,10 @@ public class Main {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 
-		// TODO Ctrl+C from Gradle does NOT call the ShutdownHook
+		// Ctrl+C from Gradle does not always call the ShutdownHook
 		// Gradle uses Process.destroy(), which is platform-dependent:
-		// - Windows platforms support a forcible kill signal.
+		// - Windows platforms only support a forcible kill signal.
 		// - Linux platforms support a normal (non-forcible) kill signal.
-		// Details: {@link Process#supportsNormalTermination()}
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				Settings settings = Settings.getInstance();
@@ -87,7 +86,7 @@ public class Main {
 			}
 		});
 
-		// TODO What is the correct link to a freemail?
+		// TODO Freenet: What is the correct link to a freemail?
 		// - Spider-Admin@msXvLpwmDqprlrYZ5ZRZyi7VUcWQ~Wisznv9JkQuSXY.freemail?
 		// - spider-admin@tlc66lu4eyhku24wwym6lfczzixnkuofsd4wrlgopp6smrbojf3a.freemail?
 		// Asked Bombe, the author of Sone, but no response.

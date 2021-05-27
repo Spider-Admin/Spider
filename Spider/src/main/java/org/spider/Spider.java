@@ -295,7 +295,7 @@ public class Spider implements AutoCloseable {
 					updatePath(key.toString(), key.getPath(), false);
 					connection.commit();
 				}
-				// TODO After an FcpException, the connection is broken:
+				// TODO Freenet: After an FcpException, the connection is broken:
 				// - jFCPlib thinks we are disconnected.
 				// - Calling disconnect and connect results in an "Socket closed".
 				throw e;
@@ -317,6 +317,8 @@ public class Spider implements AutoCloseable {
 						continue;
 					}
 				} else {
+					// TODO Freenet: Keys are not unique
+					// Change some letters of a key and Fred returns the original key
 					log.info("Invalid redirect. Mark key as fake");
 					updatePath(key.toString(), key.getPath(), false);
 					updateFreesite(key.toString(), "", "", "", "", "", false, false, false, true, FAKE_KEY);
