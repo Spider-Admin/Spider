@@ -34,6 +34,7 @@ public class Freesite {
 	private String description;
 	private String language;
 	private Boolean fms;
+	private Boolean sone;
 	private Boolean activeLink;
 	private Boolean online;
 	private Boolean obsolete;
@@ -52,7 +53,7 @@ public class Freesite {
 	private Integer pathOnOfflineSize;
 
 	public Freesite(Integer id, Key key, String author, String title, String keywords, String description,
-			String language, Boolean fms, Boolean activeLink, Boolean online, Boolean obsolete,
+			String language, Boolean fms, Boolean sone, Boolean activeLink, Boolean online, Boolean obsolete,
 			Boolean ignoreResetOffline, Boolean crawlOnlyIndex, Boolean highlight, Date added, Date crawled,
 			String comment) {
 		this.id = id;
@@ -63,6 +64,7 @@ public class Freesite {
 		this.description = description;
 		this.language = language;
 		this.fms = fms;
+		this.sone = sone;
 		this.activeLink = activeLink;
 		this.online = online;
 		this.obsolete = obsolete;
@@ -138,6 +140,10 @@ public class Freesite {
 
 	public Boolean isFMS() {
 		return fms;
+	}
+
+	public Boolean isSone() {
+		return sone;
 	}
 
 	public Boolean hasActiveLink() {

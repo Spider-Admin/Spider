@@ -56,6 +56,7 @@ public class SpiderTest {
 			assertNull(freesite.getDescription());
 			assertNull(freesite.getLanguage());
 			assertNull(freesite.isFMS());
+			assertNull(freesite.isSone());
 			assertNull(freesite.hasActiveLink());
 			assertNull(freesite.isOnline());
 			assertNotNull(freesite.getAdded());
@@ -93,6 +94,7 @@ public class SpiderTest {
 			assertNull(freesite.getDescription());
 			assertNull(freesite.getLanguage());
 			assertNull(freesite.isFMS());
+			assertNull(freesite.isSone());
 			assertNull(freesite.hasActiveLink());
 			assertNull(freesite.isOnline());
 			assertNotNull(freesite.getAdded());

@@ -436,6 +436,7 @@ public class Spider implements AutoCloseable {
 		Key key = new Key(freesite);
 		Boolean isFMS = (title != null && (title.contains("FMS Site") || title.contains("FMS Recent Messages")))
 				|| (description != null && description.contains("FMS-generated"));
+		Boolean isSone = key.getSitePath().equalsIgnoreCase("Sone") && title.contains(" - Sone");
 
 		Freesite oldFreesite = storage.getFreesite(key);
 		Boolean oldIsOnline = oldFreesite.isOnline();
@@ -443,8 +444,8 @@ public class Spider implements AutoCloseable {
 		Boolean isHighLight = (oldIsHighlight != null && oldIsHighlight) || (oldIsOnline == null && isOnline != null)
 				|| (oldIsOnline != null && isOnline != null && oldIsOnline != isOnline);
 
-		storage.updateFreesite(key, author, title, keywords, description, language, isFMS, hasActiveLink, isOnline,
-				isObsolete, ignoreResetOffline, isHighLight, new Date(), comment);
+		storage.updateFreesite(key, author, title, keywords, description, language, isFMS, isSone, hasActiveLink,
+				isOnline, isObsolete, ignoreResetOffline, isHighLight, new Date(), comment);
 	}
 
 	public Boolean updateFreesiteEdition(String freesite, Boolean searchNew) throws SQLException {
