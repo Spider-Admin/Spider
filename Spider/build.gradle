@@ -19,7 +19,7 @@ application {
 }
 
 distZip {
-	into(project.name + "/bin/") {
+	into(project.name) {
 		from "."
 		include "activelink.png"
 		include "patches/Frost/Log-Found-Messages.patch"
