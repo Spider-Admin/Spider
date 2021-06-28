@@ -36,7 +36,7 @@ public class Export {
 		result.append("PRAGMA foreign_keys=OFF;" + NL);
 		result.append("BEGIN TRANSACTION;" + NL);
 
-		for (String query : Storage.tables) {
+		for (String query : Storage.tables.values()) {
 			result.append(NL);
 			result.append(query + ";" + NL);
 
@@ -47,7 +47,7 @@ public class Export {
 			}
 		}
 
-		for (String query : Storage.views) {
+		for (String query : Storage.views.values()) {
 			result.append(NL);
 			result.append(query + ";" + NL);
 		}

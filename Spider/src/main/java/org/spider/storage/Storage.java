@@ -22,13 +22,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spider.Key;
 
 public class Storage implements AutoCloseable {
 
-	public static ArrayList<String> tables;
-	public static ArrayList<String> views;
+	private static final Logger log = LoggerFactory.getLogger(Storage.class);
+
+	private static final String TMP_TABLE_EXT = "-tmp";
+
+	public static LinkedHashMap<String, String> tables;
+	public static LinkedHashMap<String, String> views;
+	public static LinkedHashMap<String, String> tableCopyV1;
 
 	private static final String SELECT_DATABASE_VERSION_SQL = "SELECT `Version` FROM `DatabaseVersion` WHERE `ID` = 1";
 	private static final String SET_DATABASE_VERSION_SQL = "INSERT OR REPLACE INTO `DatabaseVersion` (`ID`, `Version`) VALUES (1, ?)";
@@ -63,20 +71,31 @@ public class Storage implements AutoCloseable {
 	private static final String GET_NEXT_URL_SQL = "SELECT `Key`, `Edition`, `EditionHint`, `Path` FROM `Freesite` F INNER JOIN `Path` P ON F.`ID` = P.`FreesiteID` WHERE P.`Crawled` IS NULL ORDER BY F.`Crawled` DESC, F.`Added` ASC";
 
 	static {
-		tables = new ArrayList<>();
-		tables.add(
+		tables = new LinkedHashMap<>();
+		tables.put("DatabaseVersion",
 				"CREATE TABLE IF NOT EXISTS `DatabaseVersion` (`ID` INTEGER CONSTRAINT `PK_DatabaseVersion` PRIMARY KEY AUTOINCREMENT, `Version` INTEGER)");
-		tables.add(
+		tables.put("Freesite",
 				"CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER CONSTRAINT `PK_Freesite` PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) CONSTRAINT `UQ_Freesite_Key` UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `Sone` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Highlight` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024))");
-		tables.add(
+		tables.put("Path",
 				"CREATE TABLE IF NOT EXISTS `Path` (`ID` INTEGER CONSTRAINT `PK_Path` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Path` VARCHAR(1024), `Online` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, CONSTRAINT `UQ_Path_FreesiteID_Path` UNIQUE(`FreesiteID`, `Path`))");
-		tables.add(
+		tables.put("Network",
 				"CREATE TABLE IF NOT EXISTS `Network` (`ID` INTEGER CONSTRAINT `PK_Network` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `TargetFreesiteID` INTEGER NOT NULL, CONSTRAINT `UQ_Network_FreesiteID_TargetFreesiteID` UNIQUE(`FreesiteID`, `TargetFreesiteID`), CONSTRAINT `UQ_Network_TargetFreesiteID_FreesiteID` UNIQUE(`TargetFreesiteID`, `FreesiteID`))");
 
-		views = new ArrayList<>();
-		views.add("CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
-		views.add(
+		views = new LinkedHashMap<>();
+		views.put("NextURL", "CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
+		views.put("UnknownFMS",
 				"CREATE VIEW IF NOT EXISTS `UnknownFMS` AS SELECT `ID`, `Key`, `Edition`, `Title` FROM `Freesite` WHERE `Key` LIKE '%/fms/%' AND `FMS` = 0 AND `Online` = 1");
+
+		tableCopyV1 = new LinkedHashMap<>();
+		tableCopyV1.put("Freesite",
+				"INSERT INTO `Freesite` (`ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, `Sone`, `ActiveLink`, `Online`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, `Highlight`, `Added`, `Crawled`, `Comment`) SELECT `ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, 0, `ActiveLink`, `Online`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, 0, `Added`, `Crawled`, `Comment` FROM `Freesite"
+						+ TMP_TABLE_EXT + "`");
+		tableCopyV1.put("Path",
+				"INSERT INTO `Path` (`ID`, `FreesiteID`, `Path`, `Online`, `Added`, `Crawled`) SELECT `ID`, `FreesiteID`, `Path`, `Online`, `Added`, `Crawled` FROM `Path"
+						+ TMP_TABLE_EXT + "`");
+		tableCopyV1.put("Network",
+				"INSERT INTO `Network` (`ID`, `FreesiteID`, `TargetFreesiteID`) SELECT `ID`, `FreesiteID`, `TargetFreesiteID` FROM `Network"
+						+ TMP_TABLE_EXT + "`");
 	}
 
 	private PreparedStatement getDatabaseVersion;
@@ -102,18 +121,39 @@ public class Storage implements AutoCloseable {
 	private PreparedStatement getOutNetwork;
 	private PreparedStatement getNextURL;
 
-	private static final int currentDatabaseVersion = 1;
+	private Connection connection;
+
+	private static final int currentDatabaseVersion = 2;
 
 	public Storage(Connection connection) throws SQLException {
-		for (String query : tables) {
+		for (String query : tables.values()) {
 			Database.execute(connection, query);
 		}
-		for (String query : views) {
+		for (String query : views.values()) {
 			Database.execute(connection, query);
 		}
+
+		this.connection = connection;
 
 		getDatabaseVersion = connection.prepareStatement(SELECT_DATABASE_VERSION_SQL);
 		setDatabaseVersion = connection.prepareStatement(SET_DATABASE_VERSION_SQL);
+
+		switch (getDatabaseVersion()) {
+		case -1:
+		case 0: // missing version
+			setDatabaseVersion(currentDatabaseVersion);
+			connection.commit();
+			break;
+		case 1:
+			updateDatebase(getDatabaseVersion());
+			setDatabaseVersion(currentDatabaseVersion);
+			connection.commit();
+			break;
+		case currentDatabaseVersion: // nothing to do
+			break;
+		default:
+			throw new SQLException("Unknown Database-Version!");
+		}
 
 		insertFreesite = connection.prepareStatement(INSERT_FREESITE_SQL);
 		updateFreesite = connection.prepareStatement(UPDATE_FREESITE_SQL);
@@ -138,16 +178,49 @@ public class Storage implements AutoCloseable {
 		getOutNetwork = connection.prepareStatement(GET_OUT_NETWORK_SQL);
 
 		getNextURL = connection.prepareStatement(GET_NEXT_URL_SQL);
+	}
 
-		switch (getDatabaseVersion()) {
-		case -1:
-		case 0: // missing version
-			setDatabaseVersion(currentDatabaseVersion);
-			break;
-		case currentDatabaseVersion: // nothing to do
-			break;
-		default:
-			throw new SQLException("Unknown Database-Version!");
+	private void renameTable(String oldName, String newName) throws SQLException {
+		Database.execute(connection, String.format("ALTER TABLE `%s` RENAME TO `%s`", oldName, newName));
+	}
+
+	private void removeTable(String name) throws SQLException {
+		Database.execute(connection, String.format("DROP TABLE IF EXISTS `%s`", name));
+	}
+
+	private void removeView(String name) throws SQLException {
+		Database.execute(connection, String.format("DROP VIEW IF EXISTS `%s`", name));
+	}
+
+	private void updateDatebase(Integer version) throws SQLException {
+		log.info("Update database from version {}", version);
+
+		if (connection.isReadOnly()) {
+			throw new SQLException("Read-only database. Use the default-task to update the database!");
+		}
+
+		if (version == 1) {
+			for (String view : views.keySet()) {
+				removeView(view);
+			}
+
+			for (String table : tables.keySet()) {
+				if (!table.equals("DatabaseVersion")) {
+					log.info("Update table {}...", table);
+					renameTable(table, table + TMP_TABLE_EXT);
+					Database.execute(connection, tables.get(table));
+					Database.execute(connection, tableCopyV1.get(table));
+					removeTable(table + TMP_TABLE_EXT);
+				}
+			}
+
+			log.info("Update Sone-Flag...");
+			Database.execute(connection,
+					"UPDATE `Path` SET `Crawled` = NULL WHERE `Path` = '' AND `FreesiteID` IN (SELECT `ID` FROM `Freesite` WHERE `Key` LIKE '%/Sone/%')");
+
+			for (String view : views.keySet()) {
+				Database.execute(connection, views.get(view));
+			}
 		}
 	}
 
