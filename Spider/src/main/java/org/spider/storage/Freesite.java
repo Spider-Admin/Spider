@@ -227,6 +227,10 @@ public class Freesite {
 		}
 	}
 
+	public Boolean isMalformedKey() {
+		return comment != null && comment.contains("MalformedURLException");
+	}
+
 	// Shortcut getters
 	public String getKey() {
 		return key.getKeyOnly();
