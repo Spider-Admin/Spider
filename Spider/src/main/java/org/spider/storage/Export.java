@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 
 public class Export {
 
-	private static final String NL = System.getProperty("line.separator");
+	private static final String NL = "\n";
 
 	private static Pattern tablePattern = Pattern.compile("^CREATE TABLE.*?`(.*?)`.*?$", Pattern.CASE_INSENSITIVE);
 
