@@ -61,8 +61,6 @@ public class Spider implements AutoCloseable {
 
 	private static final String INDEX_PATH = "";
 
-	private static final String FAKE_KEY = "Fake-Key";
-
 	public static enum UpdateType {
 		ALL, EDITION_ZERO, ONLINE, OFFLINE
 	};
@@ -279,9 +277,9 @@ public class Spider implements AutoCloseable {
 			GetResult site = null;
 			try {
 				site = freenet.getURI(url, true);
-				if (site.getErrorCode() == Freenet.TOO_MANY_PATH_COMPONENTS) {
+				if (site.getErrorCode() == Freenet.Error.TOO_MANY_PATH_COMPONENTS.getCode()) {
 					String redirect = url.substring(0, url.length() - 1);
-					log.warn("{}. Try {}", Freenet.getErrorMessage(Freenet.TOO_MANY_PATH_COMPONENTS), redirect);
+					log.warn("{}. Try {}", Freenet.Error.TOO_MANY_PATH_COMPONENTS.toString(), redirect);
 					site = freenet.getURI(redirect, true);
 				}
 			} catch (FcpException e) {
@@ -291,7 +289,7 @@ public class Spider implements AutoCloseable {
 				if (e.getMessage().equals("Protocol error (4, Error parsing freenet URI")) {
 					log.error("Broken key detected.");
 					updateFreesite(key.toString(), "", "", "", "", "", false, false, false, true,
-							Freenet.getErrorMessage(20));
+							Freenet.Error.INVALID_URI.toString());
 					updatePath(key.toString(), key.getPath(), false);
 					connection.commit();
 				}
@@ -321,7 +319,8 @@ public class Spider implements AutoCloseable {
 					// Change some letters of a key and Fred returns the original key
 					log.info("Invalid redirect. Mark key as fake");
 					updatePath(key.toString(), key.getPath(), false);
-					updateFreesite(key.toString(), "", "", "", "", "", false, false, false, true, FAKE_KEY);
+					updateFreesite(key.toString(), "", "", "", "", "", false, false, false, true,
+							Freenet.Error.FAKE_KEY.toString());
 					connection.commit();
 					continue;
 				}
@@ -359,7 +358,7 @@ public class Spider implements AutoCloseable {
 				Boolean ignoreResetOffline = false;
 				String comment = null;
 				if (!isOnline) {
-					comment = Freenet.getErrorMessage(site.getErrorCode());
+					comment = Freenet.Error.getMessage(site.getErrorCode());
 
 					if (isFakeKey(key.getKey())) {
 						if (comment != null) {
@@ -367,7 +366,7 @@ public class Spider implements AutoCloseable {
 						} else {
 							comment = "";
 						}
-						comment = comment + FAKE_KEY;
+						comment = comment + Freenet.Error.FAKE_KEY.toString();
 					}
 
 					ignoreResetOffline = comment != null;

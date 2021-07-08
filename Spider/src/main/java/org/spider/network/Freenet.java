@@ -26,7 +26,76 @@ import net.pterodactylus.fcp.highlevel.FcpException;
 
 public class Freenet {
 
-	public static final int TOO_MANY_PATH_COMPONENTS = 11;
+	// @see freenet.client.FetchException
+	// - isFatal
+	// - FetchExceptionMode
+	// @see
+	// https://github.com/freenet/fred/blob/master/src/freenet/l10n/freenet.l10n.en.properties
+	public enum Error {
+		// @see freenet.client.MetadataParseException
+		INVALID_METADATA(4, "MetadataParseException"),
+
+		// @see freenet.client.ArchiveFailureException
+		ARCHIVE_FAILURE(5, "ArchiveFailureException"),
+
+		TOO_MUCH_RECURSION(9, "Too much recursion"),
+
+		NOT_IN_ARCHIVE(10, "Not in archive"),
+
+		// TODO Freenet: Redirect in Fred, but error in FCPLib?
+		TOO_MANY_PATH_COMPONENTS(11, "Too many path components"),
+
+		DATA_NOT_FOUND(13, null),
+
+		ROUTE_NOT_FOUND(14, null),
+
+		REJECTED_OVERLOAD(15, null),
+
+		TRANSFER_FAILED(18, null),
+
+		SPLITFILE_ERROR(19, null),
+
+		// @see java.net.MalformedURLException
+		INVALID_URI(20, "MalformedURLException"),
+
+		ALL_DATA_NOT_FOUND(28, null),
+
+		RECENTLY_FAILED(30, null),
+
+		// @see freenet.client.filter.UnsafeContentTypeException
+		// @see freenet.client.filter.UnknownCharsetException
+		CONTENT_VALIDATION_FAILED(31, "Corrupt or malicious web page"),
+
+		// @see freenet.client.filter.UnknownContentTypeException
+		CONTENT_VALIDATION_UNKNOWN_MIME(32, "Unknown and potentially dangerous content type"),
+
+		FAKE_KEY(null, "Fake-Key");
+
+		private String name;
+		private Integer code;
+
+		private Error(Integer code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		public String toString() {
+			return name;
+		}
+
+		public Integer getCode() {
+			return code;
+		}
+
+		public static String getMessage(Integer code) {
+			for (Error value : values()) {
+				if (value.code != null && value.code.equals(code)) {
+					return value.toString();
+				}
+			}
+			return "Error: " + code;
+		}
+	}
 
 	private static String getClientName() {
 		Settings settings = Settings.getInstance();
@@ -40,69 +109,5 @@ public class Freenet {
 				settings.getInteger(Settings.FREENET_PORT_FCP));
 		connection.connect(getClientName());
 		return connection;
-	}
-
-	// @see freenet.client.FetchException
-	// - isFatal
-	// - FetchExceptionMode
-	// @see
-	// https://github.com/freenet/fred/blob/master/src/freenet/l10n/freenet.l10n.en.properties
-	public static String getErrorMessage(Integer errorCode) {
-		String result = "Error: " + errorCode;
-		switch (errorCode) {
-		case 4: // INVALID_METADATA
-			// @see freenet.client.MetadataParseException
-			result = "MetadataParseException";
-			break;
-		case 5: // ARCHIVE_FAILURE
-			// @see freenet.client.ArchiveFailureException
-			result = "ArchiveFailureException";
-			break;
-		case 9: // TOO_MUCH_RECURSION
-			result = "Too much recursion";
-			break;
-		case 10: // NOT_IN_ARCHIVE
-			result = "Not in archive";
-			break;
-		case TOO_MANY_PATH_COMPONENTS:
-			// TODO Freenet: Redirect in Fred, but error in FCPLib?
-			result = "Too many path components";
-			break;
-		case 13: // DATA_NOT_FOUND
-			result = null;
-			break;
-		case 14: // ROUTE_NOT_FOUND
-			result = null;
-			break;
-		case 15: // REJECTED_OVERLOAD
-			result = null;
-			break;
-		case 18: // TRANSFER_FAILED
-			result = null;
-			break;
-		case 19: // SPLITFILE_ERROR
-			result = null;
-			break;
-		case 20: // INVALID_URI
-			// @see java.net.MalformedURLException
-			result = "MalformedURLException";
-			break;
-		case 28: // ALL_DATA_NOT_FOUND
-			result = null;
-			break;
-		case 30: // RECENTLY_FAILED
-			result = null;
-			break;
-		case 31: // CONTENT_VALIDATION_FAILED
-			// @see freenet.client.filter.UnsafeContentTypeException
-			// @see freenet.client.filter.UnknownCharsetException
-			result = "Corrupt or malicious web page";
-			break;
-		case 32: // CONTENT_VALIDATION_UNKNOWN_MIME
-			// @see freenet.client.filter.UnknownContentTypeException
-			result = "Unknown and potentially dangerous content type";
-			break;
-		}
-		return result;
 	}
 }

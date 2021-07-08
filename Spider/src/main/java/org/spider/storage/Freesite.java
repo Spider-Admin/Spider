@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.spider.Key;
+import org.spider.network.Freenet;
 
 public class Freesite {
 
@@ -228,7 +229,7 @@ public class Freesite {
 	}
 
 	public Boolean isMalformedKey() {
-		return comment != null && comment.contains("MalformedURLException");
+		return comment != null && comment.contains(Freenet.Error.INVALID_URI.toString());
 	}
 
 	// Shortcut getters
