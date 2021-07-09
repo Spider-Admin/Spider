@@ -228,8 +228,11 @@ public class Freesite {
 		}
 	}
 
-	public Boolean isMalformedKey() {
-		return comment != null && comment.contains(Freenet.Error.INVALID_URI.toString());
+	public Boolean isKeyClickable() {
+		return comment == null || (!comment.contains(Freenet.Error.INVALID_URI.toString())
+				&& !comment.contains(Freenet.Error.ARCHIVE_FAILURE.toString())
+				&& !comment.contains(Freenet.Error.INVALID_METADATA.toString())
+				&& !comment.contains(Freenet.Error.FAKE_KEY.toString()));
 	}
 
 	// Shortcut getters

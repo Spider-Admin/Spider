@@ -19,7 +19,7 @@
 		<#list freesiteList as freesite>
 			<#t><tr<@format.css freesite=freesite/>>
 				<#t><td>
-					<#t><#if !isRelease>${freesite.ID}<#if freesite.isHighlight()>, Highlight</#if>: </#if><#if freesite.isMalformedKey()>${freesite.key}/${freesite.sitePath}/${freesite.editionWithHint}/<#else><a href="<@format.key freesite=freesite/>"><@format.title freesite=freesite/></a></#if>
+					<#t><#if !isRelease>${freesite.ID}<#if freesite.isHighlight()>, Highlight</#if>: </#if><#if freesite.isKeyClickable()><a href="<@format.key freesite=freesite/>"><@format.title freesite=freesite/></a><#else>${freesite.key}/${freesite.sitePath}/${freesite.editionWithHint}/</#if>
 					<#t><#if freesite.language?has_content> (${freesite.language})</#if>
 					<#t><#if freesite.comment?has_content><#assign commentIndex=commentIndex+1> <sup title="${freesite.comment}">[${commentIndex}]</sup></#if>
 					<#t><#if freesite.author?has_content><br/>${freesite.author}</#if>
