@@ -135,7 +135,7 @@ public class Spider implements AutoCloseable {
 			if (freesite.length() < 50) {
 				log.warn("Ignore invalid freesite {}", freesite);
 			} else {
-				log.info("Manually add freesite {}", freesite);
+				log.debug("Found freesite {}", freesite);
 				try {
 					addFreesite(freesite, null);
 				} catch (NumberFormatException e) {
