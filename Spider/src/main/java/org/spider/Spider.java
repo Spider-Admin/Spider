@@ -18,7 +18,6 @@ package org.spider;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -40,6 +39,7 @@ import org.spider.storage.Database;
 import org.spider.storage.Export;
 import org.spider.storage.Freesite;
 import org.spider.storage.Storage;
+import org.spider.utility.URLUtility;
 
 import net.pterodactylus.fcp.SubscribeUSK;
 import net.pterodactylus.fcp.highlevel.FcpClient;
@@ -92,7 +92,7 @@ public class Spider implements AutoCloseable {
 		if (freesiteID == null) {
 
 			// Detect and skip double encoded keys
-			String decodedFreesite = decodeURL(freesite);
+			String decodedFreesite = URLUtility.decodeURL(freesite);
 			Key decodedKey = new Key(decodedFreesite);
 			Integer decodedFreesiteID = storage.getFreesiteID(decodedKey);
 			if (decodedFreesiteID != null) {
@@ -130,7 +130,7 @@ public class Spider implements AutoCloseable {
 	private void addFreesiteFromString(String content) throws SQLException {
 		Matcher addKeyMatcher = addKeyPattern.matcher(content);
 		while (addKeyMatcher.find()) {
-			String freesite = decodeURL(addKeyMatcher.group(0));
+			String freesite = URLUtility.decodeURL(addKeyMatcher.group(0));
 			freesite = HTMLParser.capitalizeKeyType(freesite);
 			if (freesite.length() < 50) {
 				log.warn("Ignore invalid freesite {}", freesite);
@@ -303,7 +303,7 @@ public class Spider implements AutoCloseable {
 			if (realURL != null) {
 				// Sometimes getRealUri returns a similar, but different key
 				if (key.getKeyOnly().equals(new Key(realURL).getKeyOnly())) {
-					realURL = decodeURL(realURL);
+					realURL = URLUtility.decodeURL(realURL);
 					key = new Key(realURL);
 
 					Boolean isUpdated = updateFreesiteEdition(key.toString(), false);
@@ -390,7 +390,7 @@ public class Spider implements AutoCloseable {
 
 			ArrayList<String> paths = parser.getPaths();
 			for (String path : paths) {
-				path = decodeURL(path);
+				path = URLUtility.decodeURL(path);
 
 				if (HTMLParser.isIgnored(path)) {
 					log.debug("Ignored link: {}", path);
@@ -597,10 +597,6 @@ public class Spider implements AutoCloseable {
 			}
 		}
 		return minDiff < maxDiff;
-	}
-
-	public String decodeURL(String url) {
-		return URLDecoder.decode(url, settings.getCharset());
 	}
 
 	private void resetHighlight(ArrayList<Integer> onlyIDs) throws SQLException {

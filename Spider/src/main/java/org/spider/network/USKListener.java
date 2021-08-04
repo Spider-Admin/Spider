@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spider.Spider;
+import org.spider.utility.URLUtility;
 
 import net.pterodactylus.fcp.AllData;
 import net.pterodactylus.fcp.CloseConnectionDuplicateClientName;
@@ -202,7 +203,7 @@ public class USKListener implements FcpListener, AutoCloseable {
 		log.debug("Check: Update edition of {} to {}", subscribedUSKUpdate.getURI(), subscribedUSKUpdate.getEdition());
 
 		try (Spider spider = new Spider(connection);) {
-			spider.updateFreesiteEdition(spider.decodeURL(subscribedUSKUpdate.getURI()), false);
+			spider.updateFreesiteEdition(URLUtility.decodeURL(subscribedUSKUpdate.getURI()), false);
 			connection.commit();
 		} catch (SQLException e) {
 			log.error("Database-Error!", e);
