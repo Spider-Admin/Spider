@@ -22,8 +22,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,7 +33,6 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spider.network.Freenet;
-import org.spider.storage.Database;
 import org.spider.storage.Export;
 import org.spider.storage.Freesite;
 import org.spider.storage.Storage;
@@ -52,8 +49,6 @@ public class Spider implements AutoCloseable {
 
 	private static final Pattern addKeyPattern = Pattern.compile("(USK@[^@ ]*?\\/.*?\\/-?\\d+)",
 			Pattern.CASE_INSENSITIVE);
-
-	private static final String IMPORT_FMS = "SELECT `Body` FROM `tblMessage` WHERE `Body` LIKE '%USK@%'";
 
 	private static final ArrayList<String> FROST_LOGS;
 
@@ -127,7 +122,7 @@ public class Spider implements AutoCloseable {
 		}
 	}
 
-	private void addFreesiteFromString(String content) throws SQLException {
+	protected void addFreesiteFromString(String content) throws SQLException {
 		Matcher addKeyMatcher = addKeyPattern.matcher(content);
 		while (addKeyMatcher.find()) {
 			String freesite = URLUtility.decodeURL(addKeyMatcher.group(0));
@@ -153,18 +148,6 @@ public class Spider implements AutoCloseable {
 		log.info("Add freesites from file {}", filename);
 		String content = Files.readString(Paths.get(filename), settings.getCharset());
 		addFreesiteFromString(content);
-	}
-
-	public void addFreesiteFromFMS() throws SQLException {
-		log.info("Add freesites from FMS");
-		String fmsFilename = settings.getString(Settings.IMPORT_FMS_DATABASE_FILE);
-		try (Connection fmsConnection = Database.getConnection(fmsFilename, true);
-				PreparedStatement stmt = fmsConnection.prepareStatement(IMPORT_FMS);
-				ResultSet resultSet = stmt.executeQuery()) {
-			while (resultSet.next()) {
-				addFreesiteFromString(resultSet.getString("Body"));
-			}
-		}
 	}
 
 	public void addFreesiteFromFrost() throws SQLException, IOException {
