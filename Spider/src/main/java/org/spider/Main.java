@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.spider.Spider.UpdateType;
 import org.spider.importer.FMSImporter;
+import org.spider.importer.FrostImporter;
 import org.spider.network.Freenet;
 import org.spider.network.USKListener;
 import org.spider.storage.Database;
@@ -115,6 +116,12 @@ public class Main {
 				}
 				break;
 			case ADD_FREESITE_FROM_FROST:
+				try (Connection connection = Database.getConnection();
+						FrostImporter importer = new FrostImporter(connection);) {
+					importer.addFreesiteFromFrost();
+					connection.commit();
+				}
+				break;
 			case RESET_ALL_OFFLINE:
 			case RESET_OFFLINE:
 			case RESET_ALL_HIGHLIGHT:
@@ -127,8 +134,6 @@ public class Main {
 						spider.addFreesite(extra);
 					} else if (task == Task.ADD_FREESITE_FROM_FILE) {
 						spider.addFreesiteFromFile(extra);
-					} else if (task == Task.ADD_FREESITE_FROM_FROST) {
-						spider.addFreesiteFromFrost();
 					} else if (task == Task.RESET_ALL_OFFLINE) {
 						spider.resetAllOfflineFreesites();
 					} else if (task == Task.RESET_OFFLINE) {

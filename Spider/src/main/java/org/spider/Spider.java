@@ -16,7 +16,6 @@
 
 package org.spider;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,8 +49,6 @@ public class Spider implements AutoCloseable {
 	private static final Pattern addKeyPattern = Pattern.compile("(USK@[^@ ]*?\\/.*?\\/-?\\d+)",
 			Pattern.CASE_INSENSITIVE);
 
-	private static final ArrayList<String> FROST_LOGS;
-
 	private static final String ACTIVE_LINK = "activelink.png";
 
 	private static final String INDEX_PATH = "";
@@ -59,12 +56,6 @@ public class Spider implements AutoCloseable {
 	public static enum UpdateType {
 		ALL, EDITION_ZERO, ONLINE, OFFLINE
 	};
-
-	static {
-		FROST_LOGS = new ArrayList<>();
-		FROST_LOGS.add("frost0.log");
-		FROST_LOGS.add("frost1.log");
-	}
 
 	private Storage storage;
 	private Settings settings;
@@ -148,17 +139,6 @@ public class Spider implements AutoCloseable {
 		log.info("Add freesites from file {}", filename);
 		String content = Files.readString(Paths.get(filename), settings.getCharset());
 		addFreesiteFromString(content);
-	}
-
-	public void addFreesiteFromFrost() throws SQLException, IOException {
-		log.info("Add freesites from Frost");
-		String frostPath = settings.getString(Settings.IMPORT_FROST_PATH);
-		for (String filename : FROST_LOGS) {
-			String fullFilename = frostPath + filename;
-			if (new File(fullFilename).exists()) {
-				addFreesiteFromFile(fullFilename);
-			}
-		}
 	}
 
 	private ArrayList<Integer> extractIDs(String rawIDs) {
