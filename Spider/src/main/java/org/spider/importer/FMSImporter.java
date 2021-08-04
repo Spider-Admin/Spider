@@ -31,6 +31,8 @@ public class FMSImporter extends Spider {
 
 	private static final Logger log = LoggerFactory.getLogger(FMSImporter.class);
 
+	private static final String DATABASE_FILE = "fms.db3";
+
 	private static final String IMPORT = "SELECT `Body` FROM `tblMessage` WHERE `Body` LIKE '%USK@%'";
 
 	public FMSImporter(Connection connection) throws SQLException {
@@ -39,7 +41,7 @@ public class FMSImporter extends Spider {
 
 	public void addFreesiteFromFMS() throws SQLException {
 		log.info("Add freesites from FMS");
-		String filename = Settings.getInstance().getString(Settings.IMPORT_FMS_DATABASE_FILE);
+		String filename = Settings.getInstance().getString(Settings.IMPORT_FMS_PATH) + DATABASE_FILE;
 		try (Connection connection = Database.getConnection(filename, true);
 				PreparedStatement stmt = connection.prepareStatement(IMPORT);
 				ResultSet resultSet = stmt.executeQuery()) {

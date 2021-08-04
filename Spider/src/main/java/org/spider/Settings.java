@@ -46,7 +46,7 @@ public class Settings {
 	public static final String FREENET_PORT_FCP = "freenet.port.fcp";
 	public static final String FREENET_PORT_FPROXY = "freenet.port.fproxy";
 
-	public static final String IMPORT_FMS_DATABASE_FILE = "import.fms.database.file";
+	public static final String IMPORT_FMS_PATH= "import.fms.path";
 	public static final String IMPORT_FROST_PATH = "import.frost.path";
 
 	public static final String OUTPUT_PATH_RELEASE = "output.path.release";
