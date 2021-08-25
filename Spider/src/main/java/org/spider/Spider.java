@@ -192,28 +192,35 @@ public class Spider implements AutoCloseable {
 		Iterator<Freesite> iterator = freesites.iterator();
 		while (iterator.hasNext()) {
 			Freesite freesite = iterator.next();
+			Boolean online = freesite.isOnline();
+			Long edition = freesite.getKeyObj().getEdition();
+			String comment = freesite.getComment();
 			Boolean checkUpdate = false;
 			switch (type) {
 			case ALL:
-				if (freesite.getKeyObj().getEdition() != null) {
+				if (edition != null) {
 					checkUpdate = true;
 				}
 				break;
 			case EDITION_ZERO:
-				if (freesite.getKeyObj().getEdition() != null && freesite.getKeyObj().getEdition() == 0) {
+				if (edition != null && edition == 0) {
 					checkUpdate = true;
 				}
 				break;
 			case ONLINE:
-				if (freesite.isOnline()) {
+				if (online) {
 					checkUpdate = true;
 				}
 				break;
 			case OFFLINE:
-				if (!freesite.isOnline()) {
+				if (!online) {
 					checkUpdate = true;
 				}
 				break;
+			}
+			if (comment != null && (comment.contains(Freenet.Error.FAKE_KEY.toString())
+					|| comment.contains(Freenet.Error.INVALID_URI.toString()))) {
+				checkUpdate = false;
 			}
 			if (!checkUpdate) {
 				iterator.remove();
