@@ -548,7 +548,7 @@ public class Spider implements AutoCloseable {
 		Integer maxDiff = settings.getInteger(Settings.FAKE_KEY_MAX_DIFF);
 
 		Key key = storage.getFreesiteKey(new Key(freesite));
-		if (key.getEditionHint() == null) {
+		if (key.getEdition() != null && key.getEdition() > 0) {
 			return false;
 		}
 
