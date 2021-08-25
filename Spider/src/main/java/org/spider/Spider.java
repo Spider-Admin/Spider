@@ -77,12 +77,12 @@ public class Spider implements AutoCloseable {
 		Integer freesiteID = storage.getFreesiteID(key);
 		if (freesiteID == null) {
 
-			// Detect and skip double encoded keys
+			// Detect and skip double encoded keys, if they are already imported
 			String decodedFreesite = URLUtility.decodeURL(freesite);
 			Key decodedKey = new Key(decodedFreesite);
 			Integer decodedFreesiteID = storage.getFreesiteID(decodedKey);
 			if (decodedFreesiteID != null) {
-				log.warn("Skip double encoded key {}", freesite);
+				log.warn("Skip double encoded key (already imported) {}", freesite);
 				return;
 			}
 
