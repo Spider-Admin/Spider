@@ -232,11 +232,15 @@ public class Output implements AutoCloseable {
 		log.info("Loading content");
 		ArrayList<Freesite> freesiteList = storage.getAllFreesite(true);
 
+		Boolean hideFakeKey = settings.getBoolean(Settings.HIDE_FAKE_KEY);
+
 		Integer countOnline = 0;
 		Iterator<Freesite> iterator = freesiteList.iterator();
 		while (iterator.hasNext()) {
 			Freesite freesite = iterator.next();
-			if (freesite.isOnline() != null && freesite.isOnline()) {
+			if (hideFakeKey && freesite.isFakeKey()) {
+				iterator.remove();
+			} else if (freesite.isOnline() != null && freesite.isOnline()) {
 				countOnline = countOnline + 1;
 			}
 		}

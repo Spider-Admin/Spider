@@ -235,6 +235,10 @@ public class Freesite {
 				&& !comment.contains(Freenet.Error.FAKE_KEY.toString()));
 	}
 
+	public Boolean isFakeKey() {
+		return comment != null && comment.contains(Freenet.Error.FAKE_KEY.toString());
+	}
+
 	// Shortcut getters
 	public String getKey() {
 		return key.getKeyOnly();

@@ -11,8 +11,9 @@
 		<h3>What is this?</h3>
 		<p>
 			This is an uncensored, but filtered index. Uncensored, because every
-			crawled freesite appears in the index. Filtered, because the <a
-				href="https://github.com/freenet/wiki/wiki/Content-Filtering">content-filter</a>
+			crawled freesite (except Fake-Keys, which can only be found in the
+			database) appears in the index. Filtered, because the
+			<a href="https://github.com/freenet/wiki/wiki/Content-Filtering">content-filter</a>
 			was enabled while crawling the freesites. Dangerous pages can still be
 			found in the "Offline"-section.
 		</p>
@@ -55,7 +56,13 @@
 
 		<h3>What is a "Fake-Key"?</h3>
 		<p>
-			A "Fake-Key" is a key, which looks correct, but did not work, because someone changed some characters of the key. My crawler calculates the <a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein distance</a> for all offline keys. Keys which have a distance greater then a given threshold are flagged as "Fake-Key".
+			A "Fake-Key" is a key, which looks correct, but did not work, because
+			someone (mostly Anonymous from Frost) changed some characters of the
+			key. My crawler calculates the
+			<a href="https://en.wikipedia.org/wiki/Levenshtein_distance">Levenshtein
+			distance</a> for all offline keys. Keys which have a distance greater
+			then a given threshold are flagged as "Fake-Key". These keys are no
+			longer shown in the index, but are still available in the database.
 		</p>
 
 		<h3>Why have some freesites a yellow background?</h3>

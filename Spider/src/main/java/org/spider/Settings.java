@@ -46,7 +46,7 @@ public class Settings {
 	public static final String FREENET_PORT_FCP = "freenet.port.fcp";
 	public static final String FREENET_PORT_FPROXY = "freenet.port.fproxy";
 
-	public static final String IMPORT_FMS_PATH= "import.fms.path";
+	public static final String IMPORT_FMS_PATH = "import.fms.path";
 	public static final String IMPORT_FROST_PATH = "import.frost.path";
 
 	public static final String OUTPUT_PATH_RELEASE = "output.path.release";
@@ -66,6 +66,8 @@ public class Settings {
 	public static final String FAQ_JSITE_KEY = "faq.jsite.key";
 
 	public static final String FAKE_KEY_MAX_DIFF = "fake.key.max.diff";
+
+	public static final String HIDE_FAKE_KEY = "hide.fake.key";
 
 	public static final String UPDATE_WAIT_TIME = "update.wait.time";
 
@@ -95,6 +97,10 @@ public class Settings {
 
 	public Integer getInteger(String key) {
 		return Integer.valueOf(getString(key));
+	}
+
+	public Boolean getBoolean(String key) {
+		return Boolean.valueOf(getString(key));
 	}
 
 	public Charset getCharset() {
