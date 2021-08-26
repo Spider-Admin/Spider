@@ -544,26 +544,25 @@ public class Spider implements AutoCloseable {
 	}
 
 	private Boolean isFakeKey(String freesite) throws SQLException {
-		Integer minDiff = Integer.MAX_VALUE;
-		Integer maxDiff = settings.getInteger(Settings.FAKE_KEY_MAX_DIFF);
-
 		Key key = storage.getFreesiteKey(new Key(freesite));
 		if (key.getEdition() != null && key.getEdition() > 0) {
 			return false;
 		}
 
+		Integer minDiff = Integer.MAX_VALUE;
+		Integer maxDiff = settings.getInteger(Settings.FAKE_KEY_MAX_DIFF);
+
 		LevenshteinDistance distance = new LevenshteinDistance();
 
-		ArrayList<Freesite> freesites = storage.findFreesite("/" + key.getSitePath() + "/");
+		ArrayList<Freesite> freesites = storage.getAllFreesite(false);
 		for (Freesite orgFreesite : freesites) {
 			Key orgKey = orgFreesite.getKeyObj();
-			if (!key.getKeyOnly().equals(orgKey.getKeyOnly()) && orgKey.getEdition() != null
-					&& orgKey.getSitePath().equals(key.getSitePath())) {
-				Integer diffChars = distance.apply(key.getKeyOnly(), orgKey.getKeyOnly());
-				if (diffChars < maxDiff) {
+			if (!orgKey.getKey().equals(key.getKey())) {
+				Integer diffChars = distance.apply(key.getKey(), orgKey.getKey());
+				if (diffChars < maxDiff && orgFreesite.isOnline() != null && orgFreesite.isOnline()) {
+					minDiff = Math.min(minDiff, diffChars);
 					log.debug("Original: {} = {}", orgKey, diffChars);
 				}
-				minDiff = Math.min(minDiff, diffChars);
 			}
 		}
 		return minDiff < maxDiff;
