@@ -108,20 +108,6 @@ public class Main {
 			case INIT:
 			case ADD_FREESITE:
 			case ADD_FREESITE_FROM_FILE:
-			case ADD_FREESITE_FROM_FMS:
-				try (Connection connection = Database.getConnection();
-						FMSImporter importer = new FMSImporter(connection);) {
-					importer.addFreesiteFromFMS();
-					connection.commit();
-				}
-				break;
-			case ADD_FREESITE_FROM_FROST:
-				try (Connection connection = Database.getConnection();
-						FrostImporter importer = new FrostImporter(connection);) {
-					importer.addFreesiteFromFrost();
-					connection.commit();
-				}
-				break;
 			case RESET_ALL_OFFLINE:
 			case RESET_OFFLINE:
 			case RESET_ALL_HIGHLIGHT:
@@ -145,6 +131,20 @@ public class Main {
 					} else if (task == Task.EXPORT_DATABASE) {
 						spider.exportDatabase();
 					}
+					connection.commit();
+				}
+				break;
+			case ADD_FREESITE_FROM_FMS:
+				try (Connection connection = Database.getConnection();
+						FMSImporter importer = new FMSImporter(connection);) {
+					importer.addFreesiteFromFMS();
+					connection.commit();
+				}
+				break;
+			case ADD_FREESITE_FROM_FROST:
+				try (Connection connection = Database.getConnection();
+						FrostImporter importer = new FrostImporter(connection);) {
+					importer.addFreesiteFromFrost();
 					connection.commit();
 				}
 				break;
