@@ -17,6 +17,8 @@
 package org.spider.network;
 
 import java.io.IOException;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.spider.Settings;
@@ -109,5 +111,34 @@ public class Freenet {
 				settings.getInteger(Settings.FREENET_PORT_FCP));
 		connection.connect(getClientName());
 		return connection;
+	}
+
+	public static Integer getMinUSKKeyLength() {
+		// @see freenet.keys.FreenetURI
+		// FreenetURI#toString(boolean, boolean)
+
+		// @see freenet.keys.FreenetURI
+		// @see freenet.keys.NodeSSK
+		// RoutingKey is the pkHash. The actual routing key is calculated in NodeSSK.
+		// PUBKEY_HASH_SIZE = 32
+		byte[] routingKey = new byte[32];
+
+		// @see freenet.keys.FreenetURI
+		// Crypto key should be 32 bytes.
+		byte[] cryptoKey = new byte[32];
+
+		// @see freenet.keys.FreenetURI
+		// @see freenet.keys.ClientSSK
+		// EXTRA_LENGTH = 5;
+		byte[] extra = new byte[5];
+
+		// Minimum is one letter (according to jSite)
+		String siteName = "s";
+
+		Encoder base64 = Base64.getUrlEncoder().withoutPadding();
+
+		String minKey = "USK" + "@" + base64.encodeToString(routingKey) + "," + base64.encodeToString(cryptoKey) + ","
+				+ base64.encodeToString(extra) + "/" + siteName;
+		return minKey.length();
 	}
 }
