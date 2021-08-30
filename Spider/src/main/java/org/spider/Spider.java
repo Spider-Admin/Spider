@@ -82,7 +82,7 @@ public class Spider implements AutoCloseable {
 			Key decodedKey = new Key(decodedFreesite);
 			Integer decodedFreesiteID = storage.getFreesiteID(decodedKey);
 			if (decodedFreesiteID != null) {
-				log.warn("Skip double encoded key (already imported) {}", freesite);
+				log.debug("Skip double encoded key (already imported) {}", freesite);
 				return;
 			}
 
@@ -118,8 +118,8 @@ public class Spider implements AutoCloseable {
 		while (addKeyMatcher.find()) {
 			String freesite = URLUtility.decodeURL(addKeyMatcher.group(0));
 			freesite = HTMLParser.capitalizeKeyType(freesite);
-			if (freesite.length() < 50) {
-				log.warn("Ignore invalid freesite {}", freesite);
+			if (freesite.length() < Freenet.getMinUSKKeyLength()) {
+				log.debug("Ignore invalid freesite {}", freesite);
 			} else {
 				log.debug("Found freesite {}", freesite);
 				try {
