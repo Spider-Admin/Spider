@@ -46,7 +46,7 @@ public class Spider implements AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(Spider.class);
 
-	private static final Pattern addKeyPattern = Pattern.compile("(USK@[^@ ]*?\\/.*?\\/-?\\d+)",
+	private static final Pattern addKeyPattern = Pattern.compile("(USK@[A-Z\\d-~,]*?\\/[^ \r\n]*?\\/-?\\d+)",
 			Pattern.CASE_INSENSITIVE);
 
 	private static final String ACTIVE_LINK = "activelink.png";
