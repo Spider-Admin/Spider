@@ -19,7 +19,6 @@ tasks.withType(JavaCompile) {
 
 application {
 	mainClass = "org.spider.Main"
-	applicationDefaultJvmArgs = ["-Dfile.encoding=UTF-8"]
 }
 
 distZip {

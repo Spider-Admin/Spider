@@ -56,6 +56,8 @@ public class FrostImporter extends Spider {
 	private static final String MESSAGE_CONTENT_FILE = "messagesContents.dbs";
 	private static final String MESSAGE_ARCHIVE_FILE = "messageArchive.dbs";
 
+	private static final String PERST_ENCODING = "perst.string.encoding";
+
 	public FrostImporter(Connection connection) throws SQLException {
 		super(connection);
 	}
@@ -69,6 +71,14 @@ public class FrostImporter extends Spider {
 
 		log.info("Copy {} to temporary folder...", new File(filename).getName());
 		Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+	}
+
+	private Storage openStorage(String filename) {
+		Settings settings = Settings.getInstance();
+		Storage storage = StorageFactory.getInstance().createStorage();
+		storage.setProperty(PERST_ENCODING, settings.getCharset().name());
+		storage.open(filename, Storage.DEFAULT_PAGE_POOL_SIZE);
+		return storage;
 	}
 
 	public void addFreesiteFromFrost() throws IOException, SQLException {
@@ -88,16 +98,14 @@ public class FrostImporter extends Spider {
 	private void importMessages(String filenameMessages, String filenameMessageContents)
 			throws IOException, SQLException {
 		log.info("Load messages from {} and {}", filenameMessages, filenameMessageContents);
-		Storage dbFrostArchive = StorageFactory.getInstance().createStorage();
-		dbFrostArchive.open(filenameMessages, Storage.DEFAULT_PAGE_POOL_SIZE);
-		MessageStorageRoot rootMessages = (MessageStorageRoot) dbFrostArchive.getRoot();
+
+		Storage dbMessages = openStorage(filenameMessages);
+		MessageStorageRoot rootMessages = (MessageStorageRoot) dbMessages.getRoot();
 		if (rootMessages == null) {
 			throw new IOException(String.format("\"%s\" contains no data!", filenameMessages));
 		}
 
-		Storage dbMessageContents = StorageFactory.getInstance().createStorage();
-		dbMessageContents.open(filenameMessageContents, Storage.DEFAULT_PAGE_POOL_SIZE);
-
+		Storage dbMessageContents = openStorage(filenameMessageContents);
 		MessageContentStorageRoot rootMessageContents = (MessageContentStorageRoot) dbMessageContents.getRoot();
 		if (rootMessageContents == null) {
 			throw new IOException(String.format("\"%s\" contains no data!", filenameMessageContents));
@@ -155,13 +163,14 @@ public class FrostImporter extends Spider {
 				}
 			}
 		}
-		dbFrostArchive.close();
+		dbMessages.close();
+		dbMessageContents.close();
 	}
 
 	private void importMessageArchive(String filename) throws IOException, SQLException {
 		log.info("Load messages from {}", filename);
-		Storage dbArchive = StorageFactory.getInstance().createStorage();
-		dbArchive.open(filename, Storage.DEFAULT_PAGE_POOL_SIZE);
+
+		Storage dbArchive = openStorage(filename);
 		ArchiveMessageStorageRoot rootArchive = (ArchiveMessageStorageRoot) dbArchive.getRoot();
 		if (rootArchive == null) {
 			throw new IOException(String.format("\"%s\" contains no data!", filename));
