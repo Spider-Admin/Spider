@@ -18,6 +18,8 @@
 */
 package frost.storage.perst.messages;
 
+import java.util.Iterator;
+
 import com.mcobject.perst.IPersistentList;
 import com.mcobject.perst.Persistent;
 import com.mcobject.perst.Storage;
@@ -27,9 +29,29 @@ public class PerstAttachments extends Persistent {
 	private IPersistentList<PerstBoardAttachment> boardAttachments;
 	private IPersistentList<PerstFileAttachment> fileAttachments;
 
-	public PerstAttachments(Storage storage) {
-		this.boardAttachments = storage.createScalableList();
-		this.fileAttachments = storage.createScalableList();
+	public PerstAttachments(Storage storage, IPersistentList<PerstBoardAttachment> otherBoardAttachments,
+			IPersistentList<PerstFileAttachment> otherFileAttachments) {
+		if (otherBoardAttachments != null && otherBoardAttachments.size() > 0) {
+			this.boardAttachments = storage.createScalableList();
+			Iterator<PerstBoardAttachment> attachmentIt = otherBoardAttachments.iterator();
+			while (attachmentIt.hasNext()) {
+				PerstBoardAttachment currentAttachment = attachmentIt.next();
+				PerstBoardAttachment newtAttachment = new PerstBoardAttachment(currentAttachment.getName(),
+						currentAttachment.getPubKey(), currentAttachment.getPrivKey(),
+						currentAttachment.getDescription());
+				boardAttachments.add(newtAttachment);
+			}
+		}
+		if (otherFileAttachments != null && otherFileAttachments.size() > 0) {
+			this.fileAttachments = storage.createScalableList();
+			Iterator<PerstFileAttachment> attachmentIt = otherFileAttachments.iterator();
+			while (attachmentIt.hasNext()) {
+				PerstFileAttachment currentAttachment = attachmentIt.next();
+				PerstFileAttachment newtAttachment = new PerstFileAttachment(currentAttachment.getName(),
+						currentAttachment.getSize(), currentAttachment.getCHKKey());
+				fileAttachments.add(newtAttachment);
+			}
+		}
 	}
 
 	public IPersistentList<PerstBoardAttachment> getBoardAttachments() {

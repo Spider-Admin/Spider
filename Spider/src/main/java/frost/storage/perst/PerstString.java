@@ -36,4 +36,12 @@ public class PerstString extends Persistent {
 	public boolean recursiveLoading() {
 		return false;
 	}
+
+	public static PerstString copy(PerstString other) {
+		if (other == null) {
+			return null;
+		} else {
+			return new PerstString(other.getValue());
+		}
+	}
 }
