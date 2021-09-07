@@ -110,6 +110,7 @@ public class FrostImporter extends Spider {
 		if (rootMessageContents == null) {
 			throw new IOException(String.format("\"%s\" contains no data!", filenameMessageContents));
 		}
+
 		Index<PerstString> messageContents = rootMessageContents.getContentByMsgOid();
 //		Index<PerstString> publicKeys = rootMessageContents.getPublickeyByMsgOid();
 //		Index<PerstString> signatures = rootMessageContents.getSignatureByMsgOid();

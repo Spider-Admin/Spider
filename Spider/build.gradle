@@ -13,6 +13,7 @@ repositories {
 		url "https://raw.github.com/mcobject/perst/mvn-repo/"
 	}
 }
+
 tasks.withType(JavaCompile) {
 	options.encoding = "UTF-8"
 }
