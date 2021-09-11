@@ -28,6 +28,10 @@ public class PerstString extends Persistent {
 		this.value = value;
 	}
 
+	public PerstString(PerstString other) {
+		value = other.getValue();
+	}
+
 	public String getValue() {
 		return value;
 	}
@@ -35,13 +39,5 @@ public class PerstString extends Persistent {
 	@Override
 	public boolean recursiveLoading() {
 		return false;
-	}
-
-	public static PerstString copy(PerstString other) {
-		if (other == null) {
-			return null;
-		} else {
-			return new PerstString(other.getValue());
-		}
 	}
 }
