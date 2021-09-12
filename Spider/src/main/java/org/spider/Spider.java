@@ -304,23 +304,19 @@ public class Spider implements AutoCloseable {
 			parser.parseStream(site.getInputStream());
 			Boolean isOnline = site.isSuccess();
 
+			String redirect = null;
 			if (key.getPath().isEmpty()) {
 				String author = parser.getAuthor();
 				String title = parser.getTitle();
 				String keywords = parser.getKeywords();
 				String description = parser.getDescription();
 				String language = parser.getLanguage();
-				String redirect = parser.getRedirect();
+				redirect = parser.getRedirect();
 
 				Boolean hasActiveLink = false;
 				if (isOnline) {
 					log.info("Check for ActiveLink");
 					hasActiveLink = hasActiveLink(freenet, key);
-				}
-
-				if (!redirect.isEmpty()) {
-					log.debug("Found redirect in HTML: {}", redirect);
-					addPath(key.toString(), redirect, key.toString());
 				}
 
 				Freesite freesite = storage.getFreesite(key);
@@ -359,6 +355,12 @@ public class Spider implements AutoCloseable {
 			}
 
 			ArrayList<String> paths = parser.getPaths();
+
+			if (redirect != null && !redirect.isEmpty()) {
+				log.debug("Add redirect to path-list: {}", redirect);
+				paths.add(redirect);
+			}
+
 			for (String path : paths) {
 				path = URLUtility.decodeURL(path);
 
