@@ -19,6 +19,8 @@ import org.spider.storage.Storage;
 public class SpiderTest {
 	private Connection connection;
 
+	private static final String DUMMY_KEY = "USK@0123456789012345678901234567890123456789123,0123456789012345678901234567890123456789123,1234567/";
+
 	@BeforeEach
 	public void beforeTest() throws SQLException {
 		connection = Database.getConnectionTest();
@@ -71,9 +73,9 @@ public class SpiderTest {
 			ArrayList<Freesite> freesites = storage.getAllFreesite(false);
 			assertEquals(0, freesites.size());
 
-			spider.addFreesite("/USK@something1something1something1something1/site/1/file.ext");
-			spider.addFreesite("/USK@something2something2something2something2/site/1/");
-			spider.addFreesite("/USK@something3something3something3something3/site/-1/");
+			spider.addFreesite("/" + DUMMY_KEY + "site1/1/file.ext");
+			spider.addFreesite("/" + DUMMY_KEY + "site2/1/");
+			spider.addFreesite("/" + DUMMY_KEY + "site3/-1/");
 			spider.addFreesite("CHK@somethingsomethingsomethingsomething/file.ext");
 			spider.addFreesite("CHK@somethingsomethingsomethingsomething/file.ext");
 
@@ -83,7 +85,7 @@ public class SpiderTest {
 			Freesite freesite = freesites.get(0);
 			Key key = freesite.getKeyObj();
 
-			assertEquals("USK@something1something1something1something1/site/", key.getKey());
+			assertEquals(DUMMY_KEY + "site1/", key.getKey());
 			assertNull(key.getEdition());
 			assertEquals(-1, key.getEditionHint());
 			assertEquals("", key.getPath());
