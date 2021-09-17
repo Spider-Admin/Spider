@@ -208,18 +208,18 @@ public class Spider implements AutoCloseable {
 				}
 				break;
 			case ONLINE:
-				if (online) {
+				if (online != null && online) {
 					checkUpdate = true;
 				}
 				break;
 			case OFFLINE:
-				if (!online) {
+				if (online != null && !online) {
 					checkUpdate = true;
 				}
 				break;
 			}
-			if (comment.contains(Freenet.Error.FAKE_KEY.toString())
-					|| comment.contains(Freenet.Error.INVALID_URI.toString())) {
+			if (comment != null && (comment.contains(Freenet.Error.FAKE_KEY.toString())
+					|| comment.contains(Freenet.Error.INVALID_URI.toString()))) {
 				checkUpdate = false;
 			}
 			if (!checkUpdate) {
