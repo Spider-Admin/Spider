@@ -218,8 +218,8 @@ public class Spider implements AutoCloseable {
 				}
 				break;
 			}
-			if (comment != null && (comment.contains(Freenet.Error.FAKE_KEY.toString())
-					|| comment.contains(Freenet.Error.INVALID_URI.toString()))) {
+			if (comment.contains(Freenet.Error.FAKE_KEY.toString())
+					|| comment.contains(Freenet.Error.INVALID_URI.toString())) {
 				checkUpdate = false;
 			}
 			if (!checkUpdate) {
@@ -322,20 +322,18 @@ public class Spider implements AutoCloseable {
 				Freesite freesite = storage.getFreesite(key);
 
 				Boolean ignoreResetOffline = false;
-				String comment = null;
+				String comment = "";
 				if (!isOnline) {
 					comment = Freenet.Error.getMessage(site.getErrorCode());
 
 					if (isFakeKey(key.getKey())) {
-						if (comment != null) {
+						if (!comment.isEmpty()) {
 							comment = comment + ". ";
-						} else {
-							comment = "";
 						}
 						comment = comment + Freenet.Error.FAKE_KEY.toString();
 					}
 
-					ignoreResetOffline = comment != null;
+					ignoreResetOffline = !comment.isEmpty();
 				} else if (freesite.crawlOnlyIndex()) {
 					comment = "Only Index-Page has been crawled";
 				}

@@ -47,22 +47,22 @@ public class Freenet {
 		// TODO Freenet: Redirect in Fred, but error in FCPLib?
 		TOO_MANY_PATH_COMPONENTS(11, "Too many path components"),
 
-		DATA_NOT_FOUND(13, null),
+		DATA_NOT_FOUND(13, ""),
 
-		ROUTE_NOT_FOUND(14, null),
+		ROUTE_NOT_FOUND(14, ""),
 
-		REJECTED_OVERLOAD(15, null),
+		REJECTED_OVERLOAD(15, ""),
 
-		TRANSFER_FAILED(18, null),
+		TRANSFER_FAILED(18, ""),
 
-		SPLITFILE_ERROR(19, null),
+		SPLITFILE_ERROR(19, ""),
 
 		// @see java.net.MalformedURLException
 		INVALID_URI(20, "MalformedURLException"),
 
-		ALL_DATA_NOT_FOUND(28, null),
+		ALL_DATA_NOT_FOUND(28, ""),
 
-		RECENTLY_FAILED(30, null),
+		RECENTLY_FAILED(30, ""),
 
 		// @see freenet.client.filter.UnsafeContentTypeException
 		// @see freenet.client.filter.UnknownCharsetException
