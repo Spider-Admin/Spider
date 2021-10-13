@@ -274,6 +274,7 @@ public class Spider implements AutoCloseable {
 				// Sometimes getRealUri returns a similar, but different key
 				if (key.getKeyOnly().equals(new Key(realURL).getKeyOnly())) {
 					realURL = URLUtility.decodeURL(realURL);
+					Key orgKey = key;
 					key = new Key(realURL);
 
 					Boolean isUpdated = updateFreesiteEdition(key.toString(), false);
@@ -281,6 +282,7 @@ public class Spider implements AutoCloseable {
 						log.info("Skip key, since there was no update.");
 						Freesite freesite = storage.getFreesite(key);
 						storage.updatePath(key, storage.getPath(key).isOnline(), freesite.getCrawled());
+						storage.addInvalidEdition(orgKey);
 						connection.commit();
 						continue;
 					}
@@ -449,11 +451,15 @@ public class Spider implements AutoCloseable {
 					return isUpdated;
 				}
 
-				log.info("Set edition-hint of {} to {}", oldKey.getKey(), key.getEdition());
-				oldKey.setEditionHint(key.getEdition());
-				oldKey.setPath(INDEX_PATH);
-				storage.updatePath(oldKey, storage.getPath(oldKey).isOnline(), null);
-				storage.updateFreesiteEdition(oldKey, crawledDate);
+				if (!storage.isEditionInvalid(key)) {
+					log.info("Set edition-hint of {} to {}", oldKey.getKey(), key.getEdition());
+					oldKey.setEditionHint(key.getEdition());
+					oldKey.setPath(INDEX_PATH);
+					storage.updatePath(oldKey, storage.getPath(oldKey).isOnline(), null);
+					storage.updateFreesiteEdition(oldKey, crawledDate);
+				} else {
+					log.info("Ignore edition-hint of {} to {}", key.getKey(), key.getEdition());
+				}
 			} else {
 				Boolean isEditionUpdate = false;
 				Boolean isRemoveEditionHint = false;
@@ -474,6 +480,7 @@ public class Spider implements AutoCloseable {
 				if (isEditionUpdate) {
 					storage.deleteAllNetwork(key);
 					storage.deleteAllPath(key);
+					storage.deleteAllInvalidEdition(key);
 					isUpdated = true;
 					crawledDate = null;
 					key.setPath(INDEX_PATH);

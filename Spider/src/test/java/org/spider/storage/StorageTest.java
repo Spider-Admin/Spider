@@ -652,4 +652,45 @@ public class StorageTest {
 			assertEquals(0, outNetwork.size());
 		}
 	}
+
+	@Test
+	public void invalidEdition() throws SQLException {
+		try (Storage storage = new Storage(connection);) {
+			Key key = new Key("USK@something1/site/1/");
+
+			storage.addFreesite(key, new Date());
+
+			assertFalse(storage.isEditionInvalid(key));
+
+			Key keyHigh1 = new Key("USK@something1/site/1000/");
+			Key keyHigh2 = new Key("USK@something1/site/2000/");
+			Key keyHigh3 = new Key("USK@something1/site/-1000/");
+
+			assertFalse(storage.isEditionInvalid(key));
+			assertFalse(storage.isEditionInvalid(keyHigh1));
+			assertFalse(storage.isEditionInvalid(keyHigh2));
+			assertFalse(storage.isEditionInvalid(keyHigh3));
+
+			storage.addInvalidEdition(keyHigh1);
+
+			assertFalse(storage.isEditionInvalid(key));
+			assertTrue(storage.isEditionInvalid(keyHigh1));
+			assertFalse(storage.isEditionInvalid(keyHigh2));
+			assertTrue(storage.isEditionInvalid(keyHigh3));
+
+			storage.addInvalidEdition(keyHigh2);
+
+			assertFalse(storage.isEditionInvalid(key));
+			assertTrue(storage.isEditionInvalid(keyHigh1));
+			assertTrue(storage.isEditionInvalid(keyHigh2));
+			assertTrue(storage.isEditionInvalid(keyHigh3));
+
+			storage.deleteAllInvalidEdition(key);
+
+			assertFalse(storage.isEditionInvalid(key));
+			assertFalse(storage.isEditionInvalid(keyHigh1));
+			assertFalse(storage.isEditionInvalid(keyHigh2));
+			assertFalse(storage.isEditionInvalid(keyHigh3));
+		}
+	}
 }

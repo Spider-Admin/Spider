@@ -68,6 +68,10 @@ public class Storage implements AutoCloseable {
 	private static final String GET_IN_NETWORK_SQL = "SELECT `FreesiteID` FROM `Network` WHERE `TargetFreesiteID` = ? ORDER BY `FreesiteID` ASC";
 	private static final String GET_OUT_NETWORK_SQL = "SELECT `TargetFreesiteID` FROM `Network` WHERE `FreesiteID` = ? ORDER BY `TargetFreesiteID` ASC";
 
+	private static final String INSERT_INVALID_EDITION_SQL = "INSERT INTO `InvalidEdition` (`FreesiteID`, `Edition`) VALUES (?, ?)";
+	private static final String DELETE_ALL_INVALID_EDITION_SQL = "DELETE FROM `InvalidEdition` WHERE `FreesiteID` = ?";
+	private static final String GET_INVALID_EDITION_SQL = "SELECT `Edition` FROM `InvalidEdition` WHERE `FreesiteID` = ? AND `Edition` = ?";
+
 	private static final String GET_NEXT_URL_SQL = "SELECT `Key`, `Edition`, `EditionHint`, `Path` FROM `Freesite` F INNER JOIN `Path` P ON F.`ID` = P.`FreesiteID` WHERE P.`Crawled` IS NULL ORDER BY F.`Crawled` DESC, F.`Added` ASC";
 
 	static {
@@ -80,6 +84,8 @@ public class Storage implements AutoCloseable {
 				"CREATE TABLE IF NOT EXISTS `Path` (`ID` INTEGER CONSTRAINT `PK_Path` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Path` VARCHAR(1024), `Online` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, CONSTRAINT `UQ_Path_FreesiteID_Path` UNIQUE(`FreesiteID`, `Path`))");
 		tables.put("Network",
 				"CREATE TABLE IF NOT EXISTS `Network` (`ID` INTEGER CONSTRAINT `PK_Network` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `TargetFreesiteID` INTEGER NOT NULL, CONSTRAINT `UQ_Network_FreesiteID_TargetFreesiteID` UNIQUE(`FreesiteID`, `TargetFreesiteID`), CONSTRAINT `UQ_Network_TargetFreesiteID_FreesiteID` UNIQUE(`TargetFreesiteID`, `FreesiteID`))");
+		tables.put("InvalidEdition",
+				"CREATE TABLE IF NOT EXISTS `InvalidEdition` (`ID` INTEGER CONSTRAINT `PK_InvalidEdition` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Edition` INTEGER NOT NULL, CONSTRAINT `UQ_InvalidEdition_FreesiteID_Edition` UNIQUE(`FreesiteID`, `Edition`))");
 
 		views = new LinkedHashMap<>();
 		views.put("NextURL", "CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
@@ -119,6 +125,9 @@ public class Storage implements AutoCloseable {
 	private PreparedStatement deleteAllNetwork;
 	private PreparedStatement getInNetwork;
 	private PreparedStatement getOutNetwork;
+	private PreparedStatement insertInvalidEdition;
+	private PreparedStatement deleteAllInvalidEdition;
+	private PreparedStatement getInvalidEdition;
 	private PreparedStatement getNextURL;
 
 	private Connection connection;
@@ -176,6 +185,10 @@ public class Storage implements AutoCloseable {
 		deleteAllNetwork = connection.prepareStatement(DELETE_ALL_NETWORK_SQL);
 		getInNetwork = connection.prepareStatement(GET_IN_NETWORK_SQL);
 		getOutNetwork = connection.prepareStatement(GET_OUT_NETWORK_SQL);
+
+		insertInvalidEdition = connection.prepareStatement(INSERT_INVALID_EDITION_SQL);
+		deleteAllInvalidEdition = connection.prepareStatement(DELETE_ALL_INVALID_EDITION_SQL);
+		getInvalidEdition = connection.prepareStatement(GET_INVALID_EDITION_SQL);
 
 		getNextURL = connection.prepareStatement(GET_NEXT_URL_SQL);
 	}
@@ -486,6 +499,28 @@ public class Storage implements AutoCloseable {
 		return result;
 	}
 
+	public void addInvalidEdition(Key key) throws SQLException {
+		Integer id = getFreesiteID(key);
+		Database.setInteger(insertInvalidEdition, 1, id);
+		Database.setLong(insertInvalidEdition, 2, Math.abs(key.getEdition()));
+		insertInvalidEdition.executeUpdate();
+	}
+
+	public void deleteAllInvalidEdition(Key key) throws SQLException {
+		Integer id = getFreesiteID(key);
+		Database.setInteger(deleteAllInvalidEdition, 1, id);
+		deleteAllInvalidEdition.executeUpdate();
+	}
+
+	public Boolean isEditionInvalid(Key key) throws SQLException {
+		Integer id = getFreesiteID(key);
+		Database.setInteger(getInvalidEdition, 1, id);
+		Database.setLong(getInvalidEdition, 2, Math.abs(key.getEdition()));
+		try (ResultSet resultSet = getInvalidEdition.executeQuery()) {
+			return resultSet.next();
+		}
+	}
+
 	public Key getNextURL() throws SQLException {
 		Key result = null;
 		try (ResultSet resultSet = getNextURL.executeQuery()) {
@@ -530,6 +565,9 @@ public class Storage implements AutoCloseable {
 		deleteAllNetwork.close();
 		getInNetwork.close();
 		getOutNetwork.close();
+		insertInvalidEdition.close();
+		deleteAllInvalidEdition.close();
+		getInvalidEdition.close();
 		getNextURL.close();
 	}
 }
