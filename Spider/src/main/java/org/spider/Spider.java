@@ -556,6 +556,14 @@ public class Spider implements AutoCloseable {
 			return false;
 		}
 
+		String freesiteClean = freesite.replaceAll("[\\p{Cf}]", "");
+		if (!freesite.equals(freesiteClean)) {
+			// Mark invalid key: USK@ -> USK@@
+			StringBuilder tmp = new StringBuilder(freesiteClean);
+			tmp.setCharAt(5, '@');
+			key = new Key(tmp.toString());
+		}
+
 		Integer minDiff = Integer.MAX_VALUE;
 		Integer maxDiff = settings.getInteger(Settings.FAKE_KEY_MAX_DIFF);
 
