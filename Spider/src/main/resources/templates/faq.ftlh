@@ -10,15 +10,28 @@
 
 		<h3>What is this?</h3>
 		<p>
-			This is an uncensored, but filtered index. Uncensored, because every
-			crawled freesite (except Fake-Keys, which can only be found in the
-			database) appears in the index. Filtered, because the
+			This is an uncensored, but filtered index. Uncensored, because 
+			<a href="#hidden-categories">almost every</a> crawled freesite appears in the index. Filtered, because the
 			<a href="https://github.com/freenet/wiki/wiki/Content-Filtering">content-filter</a>
 			was enabled while crawling the freesites. Dangerous pages can still be
 			found in the "Offline"-section.
 		</p>
+		
+		<h3 id="hidden-categories">Which freesites are hidden?</h3>
+		<p>
+			Freesites, which are hidden are not shown in the index, but can still be found in <a href="#database">database</a>.
+			Each freesite is manually checked once by me. I add a one or more categories to each freesite.
+			Freesites with the following categories are hidden:
+		</p>
+		<ul>
+<#list hiddenCategories as hiddenCategory>
+			<li><#if hiddenCategory?has_content>${hiddenCategory}<#else>Freesites without a category</#if></li>
+<#else>
+			<li>Nothing is hidden</li>			
+</#list>			
+		</ul>
 
-	<h3>How can I contact you?</h3>
+		<h3>How can I contact you?</h3>
 		<dl>
 			<dt>Author:</dt>
 			<dd>${author}</dd>
@@ -137,7 +150,7 @@
 		</ul>
 
 <#if selfDatabaseKey?has_content>
-		<h3>Where can I get the database of your index?</h3>
+		<h3 id="database">Where can I get the database of your index?</h3>
 		<p>
 			Download a <abbr title="Structured Query Language">SQL</abbr>-dump using this key <a href="${keyPrefix}/${selfDatabaseKey}">${selfDatabaseKey}</a>.
 		</p>

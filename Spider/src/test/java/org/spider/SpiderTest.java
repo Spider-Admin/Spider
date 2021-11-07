@@ -102,6 +102,7 @@ public class SpiderTest {
 			assertNotNull(freesite.getAdded());
 			assertNull(freesite.getCrawled());
 			assertNull(freesite.getComment());
+			assertEquals("", freesite.getCategory());
 		}
 	}
 }

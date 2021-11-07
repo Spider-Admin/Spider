@@ -17,13 +17,12 @@
 package org.spider.storage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.spider.Key;
 import org.spider.network.Freenet;
+import org.spider.utility.ListUtility;
 
 public class Freesite {
 
@@ -45,6 +44,7 @@ public class Freesite {
 	private Date added;
 	private Date crawled;
 	private String comment;
+	private String category;
 
 	private ArrayList<Path> pathList;
 	private ArrayList<Integer> inNetwork;
@@ -56,7 +56,7 @@ public class Freesite {
 	public Freesite(Integer id, Key key, String author, String title, String keywords, String description,
 			String language, Boolean fms, Boolean sone, Boolean activeLink, Boolean online, Boolean obsolete,
 			Boolean ignoreResetOffline, Boolean crawlOnlyIndex, Boolean highlight, Date added, Date crawled,
-			String comment) {
+			String comment, String category) {
 		this.id = id;
 		this.key = key;
 		this.author = author;
@@ -75,6 +75,7 @@ public class Freesite {
 		this.added = added;
 		this.crawled = crawled;
 		this.comment = comment;
+		this.category = category;
 		pathList = null;
 		inNetwork = null;
 		outNetwork = null;
@@ -105,30 +106,9 @@ public class Freesite {
 	public String getKeywords() {
 		if (keywords == null) {
 			return null;
+		} else {
+			return ListUtility.formatList(keywords);
 		}
-		String splitChar = ",";
-		if (!keywords.contains(",")) {
-			splitChar = ";";
-			if (!keywords.contains(";")) {
-				splitChar = "\n";
-				if (!keywords.contains("\n")) {
-					splitChar = " ";
-				}
-			}
-		}
-
-		List<String> keywordList = Arrays.asList(keywords.split(splitChar));
-		String splitter = "";
-		StringBuilder result = new StringBuilder();
-		for (String keyword : keywordList) {
-			keyword = keyword.trim();
-			if (!keyword.isEmpty()) {
-				result.append(splitter);
-				result.append(keyword);
-				splitter = ", ";
-			}
-		}
-		return result.toString();
 	}
 
 	public String getDescription() {
@@ -181,6 +161,10 @@ public class Freesite {
 
 	public String getComment() {
 		return comment;
+	}
+
+	public String getCategory() {
+		return category;
 	}
 
 	public void setPathList(ArrayList<Path> pathList) {

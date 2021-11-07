@@ -20,11 +20,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spider.utility.ListUtility;
 
 public class Settings {
 
@@ -67,11 +69,13 @@ public class Settings {
 
 	public static final String FAKE_KEY_MAX_DIFF = "fake.key.max.diff";
 
-	public static final String HIDE_FAKE_KEY = "hide.fake.key";
+	public static final String HIDDEN_CATEGORIES = "hidden.categories";
 
 	public static final String UPDATE_WAIT_TIME = "update.wait.time";
 
 	private static final String SETTINGS_FILENAME = "spider.properties";
+
+	private static final String NO_CATEGORY = "NO_CATEGORY";
 
 	protected Settings() {
 		log.info("Loading settings from {}", SETTINGS_FILENAME);
@@ -105,5 +109,14 @@ public class Settings {
 
 	public Charset getCharset() {
 		return StandardCharsets.UTF_8;
+	}
+
+	public ArrayList<String> getHiddenCategories() {
+		ArrayList<String> result = ListUtility.getList(getString(Settings.HIDDEN_CATEGORIES));
+		if (result.contains(NO_CATEGORY)) {
+			result.remove(NO_CATEGORY);
+			result.add("");
+		}
+		return result;
 	}
 }

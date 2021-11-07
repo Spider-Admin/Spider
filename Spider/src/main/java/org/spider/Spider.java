@@ -259,7 +259,7 @@ public class Spider implements AutoCloseable {
 				if (e.getMessage().equals("Protocol error (4, Error parsing freenet URI")) {
 					log.error("Broken key detected.");
 					updateFreesite(key.toString(), "", "", "", "", "", false, false, false, true,
-							Freenet.Error.INVALID_URI.toString());
+							Freenet.Error.INVALID_URI.toString(), "");
 					updatePath(key.toString(), key.getPath(), false);
 					connection.commit();
 				}
@@ -292,7 +292,7 @@ public class Spider implements AutoCloseable {
 					log.info("Invalid redirect. Mark key as fake");
 					updatePath(key.toString(), key.getPath(), false);
 					updateFreesite(key.toString(), "", "", "", "", "", false, false, false, true,
-							Freenet.Error.FAKE_KEY.toString());
+							Freenet.Error.FAKE_KEY.toString(), Freenet.Error.FAKE_KEY.toString());
 					connection.commit();
 					continue;
 				}
@@ -339,6 +339,7 @@ public class Spider implements AutoCloseable {
 				} else if (freesite.crawlOnlyIndex()) {
 					comment = "Only Index-Page has been crawled";
 				}
+				String category = freesite.getCategory();
 
 				log.info("Author: {}", author);
 				log.info("Title: {}", title);
@@ -351,7 +352,7 @@ public class Spider implements AutoCloseable {
 				log.info("Comment: {}", comment);
 
 				updateFreesite(key.toString(), author, title, keywords, description, language, hasActiveLink, isOnline,
-						false, ignoreResetOffline, comment);
+						false, ignoreResetOffline, comment, category);
 			}
 
 			ArrayList<String> paths = parser.getPaths();
@@ -403,7 +404,7 @@ public class Spider implements AutoCloseable {
 
 	private void updateFreesite(String freesite, String author, String title, String keywords, String description,
 			String language, Boolean hasActiveLink, Boolean isOnline, Boolean isObsolete, Boolean ignoreResetOffline,
-			String comment) throws SQLException {
+			String comment, String category) throws SQLException {
 		Key key = new Key(freesite);
 		Boolean isFMS = (title != null && (title.contains("FMS Site") || title.contains("FMS Recent Messages")))
 				|| (description != null && description.contains("FMS-generated"));
@@ -416,7 +417,7 @@ public class Spider implements AutoCloseable {
 				|| (oldIsOnline != null && isOnline != null && oldIsOnline != isOnline);
 
 		storage.updateFreesite(key, author, title, keywords, description, language, isFMS, isSone, hasActiveLink,
-				isOnline, isObsolete, ignoreResetOffline, isHighLight, new Date(), comment);
+				isOnline, isObsolete, ignoreResetOffline, isHighLight, new Date(), comment, category);
 	}
 
 	public Boolean updateFreesiteEdition(String freesite, Boolean searchNew) throws SQLException {

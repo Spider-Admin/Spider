@@ -134,6 +134,7 @@ public class Output implements AutoCloseable {
 		params.put("tpiFreesite", tpiFreesite);
 		params.put("publishFreesite", publishFreesite);
 		params.put("jsiteFreesite", jsiteFreesite);
+		params.put("hiddenCategories", settings.getHiddenCategories());
 	}
 
 	public void setMode(Boolean isRelease) {
@@ -232,13 +233,20 @@ public class Output implements AutoCloseable {
 		log.info("Loading content");
 		ArrayList<Freesite> freesiteList = storage.getAllFreesite(true);
 
-		Boolean hideFakeKey = settings.getBoolean(Settings.HIDE_FAKE_KEY);
+		ArrayList<String> hiddenCategories = settings.getHiddenCategories();
 
 		Integer countOnline = 0;
 		Iterator<Freesite> iterator = freesiteList.iterator();
 		while (iterator.hasNext()) {
+			Boolean isHidden = false;
 			Freesite freesite = iterator.next();
-			if (hideFakeKey && freesite.isFakeKey()) {
+			for (String category : hiddenCategories) {
+				if ((category.isEmpty() && freesite.getCategory().isEmpty())
+						|| (!category.isEmpty() && freesite.getCategory().contains(category))) {
+					isHidden = true;
+				}
+			}
+			if (isHidden) {
 				iterator.remove();
 			} else if (freesite.isOnline() != null && freesite.isOnline()) {
 				countOnline = countOnline + 1;
