@@ -20,7 +20,7 @@
 		<h3 id="hidden-categories">Which freesites are hidden?</h3>
 		<p>
 			Freesites, which are hidden are not shown in the index, but can still be found in <a href="#database">database</a>.
-			Each freesite is manually checked once by me. I add a one or more categories to each freesite.
+			Each freesite is manually checked once by me. I add one or more categories to each freesite.
 			Freesites with the following categories are hidden:
 		</p>
 		<ul>
