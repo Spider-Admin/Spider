@@ -9,13 +9,7 @@
 		<h2>General <abbr title="Frequently Asked Questions">FAQ</abbr></h2>
 
 		<h3>What is this?</h3>
-		<p>
-			This is an uncensored, but filtered index. Uncensored, because 
-			<a href="#hidden-categories">almost every</a> crawled freesite appears in the index. Filtered, because the
-			<a href="https://github.com/freenet/wiki/wiki/Content-Filtering">content-filter</a>
-			was enabled while crawling the freesites. Dangerous pages can still be
-			found in the "Offline"-section.
-		</p>
+		<p><@faqAbout?interpret /></p>
 		
 		<h3 id="hidden-categories">Which freesites are hidden?</h3>
 		<p>

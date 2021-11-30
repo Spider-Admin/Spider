@@ -54,6 +54,10 @@ public class Settings {
 	public static final String OUTPUT_PATH_RELEASE = "output.path.release";
 	public static final String OUTPUT_PATH_TEST = "output.path.test";
 
+	public static final String META_AUTHOR = "meta.author";
+	public static final String META_DESCRIPTION = "meta.description";
+	public static final String META_KEYWORDS = "meta.keywords";
+
 	public static final String CONTACT_AUTHOR = "contact.author";
 	public static final String CONTACT_FREEMAIL = "contact.freemail";
 	public static final String CONTACT_FROST = "contact.frost";
@@ -63,6 +67,7 @@ public class Settings {
 
 	public static final String SEED_KEY = "seed.key";
 
+	public static final String FAQ_ABOUT = "faq.about";
 	public static final String FAQ_TPI_KEY = "faq.tpi.key";
 	public static final String FAQ_PUBLISH_KEY = "faq.publish.key";
 	public static final String FAQ_JSITE_KEY = "faq.jsite.key";
