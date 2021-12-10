@@ -322,6 +322,7 @@ public class Spider implements AutoCloseable {
 				}
 
 				Freesite freesite = storage.getFreesite(key);
+				String category = freesite.getCategory();
 
 				Boolean ignoreResetOffline = false;
 				String comment = "";
@@ -333,13 +334,13 @@ public class Spider implements AutoCloseable {
 							comment = comment + ". ";
 						}
 						comment = comment + Freenet.Error.FAKE_KEY.toString();
+						category = Freenet.Error.FAKE_KEY.toString();
 					}
 
 					ignoreResetOffline = !comment.isEmpty();
 				} else if (freesite.crawlOnlyIndex()) {
 					comment = "Only Index-Page has been crawled";
 				}
-				String category = freesite.getCategory();
 
 				log.info("Author: {}", author);
 				log.info("Title: {}", title);
