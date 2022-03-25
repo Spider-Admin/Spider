@@ -42,7 +42,4 @@
 		<appender-ref ref="ImportantLogFile" />
 	</root>
 
-	<logger name="org.spider.Main" level="DEBUG"/>
-	<logger name="org.spider.Spider" level="DEBUG"/>
-
 </configuration>
