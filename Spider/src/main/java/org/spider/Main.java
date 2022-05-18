@@ -88,11 +88,6 @@ public class Main {
 			}
 		});
 
-		// TODO Freenet: What is the correct link to a freemail?
-		// - Spider-Admin@msXvLpwmDqprlrYZ5ZRZyi7VUcWQ~Wisznv9JkQuSXY.freemail?
-		// - spider-admin@tlc66lu4eyhku24wwym6lfczzixnkuofsd4wrlgopp6smrbojf3a.freemail?
-		// Asked Bombe, the author of Sone, but no response.
-
 		try {
 			Task defaultTask = Task.CRAWL;
 			Task task = defaultTask;
