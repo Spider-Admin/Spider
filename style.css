@@ -86,7 +86,8 @@ tbody tr.highlight:hover {
 	font-weight: bold;
 }
 
-#menu li a:hover {
+#menu li a:hover,
+#menu li a:focus {
 	border-bottom: 0.25em solid blue;
 }
 
