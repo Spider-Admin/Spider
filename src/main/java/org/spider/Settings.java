@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -50,6 +50,7 @@ public class Settings {
 
 	public static final String IMPORT_FMS_PATH = "import.fms.path";
 	public static final String IMPORT_FROST_PATH = "import.frost.path";
+	public static final String IMPORT_FROST_IGNORE_PRIVATE_MESSAGES = "import.frost.ignore-private-messages";
 
 	public static final String OUTPUT_PATH_RELEASE = "output.path.release";
 	public static final String OUTPUT_PATH_TEST = "output.path.test";

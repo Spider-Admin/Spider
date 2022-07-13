@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -81,21 +81,27 @@ public class FrostImporter extends Spider {
 		return storage;
 	}
 
+	private Boolean isPrivateMessage(String recipientName) {
+		return recipientName != null && recipientName.length() > 0;
+	}
+
 	public void addFreesiteFromFrost() throws IOException, SQLException {
 		log.info("Add freesites from Frost");
 
-		String path = Settings.getInstance().getString(Settings.IMPORT_FROST_PATH);
+		Settings settings = Settings.getInstance();
+		String path = settings.getString(Settings.IMPORT_FROST_PATH);
+		Boolean ignorePrivateMessages = settings.getBoolean(Settings.IMPORT_FROST_IGNORE_PRIVATE_MESSAGES);
 
 		copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_FILE);
 		copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_CONTENT_FILE);
 		copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_ARCHIVE_FILE);
 
 		String tempDir = System.getProperty("java.io.tmpdir");
-		importMessages(tempDir + MESSAGE_FILE, tempDir + MESSAGE_CONTENT_FILE);
-		importMessageArchive(tempDir + MESSAGE_ARCHIVE_FILE);
+		importMessages(tempDir + MESSAGE_FILE, tempDir + MESSAGE_CONTENT_FILE, ignorePrivateMessages);
+		importMessageArchive(tempDir + MESSAGE_ARCHIVE_FILE, ignorePrivateMessages);
 	}
 
-	private void importMessages(String filenameMessages, String filenameMessageContents)
+	private void importMessages(String filenameMessages, String filenameMessageContents, Boolean ignorePrivateMessages)
 			throws IOException, SQLException {
 		log.info("Load messages from {} and {}", filenameMessages, filenameMessageContents);
 
@@ -131,6 +137,11 @@ public class FrostImporter extends Spider {
 					// Read message-content
 					PerstString messageContent = messageContents.get(oid);
 					addFreesiteFromString(messageContent.getValue());
+
+					if (isPrivateMessage(message.getRecipientName()) && ignorePrivateMessages) {
+						log.info("Ignore private message: {} -> {}", message.getFromName(), message.getRecipientName());
+						continue;
+					}
 
 					// Read public keys
 //					PerstString publicKey = publicKeys.get(oid);
@@ -168,7 +179,7 @@ public class FrostImporter extends Spider {
 		dbMessageContents.close();
 	}
 
-	private void importMessageArchive(String filename) throws IOException, SQLException {
+	private void importMessageArchive(String filename, Boolean ignorePrivateMessages) throws IOException, SQLException {
 		log.info("Load messages from {}", filename);
 
 		Storage dbArchive = openStorage(filename);
@@ -189,6 +200,11 @@ public class FrostImporter extends Spider {
 				// Read message
 				PerstFrostArchiveMessageObject message = messageIt.next();
 				addFreesiteFromString(message.getContent());
+
+				if (isPrivateMessage(message.getRecipientName()) && ignorePrivateMessages) {
+					log.info("Ignore private message: {} -> {}", message.getFromName(), message.getRecipientName());
+					continue;
+				}
 
 				// Read public key
 				/*
