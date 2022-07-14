@@ -91,14 +91,19 @@ public class FrostImporter extends Spider {
 		Settings settings = Settings.getInstance();
 		String path = settings.getString(Settings.IMPORT_FROST_PATH);
 		Boolean ignorePrivateMessages = settings.getBoolean(Settings.IMPORT_FROST_IGNORE_PRIVATE_MESSAGES);
+		Boolean ignoreMessageArchive = settings.getBoolean(Settings.IMPORT_FROST_IGNORE_MESSAGE_ARCHIVE);
 
 		copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_FILE);
 		copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_CONTENT_FILE);
-		copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_ARCHIVE_FILE);
+		if (!ignoreMessageArchive) {
+			copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_ARCHIVE_FILE);
+		}
 
 		String tempDir = System.getProperty("java.io.tmpdir");
 		importMessages(tempDir + MESSAGE_FILE, tempDir + MESSAGE_CONTENT_FILE, ignorePrivateMessages);
-		importMessageArchive(tempDir + MESSAGE_ARCHIVE_FILE, ignorePrivateMessages);
+		if (!ignoreMessageArchive) {
+			importMessageArchive(tempDir + MESSAGE_ARCHIVE_FILE, ignorePrivateMessages);
+		}
 	}
 
 	private void importMessages(String filenameMessages, String filenameMessageContents, Boolean ignorePrivateMessages)

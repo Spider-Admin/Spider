@@ -51,6 +51,7 @@ public class Settings {
 	public static final String IMPORT_FMS_PATH = "import.fms.path";
 	public static final String IMPORT_FROST_PATH = "import.frost.path";
 	public static final String IMPORT_FROST_IGNORE_PRIVATE_MESSAGES = "import.frost.ignore-private-messages";
+	public static final String IMPORT_FROST_IGNORE_MESSAGE_ARCHIVE = "import.frost.ignore-message-archive";
 
 	public static final String OUTPUT_PATH_RELEASE = "output.path.release";
 	public static final String OUTPUT_PATH_TEST = "output.path.test";
