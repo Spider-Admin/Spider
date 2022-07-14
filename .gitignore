@@ -1,8 +1,10 @@
+/.classpath
 /.gradle/
+/.project
 /.settings/
 /bin/
 /build/
 /logs/
 /output/
-/.classpath
-/.project
+/spider.db3
+/spider.test.db3
