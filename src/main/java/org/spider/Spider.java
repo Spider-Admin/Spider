@@ -479,7 +479,8 @@ public class Spider implements AutoCloseable {
 					}
 				}
 
-				if (isEditionUpdate) {
+				Boolean ignoreEditionUpdate = settings.getBoolean(Settings.IGNORE_EDITION_UPDATE);
+				if (isEditionUpdate && !ignoreEditionUpdate) {
 					storage.deleteAllNetwork(key);
 					storage.deleteAllPath(key);
 					storage.deleteAllInvalidEdition(key);

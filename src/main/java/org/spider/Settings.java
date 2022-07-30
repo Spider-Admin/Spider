@@ -78,6 +78,8 @@ public class Settings {
 
 	public static final String HIDDEN_CATEGORIES = "hidden.categories";
 
+	public static final String IGNORE_EDITION_UPDATE = "ignore.edition.update";
+
 	public static final String UPDATE_WAIT_TIME = "update.wait.time";
 
 	private static final String SETTINGS_FILENAME = "spider.properties";
