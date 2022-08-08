@@ -2,6 +2,11 @@
 
 This is the source code of Spider, which is used to create my (un)censored indexes of freesites [Spider](http://localhost:8888/USK@nLTpFO0hKAp9AaaChDzk~hA95CRPOipmVjilxEVrwl4,68PXzK2-NeGmyyjz8lyWXRqvWBkuUfl0QAWMyyyjKRw,AQACAAE/spider/170/) [^1] and [Clean-Spider](http://localhost:8888/USK@5ijbfKSJ4kPZTRDzq363CHteEUiSZjrO-E36vbHvnIU,ZEZqPXeuYiyokY2r0wkhJr5cy7KBH9omkuWDqSC6PLs,AQACAAE/clean-spider/77/) [^1].
 
+## Requirements
+
+- [OpenJDK 11](https://openjdk.org/) or newer.
+- [Freenet](https://freenetproject.org/)
+
 ## Build
 
 1. Download the source code and extract it.
