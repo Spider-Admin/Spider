@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.spider;
 
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -67,7 +68,7 @@ public class Main {
 					return value;
 				}
 			}
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException(String.format("Unknown task \"%s\"!", task));
 		}
 	}
 
@@ -168,7 +169,11 @@ public class Main {
 				Settings settings = Settings.getInstance();
 				Integer updateWaitTime = settings.getInteger(Settings.UPDATE_WAIT_TIME) * 1000;
 				if (!extra.isEmpty()) {
-					updateWaitTime = Integer.parseInt(extra) * 1000;
+					try {
+						updateWaitTime = Integer.parseInt(extra) * 1000;
+					} catch (NumberFormatException e) {
+						throw new IllegalArgumentException(String.format("\"%s\" is not a valid wait-time!", extra), e);
+					}
 				}
 
 				try (Connection connection = Database.getConnection();
@@ -244,7 +249,7 @@ public class Main {
 			}
 		} catch (SQLException e) {
 			log.error("Database-Error!", e);
-		} catch (IOException e) {
+		} catch (IOException | InvalidPathException e) {
 			log.error("IO-Error!", e);
 		} catch (FcpException e) {
 			log.error("Freenet-Error!", e);
@@ -252,10 +257,8 @@ public class Main {
 			log.error("Thread-Error!", e);
 		} catch (TemplateException e) {
 			log.error("Template-Error!", e);
-		} catch (NumberFormatException e) {
-			log.error("Invalid number \"{}\"!", args[1]);
 		} catch (IllegalArgumentException e) {
-			log.error("Unknown task \"{}\"!", args[0]);
+			log.error("Illegal argument!", e);
 		}
 	}
 }

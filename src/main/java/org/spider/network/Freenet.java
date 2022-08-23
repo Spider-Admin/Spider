@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -107,10 +107,15 @@ public class Freenet {
 	public static FcpClient getConnection() throws IOException, FcpException {
 		Settings settings = Settings.getInstance();
 
-		FcpClient connection = new FcpClient(settings.getString(Settings.FREENET_HOST),
-				settings.getInteger(Settings.FREENET_PORT_FCP));
-		connection.connect(getClientName());
-		return connection;
+		try {
+			FcpClient connection = new FcpClient(settings.getString(Settings.FREENET_HOST),
+					settings.getInteger(Settings.FREENET_PORT_FCP));
+			connection.connect(getClientName());
+			return connection;
+		} catch (NumberFormatException e) {
+			throw new FcpException(String.format("Invalid port \"%s\"!", settings.getString(Settings.FREENET_PORT_FCP)),
+					e);
+		}
 	}
 
 	public static Integer getMinUSKKeyLength() {

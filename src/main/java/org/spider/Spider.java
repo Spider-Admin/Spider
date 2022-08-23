@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -142,11 +142,16 @@ public class Spider implements AutoCloseable {
 	}
 
 	private ArrayList<Integer> extractIDs(String rawIDs) {
-		ArrayList<Integer> ids = new ArrayList<>();
-		for (String rawID : rawIDs.split(",")) {
-			ids.add(Integer.parseInt(rawID));
+		try {
+			ArrayList<Integer> ids = new ArrayList<>();
+			for (String rawID : rawIDs.split(",")) {
+				ids.add(Integer.parseInt(rawID));
+			}
+			return ids;
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException(String.format("\"%s\" is not a comma separated list of IDs!", rawIDs),
+					e);
 		}
-		return ids;
 	}
 
 	private void resetOfflineFreesites(ArrayList<Integer> onlyIDs) throws SQLException {
