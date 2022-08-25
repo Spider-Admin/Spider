@@ -215,14 +215,14 @@ public class Main {
 				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.RESET_OFFLINE, "<ID1>,<ID2>,...",
 						"Resets the state of freesites with the given IDs. The IDs can be seen in the test-output."));
 				System.out.println("");
-				System.out.println(String.format(HELP_FORMAT, Task.UPDATE,
-						"Check for new editions of freesites by subscribing to all freesite with a edition."));
-				System.out.println(String.format(HELP_FORMAT, Task.UPDATE_0,
-						"Check for new editions of freesites by subscribing to all freesite with edition 0."));
-				System.out.println(String.format(HELP_FORMAT, Task.UPDATE_ONLINE,
-						"Check for new editions of freesites by subscribing to all freesite which are online."));
-				System.out.println(String.format(HELP_FORMAT, Task.UPDATE_OFFLINE,
-						"Check for new editions of freesites by subscribing to all freesite which are offline."));
+				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.UPDATE, "[wait-time]",
+						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite with a edition."));
+				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_0, "[wait-time]",
+						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite with edition 0."));
+				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_ONLINE, "[wait-time]",
+						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite which are online."));
+				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_OFFLINE, "[wait-time]",
+						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite which are offline."));
 				System.out.println("");
 				System.out.println(String.format(HELP_FORMAT, Task.CRAWL, "Crawls freesites."));
 				System.out.println("");
