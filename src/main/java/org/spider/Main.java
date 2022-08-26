@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.StringJoiner;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -195,56 +196,58 @@ public class Main {
 				}
 				break;
 			case HELP:
-				System.out.println("");
-				System.out.println("Default-Task: " + defaultTask);
-				System.out.println("");
-				System.out.println(StringUtils.leftPad("", HELP_WIDTH, "-"));
-				System.out.println(String.format(HELP_FORMAT_EXTRA, "Task", "Extra", "Description"));
-				System.out.println(String.format(HELP_FORMAT_EXTRA, "Parameter 1", "Parameter 2", ""));
-				System.out.println(StringUtils.leftPad("", HELP_WIDTH, "-"));
-				System.out.println(String.format(HELP_FORMAT, Task.HELP, "Show this help."));
-				System.out.println("");
-				System.out.println(String.format(HELP_FORMAT, Task.INIT, "Init the database by adding the seed-key."));
-				System.out.println("");
-				System.out.println(
+				StringJoiner helpPage = new StringJoiner(System.lineSeparator());
+				helpPage.add("");
+				helpPage.add("Default-Task: " + defaultTask);
+				helpPage.add("");
+				helpPage.add(StringUtils.leftPad("", HELP_WIDTH, "-"));
+				helpPage.add(String.format(HELP_FORMAT_EXTRA, "Task", "Extra", "Description"));
+				helpPage.add(String.format(HELP_FORMAT_EXTRA, "Parameter 1", "Parameter 2", ""));
+				helpPage.add(StringUtils.leftPad("", HELP_WIDTH, "-"));
+				helpPage.add(String.format(HELP_FORMAT, Task.HELP, "Show this help."));
+				helpPage.add("");
+				helpPage.add(String.format(HELP_FORMAT, Task.INIT, "Init the database by adding the seed-key."));
+				helpPage.add("");
+				helpPage.add(
 						String.format(HELP_FORMAT_EXTRA, Task.ADD_FREESITE, "<freesite>", "Add freesite <freesite>."));
-				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.ADD_FREESITE_FROM_FILE, "<filename>",
+				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.ADD_FREESITE_FROM_FILE, "<filename>",
 						"Read freesites from text-file <filename> and adds them."));
-				System.out.println(String.format(HELP_FORMAT, Task.ADD_FREESITE_FROM_FMS,
+				helpPage.add(String.format(HELP_FORMAT, Task.ADD_FREESITE_FROM_FMS,
 						"Searches the database of FMS for freesites and adds them."));
-				System.out.println(String.format(HELP_FORMAT, Task.ADD_FREESITE_FROM_FROST,
+				helpPage.add(String.format(HELP_FORMAT, Task.ADD_FREESITE_FROM_FROST,
 						"Searches the logfiles of Frost for freesites and adds them."));
-				System.out.println("");
-				System.out.println(String.format(HELP_FORMAT, Task.RESET_ALL_OFFLINE,
+				helpPage.add("");
+				helpPage.add(String.format(HELP_FORMAT, Task.RESET_ALL_OFFLINE,
 						"Resets the state of all offline freesites, such that they can be crawled again."));
-				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.RESET_OFFLINE, "<ID1>,<ID2>,...",
+				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.RESET_OFFLINE, "<ID1>,<ID2>,...",
 						"Resets the state of freesites with the given IDs. The IDs can be seen in the test-output."));
-				System.out.println("");
-				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.UPDATE, "[wait-time]",
+				helpPage.add("");
+				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.UPDATE, "[wait-time]",
 						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite with a edition."));
-				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_0, "[wait-time]",
+				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_0, "[wait-time]",
 						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite with edition 0."));
-				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_ONLINE, "[wait-time]",
+				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_ONLINE, "[wait-time]",
 						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite which are online."));
-				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_OFFLINE, "[wait-time]",
+				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_OFFLINE, "[wait-time]",
 						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite which are offline."));
-				System.out.println("");
-				System.out.println(String.format(HELP_FORMAT, Task.CRAWL, "Crawls freesites."));
-				System.out.println("");
-				System.out.println(String.format(HELP_FORMAT, Task.OUTPUT_TEST,
+				helpPage.add("");
+				helpPage.add(String.format(HELP_FORMAT, Task.CRAWL, "Crawls freesites."));
+				helpPage.add("");
+				helpPage.add(String.format(HELP_FORMAT, Task.OUTPUT_TEST,
 						"Generated the test-output. It contains the IDs of all freesites and clickable absolute links."));
-				System.out.println(String.format(HELP_FORMAT, Task.OUTPUT_RELEASE,
+				helpPage.add(String.format(HELP_FORMAT, Task.OUTPUT_RELEASE,
 						"Generates the release-output. This version is meant to published in Freenet."));
-				System.out.println("");
-				System.out.println(String.format(HELP_FORMAT, Task.RESET_ALL_HIGHLIGHT,
+				helpPage.add("");
+				helpPage.add(String.format(HELP_FORMAT, Task.RESET_ALL_HIGHLIGHT,
 						"Resets the highlight-flag of all freesites. Call this after releasing an edition."));
-				System.out.println(String.format(HELP_FORMAT_EXTRA, Task.RESET_HIGHLIGHT, "<ID1>,<ID2>,...",
+				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.RESET_HIGHLIGHT, "<ID1>,<ID2>,...",
 						"Resets the highlight-flag of freesites with the given IDs. The IDs can be seen in the test-output. Call this after releasing an edition."));
-				System.out.println("");
-				System.out.println(String.format(HELP_FORMAT, Task.EXPORT_DATABASE,
+				helpPage.add("");
+				helpPage.add(String.format(HELP_FORMAT, Task.EXPORT_DATABASE,
 						String.format("Exports the database as sql-dump to %s.", Spider.getExportFilename())));
-				System.out.println(StringUtils.leftPad("", HELP_WIDTH, "-"));
-				System.out.println("");
+				helpPage.add(StringUtils.leftPad("", HELP_WIDTH, "-"));
+				helpPage.add("");
+				System.out.println(helpPage);
 				break;
 			}
 		} catch (SQLException e) {
