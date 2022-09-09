@@ -376,10 +376,6 @@ public class Spider implements AutoCloseable {
 					continue;
 				}
 
-				if (path.contains("../")) {
-					log.warn("Relative link {} was not resolved!", path);
-				}
-
 				Key linkKey = new Key(path);
 
 				if (linkKey.isKey()) {
