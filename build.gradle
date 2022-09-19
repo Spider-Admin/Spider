@@ -33,10 +33,10 @@ distZip {
 }
 
 dependencies {
-	implementation("org.slf4j:slf4j-api:2.0.0")
-	implementation("org.slf4j:jul-to-slf4j:2.0.0");
-	implementation("ch.qos.logback:logback-core:1.4.0")
-	implementation("ch.qos.logback:logback-classic:1.4.0")
+	implementation("org.slf4j:slf4j-api:2.0.2")
+	implementation("org.slf4j:jul-to-slf4j:2.0.2");
+	implementation("ch.qos.logback:logback-core:1.4.1")
+	implementation("ch.qos.logback:logback-classic:1.4.1")
 	implementation("org.jsoup:jsoup:1.15.3")
 	implementation("org.xerial:sqlite-jdbc:3.39.3.0")
 	implementation("com.github.Bombe:jFCPlib:v0.1.6")
