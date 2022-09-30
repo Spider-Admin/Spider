@@ -116,7 +116,6 @@ public class Output implements AutoCloseable {
 		selfFreesite.setEdition(selfFreesite.getEditionWithHint() + 1);
 		Freesite selfSourceFreesite = storage.getFreesite(new Key(settings.getString(Settings.INDEX_SOURCE_KEY)));
 		Freesite fmsFreesite = storage.getFreesite(new Key(settings.getString(Settings.CONTACT_FMS_FREESITE)));
-		Freesite tpiFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_TPI_KEY)), false);
 		Freesite publishFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_PUBLISH_KEY)), false);
 		Freesite jsiteFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_JSITE_KEY)), false);
 
@@ -135,7 +134,6 @@ public class Output implements AutoCloseable {
 		params.put("selfSourceFreesite", selfSourceFreesite);
 		params.put("selfDatabaseKey", settings.getString(Settings.INDEX_DATABASE_KEY));
 		params.put("faqAbout", settings.getString(Settings.FAQ_ABOUT));
-		params.put("tpiFreesite", tpiFreesite);
 		params.put("publishFreesite", publishFreesite);
 		params.put("jsiteFreesite", jsiteFreesite);
 		params.put("hiddenCategories", settings.getHiddenCategories());

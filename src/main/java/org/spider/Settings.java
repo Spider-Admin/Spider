@@ -70,7 +70,6 @@ public class Settings {
 	public static final String SEED_KEY = "seed.key";
 
 	public static final String FAQ_ABOUT = "faq.about";
-	public static final String FAQ_TPI_KEY = "faq.tpi.key";
 	public static final String FAQ_PUBLISH_KEY = "faq.publish.key";
 	public static final String FAQ_JSITE_KEY = "faq.jsite.key";
 
