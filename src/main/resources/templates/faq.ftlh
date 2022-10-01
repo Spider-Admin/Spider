@@ -99,15 +99,15 @@
 			<textarea class="tag-example" readonly="readonly">
 &lt;!DOCTYPE html&gt;
 &lt;html lang="your-language"&gt;
-&nbsp;&nbsp;&lt;head&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta http-equiv="content-type" content="text/html; charset=utf-8"&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="author" content="your-author"&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="description" content="your-description"&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="keywords" content="your-keyword1,your-keyword2"&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;your title&lt;/title&gt;
-&nbsp;&nbsp;&lt;/head&gt;
-&nbsp;&nbsp;&lt;body&gt;
-&nbsp;&nbsp;&lt;/body&gt;
+&#32;&#32;&lt;head&gt;
+&#32;&#32;&#32;&#32;&lt;meta http-equiv="content-type" content="text/html; charset=utf-8"&gt;
+&#32;&#32;&#32;&#32;&lt;meta name="author" content="your-author"&gt;
+&#32;&#32;&#32;&#32;&lt;meta name="description" content="your-description"&gt;
+&#32;&#32;&#32;&#32;&lt;meta name="keywords" content="your-keyword1,your-keyword2"&gt;
+&#32;&#32;&#32;&#32;&lt;title&gt;your title&lt;/title&gt;
+&#32;&#32;&lt;/head&gt;
+&#32;&#32;&lt;body&gt;
+&#32;&#32;&lt;/body&gt;
 &lt;/html&gt;
 			</textarea>
 		</p>
