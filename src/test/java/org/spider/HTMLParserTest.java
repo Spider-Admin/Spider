@@ -40,13 +40,13 @@ public class HTMLParserTest {
 		assertEquals("description образец", parser.getDescription());
 		assertEquals("keyword1, keyword2 образец", parser.getKeywords());
 		assertEquals("en образец", parser.getLanguage());
-		assertEquals("redirect образец.htm", parser.getRedirect());
+		assertEquals("redirect-образец.htm", parser.getRedirect());
 
 		ArrayList<String> paths = parser.getPaths();
 		assertEquals(4, paths.size());
-		assertEquals("index образец.htm", paths.get(0));
+		assertEquals("index-образец.htm", paths.get(0));
 		assertEquals("test.htm", paths.get(1));
-		assertEquals("iframe образец.htm", paths.get(2));
+		assertEquals("iframe-образец.htm", paths.get(2));
 		assertEquals("iframe2.htm", paths.get(3));
 	}
 
@@ -59,11 +59,11 @@ public class HTMLParserTest {
 		assertEquals("description образец", parser.getDescription());
 		assertEquals("keyword1, keyword2 образец", parser.getKeywords());
 		assertEquals("en образец", parser.getLanguage());
-		assertEquals("redirect образец.htm", parser.getRedirect());
+		assertEquals("redirect-образец.htm", parser.getRedirect());
 
 		ArrayList<String> paths = parser.getPaths();
 		assertEquals(2, paths.size());
-		assertEquals("frame образец.htm", paths.get(0));
+		assertEquals("frame-образец.htm", paths.get(0));
 		assertEquals("frame2.htm", paths.get(1));
 	}
 
@@ -76,13 +76,13 @@ public class HTMLParserTest {
 		assertEquals("description образец", parser.getDescription());
 		assertEquals("keyword1, keyword2 образец", parser.getKeywords());
 		assertEquals("en2 образец", parser.getLanguage());
-		assertEquals("redirect образец.htm", parser.getRedirect());
+		assertEquals("redirect-образец.htm", parser.getRedirect());
 
 		ArrayList<String> paths = parser.getPaths();
 		assertEquals(4, paths.size());
-		assertEquals("index образец.htm", paths.get(0));
+		assertEquals("index-образец.htm", paths.get(0));
 		assertEquals("test.htm", paths.get(1));
-		assertEquals("iframe образец.htm", paths.get(2));
+		assertEquals("iframe-образец.htm", paths.get(2));
 		assertEquals("iframe2.htm", paths.get(3));
 	}
 
