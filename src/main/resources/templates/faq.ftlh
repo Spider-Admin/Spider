@@ -10,7 +10,7 @@
 
 		<h3>What is this?</h3>
 		<p><@faqAbout?interpret /></p>
-		
+
 		<h3 id="hidden-categories">Which freesites are hidden?</h3>
 		<p>
 			Freesites, which are hidden are not shown in the index, but can still be found in <a href="#database">database</a>.
@@ -21,8 +21,8 @@
 <#list hiddenCategories as hiddenCategory>
 			<li><#if hiddenCategory?has_content>${hiddenCategory}<#else>Freesites without a category</#if></li>
 <#else>
-			<li>Nothing is hidden</li>			
-</#list>			
+			<li>Nothing is hidden</li>
+</#list>
 		</ul>
 
 		<h3>How can I contact you?</h3>
@@ -42,7 +42,7 @@
 	<#if fmsFreesite??>
 			<dd><a href="<@format.key freesite=fmsFreesite/>" title="Public Key: ${fmsPublicKey}">${author}</a></dd>
 	<#else>
-			<dd><span title="Public Key: ${fmsPublicKey}">${author}</span></dd>	
+			<dd><span title="Public Key: ${fmsPublicKey}">${author}</span></dd>
 	</#if>
 </#if>
 <#if sone?has_content>
@@ -114,7 +114,7 @@
 
 		<h3>My author, language, description and/or keywords are broken in your index</h3>
 		<p>
-			Validate the source of your freesite. For the <abbr title="Hypertext Markup Language">HTML</abbr> use 
+			Validate the source of your freesite. For the <abbr title="Hypertext Markup Language">HTML</abbr> use
 			<a href="https://validator.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr> Markup Validation Service</a>.
 			For <abbr title="Cascading Style Sheets">CSS</abbr> use <a href="https://jigsaw.w3.org/css-validator/"><abbr
 			title="World Wide Web Consortium">W3C</abbr> <abbr

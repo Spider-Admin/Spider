@@ -18,7 +18,7 @@
 	<#t><#-- Save space by format obsolete freesites with CSS rather than use the del-tag for each cell -->
 	<#t><#if freesite.isObsolete() && !freesite.isHighlight()> class="del"</#if>
 	<#t><#if !freesite.isObsolete() && freesite.isHighlight()> class="highlight"</#if>
-	<#t><#if freesite.isObsolete() && freesite.isHighlight()> class="highlight del"</#if>	
+	<#t><#if freesite.isObsolete() && freesite.isHighlight()> class="highlight del"</#if>
 </#macro>
 
 <#macro percent value>
