@@ -1,11 +1,11 @@
 <#macro head>
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<meta name="author" content="${metaAuthor}"/>
-	<meta name="description" content="<@metaDescription?interpret />"/>
-	<meta name="keywords" content="${metaKeywords}"/>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<meta name="author" content="${metaAuthor}">
+	<meta name="description" content="<@metaDescription?interpret />">
+	<meta name="keywords" content="${metaKeywords}">
 	<title>${selfName}<#if title != ""> - </#if>${title}</title>
-	<link rel="stylesheet" href="style.css"/>
+	<link rel="stylesheet" href="style.css">
 </head>
 </#macro>
 

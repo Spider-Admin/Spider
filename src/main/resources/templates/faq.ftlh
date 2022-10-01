@@ -95,15 +95,15 @@
 
 		<h3>How can I add author, language, description or keywords to my freesite?</h3>
 		<p>
-			Just use the appropriate <abbr title="Hypertext Markup Language">HTML</abbr>-tags. Here is a example:<br/>
+			Just use the appropriate <abbr title="Hypertext Markup Language">HTML</abbr>-tags. Here is a example:<br>
 			<textarea class="tag-example" readonly="readonly">
 &lt;!DOCTYPE html&gt;
 &lt;html lang="your-language"&gt;
 &nbsp;&nbsp;&lt;head&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta http-equiv="content-type" content="text/html; charset=utf-8" /&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="author" content="your-author" /&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="description" content="your-description" /&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="keywords" content="your-keyword1,your-keyword2" /&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta http-equiv="content-type" content="text/html; charset=utf-8"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="author" content="your-author"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="description" content="your-description"&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;meta name="keywords" content="your-keyword1,your-keyword2"&gt;
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;title&gt;your title&lt;/title&gt;
 &nbsp;&nbsp;&lt;/head&gt;
 &nbsp;&nbsp;&lt;body&gt;
@@ -137,10 +137,10 @@
 			At the moment only due a manual <abbr title="Structured Query Language">SQL</abbr>-query. Download the <abbr title="Structured Query Language">SQL</abbr>-dump, find the ID of the freesite (e.g. this freesite has the ID ${selfFreesite.ID}) and use the ID in the following queries:
 		</p>
 		<ul>
-			<li><label for="in-query">In = Which freesites has links to the freesite with the ID &lt;ID&gt;:</label><br/>
-				<input type="text" id="in-query" class="query" readonly="readonly" value="SELECT `Key`, `Edition`, `Title` FROM `Freesite` WHERE `ID` IN (SELECT `FreesiteID` FROM `Network` WHERE `TargetFreesiteID` = <ID>)"/></li>
-			<li><label for="out-query">Out = The freesite with the ID &lt;ID&gt; has links to these freesites:</label><br/>
-				<input type="text" id="out-query" class="query" readonly="readonly" value="SELECT `Key`, `Edition`, `Title` FROM `Freesite` WHERE `ID` IN (SELECT `TargetFreesiteID` FROM `Network` WHERE `FreesiteID` = <ID>)" /></li>
+			<li><label for="in-query">In = Which freesites has links to the freesite with the ID &lt;ID&gt;:</label><br>
+				<input type="text" id="in-query" class="query" readonly="readonly" value="SELECT `Key`, `Edition`, `Title` FROM `Freesite` WHERE `ID` IN (SELECT `FreesiteID` FROM `Network` WHERE `TargetFreesiteID` = <ID>)"></li>
+			<li><label for="out-query">Out = The freesite with the ID &lt;ID&gt; has links to these freesites:</label><br>
+				<input type="text" id="out-query" class="query" readonly="readonly" value="SELECT `Key`, `Edition`, `Title` FROM `Freesite` WHERE `ID` IN (SELECT `TargetFreesiteID` FROM `Network` WHERE `FreesiteID` = <ID>)"></li>
 		</ul>
 
 <#if selfDatabaseKey?has_content>

@@ -11,7 +11,7 @@
 </#macro>
 
 <#macro activelink freesite>
-	<#t><img src="<@key freesite=freesite/>activelink.png" alt="<@title freesite=freesite/>" width="108" height="36"/>
+	<#t><img src="<@key freesite=freesite/>activelink.png" alt="<@title freesite=freesite/>" width="108" height="36">
 </#macro>
 
 <#macro css freesite>
