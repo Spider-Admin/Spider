@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2021 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ public class Export {
 		result.append("PRAGMA foreign_keys=OFF;" + NL);
 		result.append("BEGIN TRANSACTION;" + NL);
 
-		for (String query : Storage.tables.values()) {
+		for (String query : Storage.TABLES.values()) {
 			result.append(NL);
 			result.append(query + ";" + NL);
 
@@ -47,7 +47,7 @@ public class Export {
 			}
 		}
 
-		for (String query : Storage.views.values()) {
+		for (String query : Storage.VIEWS.values()) {
 			result.append(NL);
 			result.append(query + ";" + NL);
 		}

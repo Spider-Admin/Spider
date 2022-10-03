@@ -34,17 +34,24 @@ public class Storage implements AutoCloseable {
 
 	private static final String TMP_TABLE_EXT = "-tmp";
 
-	public static LinkedHashMap<String, String> tablesV1;
-	public static LinkedHashMap<String, String> viewsV1;
+	private static final String CREATE_VERSION_TABLE;
 
-	public static LinkedHashMap<String, String> tablesV2;
-	public static LinkedHashMap<String, String> viewsV2;
+	private static final LinkedHashMap<String, String> TABLES_V1;
+	private static final LinkedHashMap<String, String> VIEWS_V1;
 
-	public static LinkedHashMap<String, String> tables;
-	public static LinkedHashMap<String, String> views;
-	public static LinkedHashMap<String, String> tableCopyV1ToV2;
+	private static final LinkedHashMap<String, String> TABLES_V2;
+	private static final LinkedHashMap<String, String> VIEWS_V2;
 
-	private static final String CREATE_VERSION_TABLE = "CREATE TABLE IF NOT EXISTS `DatabaseVersion` (`ID` INTEGER CONSTRAINT `PK_DatabaseVersion` PRIMARY KEY AUTOINCREMENT, `Version` INTEGER)";
+	private static final String SET_SONE_V2;
+
+	private static final String ADD_CATEGORY_V3;
+	private static final String SET_CATEGORY_V3;
+	private static final String CREATE_INVALID_EDITION_V3;
+
+	public static final LinkedHashMap<String, String> TABLES;
+	public static final LinkedHashMap<String, String> VIEWS;
+
+	private static final LinkedHashMap<String, String> TABLE_COPY_V1_TO_V2;
 
 	private static final String SELECT_DATABASE_VERSION_SQL = "SELECT `Version` FROM `DatabaseVersion` WHERE `ID` = 1";
 	private static final String SET_DATABASE_VERSION_SQL = "INSERT OR REPLACE INTO `DatabaseVersion` (`ID`, `Version`) VALUES (1, ?)";
@@ -82,63 +89,62 @@ public class Storage implements AutoCloseable {
 
 	private static final String GET_NEXT_URL_SQL = "SELECT `Key`, `Edition`, `EditionHint`, `Path` FROM `Freesite` F INNER JOIN `Path` P ON F.`ID` = P.`FreesiteID` WHERE P.`Crawled` IS NULL ORDER BY F.`Crawled` DESC, F.`Added` ASC";
 
-	private static final String SET_SONE_V2 = "UPDATE `Path` SET `Crawled` = NULL WHERE `Path` = '' AND `FreesiteID` IN (SELECT `ID` FROM `Freesite` WHERE `Key` LIKE '%/Sone/%')";
-
-	private static final String ADD_CATEGORY_V3 = "ALTER TABLE `Freesite` ADD `Category` VARCHAR(1024)";
-	private static final String SET_CATEGORY_V3 = "UPDATE `Freesite` SET `Category` = ''";
-
 	static {
-		tablesV1 = new LinkedHashMap<>();
-		tablesV1.put("DatabaseVersion", "");
-		tablesV1.put("Freesite", "");
-		tablesV1.put("Path", "");
-		tablesV1.put("Network", "");
+		TABLES_V1 = new LinkedHashMap<>();
+		TABLES_V1.put("DatabaseVersion", "");
+		TABLES_V1.put("Freesite", "");
+		TABLES_V1.put("Path", "");
+		TABLES_V1.put("Network", "");
 
-		viewsV1 = new LinkedHashMap<>();
-		viewsV1.put("NextURL", "");
-		viewsV1.put("UnknownFMS", "");
+		VIEWS_V1 = new LinkedHashMap<>();
+		VIEWS_V1.put("NextURL", "");
+		VIEWS_V1.put("UnknownFMS", "");
 
-		tablesV2 = new LinkedHashMap<>();
-		tablesV2.put("DatabaseVersion",
+		TABLES_V2 = new LinkedHashMap<>();
+		TABLES_V2.put("DatabaseVersion",
 				"CREATE TABLE IF NOT EXISTS `DatabaseVersion` (`ID` INTEGER CONSTRAINT `PK_DatabaseVersion` PRIMARY KEY AUTOINCREMENT, `Version` INTEGER)");
-		tablesV2.put("Freesite",
+		TABLES_V2.put("Freesite",
 				"CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER CONSTRAINT `PK_Freesite` PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) CONSTRAINT `UQ_Freesite_Key` UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `Sone` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Highlight` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024))");
-		tablesV2.put("Path",
+		TABLES_V2.put("Path",
 				"CREATE TABLE IF NOT EXISTS `Path` (`ID` INTEGER CONSTRAINT `PK_Path` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Path` VARCHAR(1024), `Online` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, CONSTRAINT `UQ_Path_FreesiteID_Path` UNIQUE(`FreesiteID`, `Path`))");
-		tablesV2.put("Network",
+		TABLES_V2.put("Network",
 				"CREATE TABLE IF NOT EXISTS `Network` (`ID` INTEGER CONSTRAINT `PK_Network` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `TargetFreesiteID` INTEGER NOT NULL, CONSTRAINT `UQ_Network_FreesiteID_TargetFreesiteID` UNIQUE(`FreesiteID`, `TargetFreesiteID`), CONSTRAINT `UQ_Network_TargetFreesiteID_FreesiteID` UNIQUE(`TargetFreesiteID`, `FreesiteID`))");
 
-		viewsV2 = new LinkedHashMap<>();
-		viewsV2.put("NextURL",
+		VIEWS_V2 = new LinkedHashMap<>();
+		VIEWS_V2.put("NextURL",
 				"CREATE VIEW IF NOT EXISTS `NextURL` AS SELECT `Key`, `Edition`, `EditionHint`, `Path` FROM `Freesite` F INNER JOIN `Path` P ON F.`ID` = P.`FreesiteID` WHERE P.`Crawled` IS NULL ORDER BY F.`Crawled` DESC, F.`Added` ASC");
-		viewsV2.put("UnknownFMS",
+		VIEWS_V2.put("UnknownFMS",
 				"CREATE VIEW IF NOT EXISTS `UnknownFMS` AS SELECT `ID`, `Key`, `Edition`, `Title` FROM `Freesite` WHERE `Key` LIKE '%/fms/%' AND `FMS` = 0 AND `Online` = 1");
 
-		tables = new LinkedHashMap<>();
-		tables.put("Freesite",
-				"CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER CONSTRAINT `PK_Freesite` PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) CONSTRAINT `UQ_Freesite_Key` UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `Sone` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Highlight` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024), `Category` VARCHAR(1024))");
-		tables.put("Path",
-				"CREATE TABLE IF NOT EXISTS `Path` (`ID` INTEGER CONSTRAINT `PK_Path` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Path` VARCHAR(1024), `Online` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, CONSTRAINT `UQ_Path_FreesiteID_Path` UNIQUE(`FreesiteID`, `Path`))");
-		tables.put("Network",
-				"CREATE TABLE IF NOT EXISTS `Network` (`ID` INTEGER CONSTRAINT `PK_Network` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `TargetFreesiteID` INTEGER NOT NULL, CONSTRAINT `UQ_Network_FreesiteID_TargetFreesiteID` UNIQUE(`FreesiteID`, `TargetFreesiteID`), CONSTRAINT `UQ_Network_TargetFreesiteID_FreesiteID` UNIQUE(`TargetFreesiteID`, `FreesiteID`))");
-		tables.put("InvalidEdition",
-				"CREATE TABLE IF NOT EXISTS `InvalidEdition` (`ID` INTEGER CONSTRAINT `PK_InvalidEdition` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Edition` INTEGER NOT NULL, CONSTRAINT `UQ_InvalidEdition_FreesiteID_Edition` UNIQUE(`FreesiteID`, `Edition`))");
-
-		views = new LinkedHashMap<>();
-		views.put("NextURL", "CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
-		views.put("UnknownFMS",
-				"CREATE VIEW IF NOT EXISTS `UnknownFMS` AS SELECT `ID`, `Key`, `Edition`, `Title` FROM `Freesite` WHERE `Key` LIKE '%/fms/%' AND `FMS` = 0 AND `Online` = 1");
-
-		tableCopyV1ToV2 = new LinkedHashMap<>();
-		tableCopyV1ToV2.put("Freesite",
+		TABLE_COPY_V1_TO_V2 = new LinkedHashMap<>();
+		TABLE_COPY_V1_TO_V2.put("Freesite",
 				"INSERT INTO `Freesite` (`ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, `Sone`, `ActiveLink`, `Online`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, `Highlight`, `Added`, `Crawled`, `Comment`) SELECT `ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, 0, `ActiveLink`, `Online`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, 0, `Added`, `Crawled`, `Comment` FROM `Freesite"
 						+ TMP_TABLE_EXT + "`");
-		tableCopyV1ToV2.put("Path",
+		TABLE_COPY_V1_TO_V2.put("Path",
 				"INSERT INTO `Path` (`ID`, `FreesiteID`, `Path`, `Online`, `Added`, `Crawled`) SELECT `ID`, `FreesiteID`, `Path`, `Online`, `Added`, `Crawled` FROM `Path"
 						+ TMP_TABLE_EXT + "`");
-		tableCopyV1ToV2.put("Network",
+		TABLE_COPY_V1_TO_V2.put("Network",
 				"INSERT INTO `Network` (`ID`, `FreesiteID`, `TargetFreesiteID`) SELECT `ID`, `FreesiteID`, `TargetFreesiteID` FROM `Network"
 						+ TMP_TABLE_EXT + "`");
+
+		SET_SONE_V2 = "UPDATE `Path` SET `Crawled` = NULL WHERE `Path` = '' AND `FreesiteID` IN (SELECT `ID` FROM `Freesite` WHERE `Key` LIKE '%/Sone/%')";
+
+		ADD_CATEGORY_V3 = "ALTER TABLE `Freesite` ADD `Category` VARCHAR(1024)";
+		SET_CATEGORY_V3 = "UPDATE `Freesite` SET `Category` = ''";
+		CREATE_INVALID_EDITION_V3 = "CREATE TABLE IF NOT EXISTS `InvalidEdition` (`ID` INTEGER CONSTRAINT `PK_InvalidEdition` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Edition` INTEGER NOT NULL, CONSTRAINT `UQ_InvalidEdition_FreesiteID_Edition` UNIQUE(`FreesiteID`, `Edition`))";
+
+		CREATE_VERSION_TABLE = TABLES_V2.get("DatabaseVersion");
+		TABLES = new LinkedHashMap<>();
+		TABLES.put("Freesite",
+				"CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER CONSTRAINT `PK_Freesite` PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) CONSTRAINT `UQ_Freesite_Key` UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `Sone` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Highlight` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024), `Category` VARCHAR(1024))");
+		TABLES.put("Path", TABLES_V2.get("Path"));
+		TABLES.put("Network", TABLES_V2.get("Network"));
+		TABLES.put("InvalidEdition", CREATE_INVALID_EDITION_V3);
+
+		VIEWS = new LinkedHashMap<>();
+		VIEWS.put("NextURL", "CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
+		VIEWS.put("UnknownFMS",
+				"CREATE VIEW IF NOT EXISTS `UnknownFMS` AS SELECT `ID`, `Key`, `Edition`, `Title` FROM `Freesite` WHERE `Key` LIKE '%/fms/%' AND `FMS` = 0 AND `Online` = 1");
 	}
 
 	private PreparedStatement getDatabaseVersion;
@@ -169,6 +175,11 @@ public class Storage implements AutoCloseable {
 
 	private Connection connection;
 
+	// Version
+	// Spider = Database
+	// 1.0 = 1
+	// 1.1 = 2
+	// 1.2 = 3
 	private static final int currentDatabaseVersion = 3;
 
 	public Storage(Connection connection) throws SQLException {
@@ -184,10 +195,10 @@ public class Storage implements AutoCloseable {
 		case -1:
 		case 0: // missing version
 			log.info("Create database for version {}", currentDatabaseVersion);
-			for (String query : tables.values()) {
+			for (String query : TABLES.values()) {
 				Database.execute(connection, query);
 			}
-			for (String query : views.values()) {
+			for (String query : VIEWS.values()) {
 				Database.execute(connection, query);
 			}
 			setDatabaseVersion(currentDatabaseVersion);
@@ -260,16 +271,16 @@ public class Storage implements AutoCloseable {
 			// Recreate the tables to apply the names of the constraints.
 			// Delete and create the views to keep the database consistent.
 
-			for (String view : viewsV1.keySet()) {
+			for (String view : VIEWS_V1.keySet()) {
 				removeView(view);
 			}
 
-			for (String table : tablesV1.keySet()) {
+			for (String table : TABLES_V1.keySet()) {
 				log.info("Update table {}", table);
 				renameTable(table, table + TMP_TABLE_EXT);
-				Database.execute(connection, tablesV2.get(table));
+				Database.execute(connection, TABLES_V2.get(table));
 				if (!table.equals("DatabaseVersion")) {
-					Database.execute(connection, tableCopyV1ToV2.get(table));
+					Database.execute(connection, TABLE_COPY_V1_TO_V2.get(table));
 				}
 				removeTable(table + TMP_TABLE_EXT);
 			}
@@ -277,7 +288,7 @@ public class Storage implements AutoCloseable {
 			log.info("Update Sone-Flag");
 			Database.execute(connection, SET_SONE_V2);
 
-			for (String view : viewsV2.values()) {
+			for (String view : VIEWS_V2.values()) {
 				Database.execute(connection, view);
 			}
 		} else if (version == 3) {
@@ -286,7 +297,7 @@ public class Storage implements AutoCloseable {
 			Database.execute(connection, SET_CATEGORY_V3);
 
 			log.info("Add table InvalidEdition");
-			Database.execute(connection, tables.get("InvalidEdition"));
+			Database.execute(connection, CREATE_INVALID_EDITION_V3);
 		}
 	}
 
