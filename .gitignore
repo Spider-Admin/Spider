@@ -6,5 +6,6 @@
 /build/
 /logs/
 /output/
+/release/
 /spider.db3
 /spider.test.db3
