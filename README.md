@@ -1,10 +1,10 @@
-# Source code of Spider
+# Spider
 
-This is the source code of Spider, which is used to create my (un)censored indexes of freesites [Spider](http://localhost:8888/USK@nLTpFO0hKAp9AaaChDzk~hA95CRPOipmVjilxEVrwl4,68PXzK2-NeGmyyjz8lyWXRqvWBkuUfl0QAWMyyyjKRw,AQACAAE/spider/170/) [^1] and [Clean-Spider](http://localhost:8888/USK@5ijbfKSJ4kPZTRDzq363CHteEUiSZjrO-E36vbHvnIU,ZEZqPXeuYiyokY2r0wkhJr5cy7KBH9omkuWDqSC6PLs,AQACAAE/clean-spider/77/) [^1].
+Spider crawls freesites in [Freenet](https://freenetproject.org/), extracts various information and creates an index of these freesites. It is currently used by me to create my uncensored index [Spider](http://localhost:8888/USK@nLTpFO0hKAp9AaaChDzk~hA95CRPOipmVjilxEVrwl4,68PXzK2-NeGmyyjz8lyWXRqvWBkuUfl0QAWMyyyjKRw,AQACAAE/spider/197/) [^2] and to create my censored index [Clean-Spider](http://localhost:8888/USK@5ijbfKSJ4kPZTRDzq363CHteEUiSZjrO-E36vbHvnIU,ZEZqPXeuYiyokY2r0wkhJr5cy7KBH9omkuWDqSC6PLs,AQACAAE/clean-spider/104/) [^2].
 
 ## Requirements
 
-- [OpenJDK 11](https://openjdk.org/) or newer.
+- [OpenJDK](https://openjdk.org/) 11 or newer.
 - [Freenet](https://freenetproject.org/)
 
 ## Build
@@ -51,7 +51,7 @@ Frost: Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
 FMS: Spider-Admin
 
-Sone: [Spider-Admin](http://localhost:8888/Sone/viewSone.html?sone=msXvLpwmDqprlrYZ5ZRZyi7VUcWQ~Wisznv9JkQuSXY) [^1]
+Sone: [Spider-Admin](http://localhost:8888/Sone/viewSone.html?sone=msXvLpwmDqprlrYZ5ZRZyi7VUcWQ~Wisznv9JkQuSXY) [^2]
 
 I do not regularly read the email associated with GitHub.
 
@@ -59,4 +59,5 @@ I do not regularly read the email associated with GitHub.
 
 Spider by Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
-[^1]: Link requires a running Freenet node at http://localhost:8888/
+[^1]: Freemail requires a running Freenet node
+[^2]: Link requires a running Freenet node at http://localhost:8888/
