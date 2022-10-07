@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ public class Key {
 			Pattern.CASE_INSENSITIVE);
 	private static final Pattern newLinePattern = Pattern.compile("(\\r|\\n)");
 
-	// USK@------key-------/edition/path/filename.ext
-	// USK@keyOnly/sitePath/edition/path/filename.ext
+	// USK@------key-------/edition/-------path--------
+	// USK@keyOnly/sitePath/edition/folder/filename.ext
 
 	private String key;
 	private Long edition;
@@ -172,7 +172,7 @@ public class Key {
 		return useEdition;
 	}
 
-	public String getPathWithoutFilename() {
+	public String getFolder() {
 		if (isUSK()) {
 			if (path.isEmpty() || path.substring(path.length() - 1).equals("/")) {
 				return path;

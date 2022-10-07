@@ -59,7 +59,7 @@ public class KeyTest {
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEdition());
 		assertEquals("", key.getPath());
-		assertEquals("", key.getPathWithoutFilename());
+		assertEquals("", key.getFolder());
 		assertEquals("USK@something", key.getKeyOnly());
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEditionWithHint());
@@ -71,7 +71,7 @@ public class KeyTest {
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEdition());
 		assertEquals("file.ext", key.getPath());
-		assertEquals("", key.getPathWithoutFilename());
+		assertEquals("", key.getFolder());
 		assertEquals("USK@something", key.getKeyOnly());
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEditionWithHint());
@@ -83,7 +83,7 @@ public class KeyTest {
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEdition());
 		assertEquals("file.ext", key.getPath());
-		assertEquals("", key.getPathWithoutFilename());
+		assertEquals("", key.getFolder());
 		assertEquals("USK@something", key.getKeyOnly());
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEditionWithHint());
@@ -95,7 +95,7 @@ public class KeyTest {
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEdition());
 		assertEquals("file.ext", key.getPath());
-		assertEquals("", key.getPathWithoutFilename());
+		assertEquals("", key.getFolder());
 		assertEquals("USK@something", key.getKeyOnly());
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEditionWithHint());
@@ -107,7 +107,7 @@ public class KeyTest {
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEdition());
 		assertEquals("file.ext", key.getPath());
-		assertEquals("", key.getPathWithoutFilename());
+		assertEquals("", key.getFolder());
 		assertEquals("USK@something", key.getKeyOnly());
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEditionWithHint());
@@ -119,7 +119,7 @@ public class KeyTest {
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEdition());
 		assertEquals("file.ext", key.getPath());
-		assertEquals("", key.getPathWithoutFilename());
+		assertEquals("", key.getFolder());
 		assertEquals("USK@something", key.getKeyOnly());
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEditionWithHint());
@@ -131,7 +131,7 @@ public class KeyTest {
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEdition());
 		assertEquals("file.ext", key.getPath());
-		assertEquals("", key.getPathWithoutFilename());
+		assertEquals("", key.getFolder());
 		assertEquals("USK@something", key.getKeyOnly());
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEditionWithHint());
@@ -143,7 +143,7 @@ public class KeyTest {
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEdition());
 		assertEquals("folder/file.ext", key.getPath());
-		assertEquals("folder/", key.getPathWithoutFilename());
+		assertEquals("folder/", key.getFolder());
 		assertEquals("USK@something", key.getKeyOnly());
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEditionWithHint());
@@ -155,7 +155,7 @@ public class KeyTest {
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEdition());
 		assertEquals("folder1/folder2/file.ext", key.getPath());
-		assertEquals("folder1/folder2/", key.getPathWithoutFilename());
+		assertEquals("folder1/folder2/", key.getFolder());
 		assertEquals("USK@something", key.getKeyOnly());
 		assertEquals("site", key.getSitePath());
 		assertEquals(1, key.getEditionWithHint());
@@ -167,7 +167,7 @@ public class KeyTest {
 		assertNull(key.getSitePath());
 		assertNull(key.getEdition());
 		assertEquals("file.ext", key.getPath());
-		assertNull(key.getPathWithoutFilename());
+		assertNull(key.getFolder());
 		assertNull(key.getKeyOnly());
 		assertNull(key.getSitePath());
 		assertNull(key.getEditionWithHint());
@@ -179,7 +179,7 @@ public class KeyTest {
 		assertNull(key.getSitePath());
 		assertNull(key.getEdition());
 		assertEquals("file.ext", key.getPath());
-		assertNull(key.getPathWithoutFilename());
+		assertNull(key.getFolder());
 		assertNull(key.getKeyOnly());
 		assertNull(key.getSitePath());
 		assertNull(key.getEditionWithHint());
@@ -191,7 +191,7 @@ public class KeyTest {
 		assertNull(key.getSitePath());
 		assertNull(key.getEdition());
 		assertEquals("file.ext", key.getPath());
-		assertNull(key.getPathWithoutFilename());
+		assertNull(key.getFolder());
 		assertNull(key.getKeyOnly());
 		assertNull(key.getSitePath());
 		assertNull(key.getEditionWithHint());

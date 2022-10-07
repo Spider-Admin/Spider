@@ -395,8 +395,8 @@ public class Spider implements AutoCloseable {
 						addPath(linkKey.toString(), linkKey.getPath(), key.toString());
 					}
 				} else {
-					log.debug("Found link: {}", key.getPathWithoutFilename() + linkKey.getPath());
-					addPath(key.toString(), key.getPathWithoutFilename() + linkKey.getPath(), key.toString());
+					log.debug("Found link: {}", key.getFolder() + linkKey.getPath());
+					addPath(key.toString(), key.getFolder() + linkKey.getPath(), key.toString());
 				}
 			}
 			updatePath(key.toString(), key.getPath(), isOnline);
