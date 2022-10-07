@@ -22,5 +22,5 @@
 </#macro>
 
 <#macro percent value>
-	<#t>${value?string["0.#;; roundingMode=halfUp"]}
+	<#t>${value?string["0.#; roundingMode=halfUp"]}
 </#macro>
