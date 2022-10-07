@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -156,7 +156,7 @@ public class HTMLParser {
 		// " (quote) -> probably invalid html
 		if (url.startsWith("/?newbookmark") || url.startsWith("/external-link/") || url.startsWith("/Sone/")
 				|| key.isCHK() || key.isKSK() || key.isSSK() || (!key.isKey() && key.getPath().isEmpty())
-				|| (!key.getPath().isEmpty() && !key.getPath().contains(".htm") && !key.getPath().contains(".xhtm"))
+				|| (!key.getPath().isEmpty() && !key.getExtension().contains("htm") && !key.getExtension().contains("xhtm"))
 				|| key.getPath().contains("\"")) {
 			result = true;
 		}

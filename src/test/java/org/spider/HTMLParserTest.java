@@ -98,10 +98,14 @@ public class HTMLParserTest {
 		assertTrue(HTMLParser.isIgnored("?something"));
 		assertTrue(HTMLParser.isIgnored("file.ext"));
 		assertTrue(HTMLParser.isIgnored("/USK@something1/site/123/file.ext"));
+		assertTrue(HTMLParser.isIgnored("/USK@something1/site/1/folder/file.ext"));
+		assertTrue(HTMLParser.isIgnored("/USK@something1/site/1/folder/.ext"));
 
 		assertFalse(HTMLParser.isIgnored("/USK@something1/site/1/"));
 		assertFalse(HTMLParser.isIgnored("/USK@something1/site/1/file.htm"));
+		assertFalse(HTMLParser.isIgnored("/USK@something1/site/1/file.html"));
 		assertFalse(HTMLParser.isIgnored("/USK@something1/site/1/file.xhtm"));
+		assertFalse(HTMLParser.isIgnored("/USK@something1/site/1/file.xhtml"));
 		assertFalse(HTMLParser.isIgnored("file.htm"));
 		assertFalse(HTMLParser.isIgnored("file.xhtm"));
 	}

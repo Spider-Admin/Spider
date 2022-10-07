@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 public class Key {
 
 	private static final Pattern uskPattern = Pattern.compile(
-			"^\\/?(?:((?:CHK|SSK|USK|KSK)@.*?\\/(?:.*?\\/)?)(?:(-?\\d+)(?:\\/|$))?)?(.*?)(?:(?:#|\\?).*?)?$",
+			"^\\/?(?:((?:CHK|SSK|USK|KSK)@(?:.*?\\/)?(?:.*?\\/)?)(?:(-?\\d+)(?:\\/|$))?)?(.*?)(?:(?:#|\\?).*?)?$",
 			Pattern.CASE_INSENSITIVE);
 	private static final Pattern newLinePattern = Pattern.compile("(\\r|\\n)");
 
@@ -30,12 +30,16 @@ public class Key {
 	// USK@keyOnly/sitePath/edition/folder/filename.ext
 
 	private String key;
-	private Long edition;
-	private Long editionHint;
-	private String path;
-
 	private String keyOnly;
 	private String sitePath;
+
+	private Long edition;
+	private Long editionHint;
+
+	private String path;
+	private String folder;
+	private String filename;
+	private String extension;
 
 	public Key(String freesite) {
 		freesite = newLinePattern.matcher(freesite).replaceAll("");
@@ -64,11 +68,31 @@ public class Key {
 	}
 
 	private void updateKeyParts() {
+		keyOnly = "";
+		sitePath = "";
+		folder = "";
+		filename = "";
+		extension = "";
 		if (isUSK()) {
 			String[] parts = key.split("/");
 			keyOnly = parts[0];
 			if (parts.length > 1) {
 				sitePath = parts[1];
+			}
+		}
+
+		if (!path.isEmpty()) {
+			String fullFilename = path;
+			Integer pathPos = path.lastIndexOf("/");
+			if (pathPos != -1) {
+				folder = path.substring(0, pathPos + 1);
+				fullFilename = path.substring(pathPos + 1);
+			}
+			filename = fullFilename;
+			Integer filenamePos = fullFilename.lastIndexOf(".");
+			if (filenamePos != -1) {
+				filename = fullFilename.substring(0, filenamePos);
+				extension = fullFilename.substring(filenamePos + 1);
 			}
 		}
 	}
@@ -173,20 +197,14 @@ public class Key {
 	}
 
 	public String getFolder() {
-		if (isUSK()) {
-			if (path.isEmpty() || path.substring(path.length() - 1).equals("/")) {
-				return path;
-			} else {
-				// Remove filename
-				Integer pos = path.lastIndexOf("/");
-				if (pos == -1) {
-					return "";
-				} else {
-					return path.substring(0, pos + 1);
-				}
-			}
-		} else {
-			return null;
-		}
+		return folder;
+	}
+
+	public String getFilename() {
+		return filename;
+	}
+
+	public String getExtension() {
+		return extension;
 	}
 }
