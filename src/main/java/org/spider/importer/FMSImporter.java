@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2021 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.spider.importer;
 
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,7 +42,7 @@ public class FMSImporter extends Spider {
 
 	public void addFreesiteFromFMS() throws SQLException {
 		log.info("Add freesites from FMS");
-		String filename = Settings.getInstance().getString(Settings.IMPORT_FMS_PATH) + DATABASE_FILE;
+		String filename = Path.of(Settings.getInstance().getString(Settings.IMPORT_FMS_PATH), DATABASE_FILE).toString();
 		try (Connection connection = Database.getConnection(filename, true);
 				PreparedStatement stmt = connection.prepareStatement(IMPORT);
 				ResultSet resultSet = stmt.executeQuery()) {

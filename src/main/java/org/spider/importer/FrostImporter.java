@@ -16,11 +16,9 @@
 
 package org.spider.importer;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -62,14 +60,17 @@ public class FrostImporter extends Spider {
 		super(connection);
 	}
 
-	private void copyFileToTemp(String filename) throws IOException {
-		String tempDir = System.getProperty("java.io.tmpdir");
+	private String getTempDir() {
+		return System.getProperty("java.io.tmpdir");
+	}
 
-		Path source = Paths.get(filename);
-		Path destination = Paths.get(tempDir + source.getFileName());
+	private void copyFileToTemp(Path source) throws IOException {
+		String tempDir = getTempDir();
+
+		Path destination = Path.of(tempDir, source.getFileName().toString());
 		destination.toFile().deleteOnExit();
 
-		log.info("Copy {} to temporary folder...", new File(filename).getName());
+		log.info("Copy {} to temporary folder...", source.getFileName());
 		Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
 	}
 
@@ -93,30 +94,29 @@ public class FrostImporter extends Spider {
 		Boolean ignorePrivateMessages = settings.getBoolean(Settings.IMPORT_FROST_IGNORE_PRIVATE_MESSAGES);
 		Boolean ignoreMessageArchive = settings.getBoolean(Settings.IMPORT_FROST_IGNORE_MESSAGE_ARCHIVE);
 
-		copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_FILE);
-		copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_CONTENT_FILE);
+		copyFileToTemp(Path.of(path, STORE_PATH, MESSAGE_FILE));
+		copyFileToTemp(Path.of(path, STORE_PATH, MESSAGE_CONTENT_FILE));
 		if (!ignoreMessageArchive) {
-			copyFileToTemp(path + STORE_PATH + File.separator + MESSAGE_ARCHIVE_FILE);
+			copyFileToTemp(Path.of(path, STORE_PATH, MESSAGE_ARCHIVE_FILE));
 		}
 
-		String tempDir = System.getProperty("java.io.tmpdir");
-		importMessages(tempDir + MESSAGE_FILE, tempDir + MESSAGE_CONTENT_FILE, ignorePrivateMessages);
+		String tempDir = getTempDir();
+		importMessages(Path.of(tempDir, MESSAGE_FILE), Path.of(tempDir, MESSAGE_CONTENT_FILE), ignorePrivateMessages);
 		if (!ignoreMessageArchive) {
-			importMessageArchive(tempDir + MESSAGE_ARCHIVE_FILE, ignorePrivateMessages);
+			importMessageArchive(Path.of(tempDir, MESSAGE_ARCHIVE_FILE), ignorePrivateMessages);
 		}
 	}
 
-	private void importMessages(String filenameMessages, String filenameMessageContents, Boolean ignorePrivateMessages)
+	private void importMessages(Path filenameMessages, Path filenameMessageContents, Boolean ignorePrivateMessages)
 			throws IOException, SQLException {
 		log.info("Load messages from {} and {}", filenameMessages, filenameMessageContents);
-
-		Storage dbMessages = openStorage(filenameMessages);
+		Storage dbMessages = openStorage(filenameMessages.toString());
 		MessageStorageRoot rootMessages = (MessageStorageRoot) dbMessages.getRoot();
 		if (rootMessages == null) {
 			throw new IOException(String.format("\"%s\" contains no data!", filenameMessages));
 		}
 
-		Storage dbMessageContents = openStorage(filenameMessageContents);
+		Storage dbMessageContents = openStorage(filenameMessageContents.toString());
 		MessageContentStorageRoot rootMessageContents = (MessageContentStorageRoot) dbMessageContents.getRoot();
 		if (rootMessageContents == null) {
 			throw new IOException(String.format("\"%s\" contains no data!", filenameMessageContents));
@@ -184,10 +184,10 @@ public class FrostImporter extends Spider {
 		dbMessageContents.close();
 	}
 
-	private void importMessageArchive(String filename, Boolean ignorePrivateMessages) throws IOException, SQLException {
+	private void importMessageArchive(Path filename, Boolean ignorePrivateMessages) throws IOException, SQLException {
 		log.info("Load messages from {}", filename);
 
-		Storage dbArchive = openStorage(filename);
+		Storage dbArchive = openStorage(filename.toString());
 		ArchiveMessageStorageRoot rootArchive = (ArchiveMessageStorageRoot) dbArchive.getRoot();
 		if (rootArchive == null) {
 			throw new IOException(String.format("\"%s\" contains no data!", filename));
