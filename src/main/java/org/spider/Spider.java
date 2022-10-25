@@ -276,20 +276,29 @@ public class Spider implements AutoCloseable {
 
 			String realURL = site.getRealUri();
 			if (realURL != null) {
-				// Sometimes getRealUri returns a similar, but different key
-				if (key.getKeyOnly().equals(new Key(realURL).getKeyOnly())) {
-					realURL = URLUtility.decodeURL(realURL);
-					Key orgKey = key;
-					key = new Key(realURL);
+				realURL = URLUtility.decodeURL(realURL);
+				Key realKey = new Key(realURL);
 
-					Boolean isUpdated = updateFreesiteEdition(key.toString(), false);
-					if (!isUpdated) {
-						log.info("Skip key, since there was no update.");
-						Freesite freesite = storage.getFreesite(key);
-						storage.updatePath(key, storage.getPath(key).isOnline(), freesite.getCrawled());
-						storage.addInvalidEdition(orgKey);
+				// Sometimes getRealUri returns a similar, but different key
+				if (key.getKeyOnly().equals(realKey.getKeyOnly())) {
+
+					if (!key.getPath().equals(realKey.getPath())) {
+						log.info("Path changed from {} to {}", key.getPath(), realKey.getPath());
+						updatePath(key.toString(), key.getPath(), site.isSuccess());
+						addPath(key.toString(), realKey.getPath(), key.toString());
 						connection.commit();
-						continue;
+					}
+
+					if (!key.getEdition().equals(realKey.getEdition())) {
+						Boolean isUpdated = updateFreesiteEdition(realKey.toString(), false);
+						if (!isUpdated) {
+							log.info("Skip key, since there was no update.");
+							Freesite freesite = storage.getFreesite(realKey);
+							storage.updatePath(realKey, storage.getPath(realKey).isOnline(), freesite.getCrawled());
+							storage.addInvalidEdition(key);
+							connection.commit();
+							continue;
+						}
 					}
 				} else {
 					// TODO Freenet: Keys are not unique

@@ -156,7 +156,8 @@ public class HTMLParser {
 		// " (quote) -> probably invalid html
 		if (url.startsWith("/?newbookmark") || url.startsWith("/external-link/") || url.startsWith("/Sone/")
 				|| key.isCHK() || key.isKSK() || key.isSSK() || (!key.isKey() && key.getPath().isEmpty())
-				|| (!key.getPath().isEmpty() && !key.getExtension().contains("htm") && !key.getExtension().contains("xhtm"))
+				|| (!key.getPath().isEmpty() && !key.getExtension().contains("htm")
+						&& !key.getExtension().contains("xhtm") && !key.getExtension().isEmpty())
 				|| key.getPath().contains("\"")) {
 			result = true;
 		}
