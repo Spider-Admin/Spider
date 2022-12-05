@@ -298,6 +298,8 @@ public class Spider implements AutoCloseable {
 							storage.addInvalidEdition(key);
 							connection.commit();
 							continue;
+						} else {
+							key = realKey;
 						}
 					}
 				} else {
@@ -529,7 +531,7 @@ public class Spider implements AutoCloseable {
 				log.info("Add path {}", key.getPath());
 				storage.addPath(key, new Date());
 			} else {
-				log.debug("Path {} not added. Edition does not match: {} != {}", key.getPath(), oldKey.getEdition(),
+				log.warn("Path {} not added. Edition does not match: {} != {}", key.getPath(), oldKey.getEdition(),
 						key.getEdition());
 			}
 		}
