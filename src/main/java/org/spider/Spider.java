@@ -233,7 +233,7 @@ public class Spider implements AutoCloseable {
 		}
 
 		for (Freesite freesite : freesites) {
-			subscribeUSK(freenet, freesite.getKeyObj().toString());
+			subscribeUSK(freenet, freesite.getKeyObj());
 		}
 		log.info("Subscribed {} freesites", freesites.size());
 	}
@@ -543,9 +543,15 @@ public class Spider implements AutoCloseable {
 		storage.updatePath(key, online, new Date());
 	}
 
-	public void subscribeUSK(FcpClient freenet, String key) throws IOException {
-		log.debug("Subscribe {}", key);
-		SubscribeUSK usk = new SubscribeUSK(key, key);
+	public void subscribeUSK(FcpClient freenet, Key key) throws IOException {
+		log.debug("Subscribe {}", key.toString());
+
+		// Avoid error "Subscribing to USK with negative edition number" in Freenet
+		if (key.getEdition() == null && key.getEditionHint() != null) {
+			key.setEdition(Math.abs(key.getEditionHint()));
+		}
+
+		SubscribeUSK usk = new SubscribeUSK(key.toString(), key.toString());
 		usk.setActive(true);
 
 		freenet.getConnection().sendMessage(usk);
