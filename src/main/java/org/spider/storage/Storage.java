@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spider.Key;
+import org.spider.Settings;
 
 public class Storage implements AutoCloseable {
 
@@ -47,6 +48,8 @@ public class Storage implements AutoCloseable {
 	private static final String ADD_CATEGORY_V3;
 	private static final String SET_CATEGORY_V3;
 	private static final String CREATE_INVALID_EDITION_V3;
+
+	private static final LinkedHashMap<String, String> VIEWS_V4;
 
 	public static final LinkedHashMap<String, String> TABLES;
 	public static final LinkedHashMap<String, String> VIEWS;
@@ -90,6 +93,8 @@ public class Storage implements AutoCloseable {
 	private static final String GET_NEXT_URL_SQL = "SELECT `Key`, `Edition`, `EditionHint`, `Path` FROM `Freesite` F INNER JOIN `Path` P ON F.`ID` = P.`FreesiteID` WHERE P.`Crawled` IS NULL ORDER BY F.`Crawled` DESC, F.`Added` ASC";
 
 	static {
+		Settings settings = Settings.getInstance();
+
 		TABLES_V1 = new LinkedHashMap<>();
 		TABLES_V1.put("DatabaseVersion", "");
 		TABLES_V1.put("Freesite", "");
@@ -133,6 +138,16 @@ public class Storage implements AutoCloseable {
 		SET_CATEGORY_V3 = "UPDATE `Freesite` SET `Category` = ''";
 		CREATE_INVALID_EDITION_V3 = "CREATE TABLE IF NOT EXISTS `InvalidEdition` (`ID` INTEGER CONSTRAINT `PK_InvalidEdition` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Edition` INTEGER NOT NULL, CONSTRAINT `UQ_InvalidEdition_FreesiteID_Edition` UNIQUE(`FreesiteID`, `Edition`))";
 
+		VIEWS_V4 = new LinkedHashMap<>();
+		VIEWS_V4.put("Categories",
+				"CREATE VIEW IF NOT EXISTS `Categories` AS SELECT `Category`, COUNT(`ID`) AS 'Count' FROM `Freesite` WHERE `Online` = 1 OR `Category` != '' GROUP BY `Category`");
+		VIEWS_V4.put("MissingCategoryOnline", String.format(
+				"CREATE VIEW IF NOT EXISTS `MissingCategoryOnline` AS SELECT `ID`, 'http://%s:%d/' || `Key` || `Edition` || '/' AS 'Link', `Title`, `Category` FROM `Freesite` WHERE `Category` = '' AND `Online` = 1 ORDER BY `Crawled` DESC",
+				settings.getString(Settings.FREENET_HOST), settings.getInteger(Settings.FREENET_PORT_FPROXY)));
+		VIEWS_V4.put("MissingCategoryOffline", String.format(
+				"CREATE VIEW IF NOT EXISTS `MissingCategoryOffline` AS SELECT `ID`, 'http://%s:%d/' || `Key` || `Edition` || '/' AS 'Link', `Title`, `Category` FROM `Freesite` WHERE `Category` = '' AND `Online` = 0 ORDER BY `Crawled` DESC",
+				settings.getString(Settings.FREENET_HOST), settings.getInteger(Settings.FREENET_PORT_FPROXY)));
+
 		CREATE_VERSION_TABLE = TABLES_V2.get("DatabaseVersion");
 		TABLES = new LinkedHashMap<>();
 		TABLES.put("Freesite",
@@ -145,6 +160,9 @@ public class Storage implements AutoCloseable {
 		VIEWS.put("NextURL", "CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
 		VIEWS.put("UnknownFMS",
 				"CREATE VIEW IF NOT EXISTS `UnknownFMS` AS SELECT `ID`, `Key`, `Edition`, `Title` FROM `Freesite` WHERE `Key` LIKE '%/fms/%' AND `FMS` = 0 AND `Online` = 1");
+		VIEWS.put("Categories", VIEWS_V4.get("Categories"));
+		VIEWS.put("MissingCategoryOnline", VIEWS_V4.get("MissingCategoryOnline"));
+		VIEWS.put("MissingCategoryOffline", VIEWS_V4.get("MissingCategoryOffline"));
 	}
 
 	private PreparedStatement getDatabaseVersion;
@@ -180,7 +198,8 @@ public class Storage implements AutoCloseable {
 	// 1.0 = 1
 	// 1.1 = 2
 	// 1.2 = 3
-	private static final int currentDatabaseVersion = 3;
+	// 1.3 = 4
+	private static final int currentDatabaseVersion = 4;
 
 	public Storage(Connection connection) throws SQLException {
 
@@ -206,6 +225,7 @@ public class Storage implements AutoCloseable {
 			break;
 		case 1:
 		case 2:
+		case 3:
 			while (getDatabaseVersion() < currentDatabaseVersion) {
 				Integer nextVersion = getDatabaseVersion() + 1;
 				updateDatebase(nextVersion);
@@ -298,6 +318,10 @@ public class Storage implements AutoCloseable {
 
 			log.info("Add table InvalidEdition");
 			Database.execute(connection, CREATE_INVALID_EDITION_V3);
+		} else if (version == 4) {
+			for (String view : VIEWS_V4.values()) {
+				Database.execute(connection, view);
+			}
 		}
 	}
 
