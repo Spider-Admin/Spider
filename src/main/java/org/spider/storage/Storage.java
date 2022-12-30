@@ -35,8 +35,6 @@ public class Storage implements AutoCloseable {
 
 	private static final String TMP_TABLE_EXT = "-tmp";
 
-	private static final String CREATE_VERSION_TABLE;
-
 	private static final LinkedHashMap<String, String> TABLES_V1;
 	private static final LinkedHashMap<String, String> VIEWS_V1;
 
@@ -148,8 +146,8 @@ public class Storage implements AutoCloseable {
 				"CREATE VIEW IF NOT EXISTS `MissingCategoryOffline` AS SELECT `ID`, 'http://%s:%d/' || `Key` || `Edition` || '/' AS 'Link', `Title`, `Category` FROM `Freesite` WHERE `Category` = '' AND `Online` = 0 ORDER BY `Crawled` DESC",
 				settings.getString(Settings.FREENET_HOST), settings.getInteger(Settings.FREENET_PORT_FPROXY)));
 
-		CREATE_VERSION_TABLE = TABLES_V2.get("DatabaseVersion");
 		TABLES = new LinkedHashMap<>();
+		TABLES.put("DatabaseVersion", TABLES_V2.get("DatabaseVersion"));
 		TABLES.put("Freesite",
 				"CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER CONSTRAINT `PK_Freesite` PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) CONSTRAINT `UQ_Freesite_Key` UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `Sone` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Highlight` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024), `Category` VARCHAR(1024))");
 		TABLES.put("Path", TABLES_V2.get("Path"));
@@ -205,7 +203,7 @@ public class Storage implements AutoCloseable {
 
 		this.connection = connection;
 
-		Database.execute(connection, CREATE_VERSION_TABLE);
+		Database.execute(connection, TABLES.get("DatabaseVersion"));
 
 		getDatabaseVersion = connection.prepareStatement(SELECT_DATABASE_VERSION_SQL);
 		setDatabaseVersion = connection.prepareStatement(SET_DATABASE_VERSION_SQL);
