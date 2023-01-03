@@ -33,7 +33,7 @@ td {
 	padding: 0.25em 0.5em 0.25em 0.5em;
 }
 
-tbody tr:hover {
+tbody tr:hover, tbody tr:focus-within {
 	background-color: lightgray;
 }
 
@@ -41,7 +41,7 @@ tbody tr.highlight, span.highlight {
 	background-color: lightgoldenrodyellow;
 }
 
-tbody tr.highlight:hover {
+tbody tr.highlight:hover, tbody tr.highlight:focus-within {
 	background-color: #E7E7D3;
 }
 
@@ -86,8 +86,7 @@ tbody tr.highlight:hover {
 	font-weight: bold;
 }
 
-#menu li a:hover,
-#menu li a:focus {
+#menu li a:hover, #menu li a:focus {
 	border-bottom: 0.25em solid blue;
 }
 
