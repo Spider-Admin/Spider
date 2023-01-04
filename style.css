@@ -4,32 +4,41 @@ body {
 }
 
 table {
-	border-collapse: collapse;
+	border-collapse: separate;
+	border-spacing: 0;
+}
+
+thead {
+	position: sticky;
+	top: 0;
+}
+
+table, table * {
+	border: none;
+}
+
+thead tr:first-child th {
 	border-top: 0.1em solid black;
+}
+
+thead tr:last-child th {
 	border-bottom: 0.1em solid black;
-	border-left: none;
-	border-right: none;
+}
+
+tbody tr:last-child td {
+	border-bottom: 0.1em solid black;
 }
 
 th {
 	font-weight: bold;
 	padding: 0.5em;
 	background-color: white;
-	border: none;
 	white-space: nowrap;
-}
-
-thead {
-	border-bottom: 0.1em solid black;
-	border-top: none;
-	border-left: none;
-	border-right: none;
 }
 
 td {
 	vertical-align: top;
 	text-align: left;
-	border: none;
 	padding: 0.25em 0.5em 0.25em 0.5em;
 }
 
