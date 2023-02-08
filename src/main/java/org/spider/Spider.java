@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ public class Spider implements AutoCloseable {
 
 	private Storage storage;
 	private Settings settings;
-	private Connection connection;
+	protected Connection connection;
 
 	public Spider(Connection connection) throws SQLException {
 		this.storage = new Storage(connection);

@@ -141,7 +141,6 @@ public class Main {
 				try (Connection connection = Database.getConnection();
 						FrostImporter importer = new FrostImporter(connection);) {
 					importer.addFreesiteFromFrost();
-					connection.commit();
 				}
 				break;
 			case OUTPUT_RELEASE:

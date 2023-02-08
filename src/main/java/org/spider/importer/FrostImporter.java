@@ -1,5 +1,5 @@
 /*
-  Copyright 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2022 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -49,6 +49,8 @@ public class FrostImporter extends Spider {
 	private static final Logger log = LoggerFactory.getLogger(FrostImporter.class);
 
 	private static final String STORE_PATH = "store";
+
+	private static final String USK = "USK@";
 
 	private static final String MESSAGE_FILE = "messages.dbs";
 	private static final String MESSAGE_CONTENT_FILE = "messagesContents.dbs";
@@ -140,8 +142,12 @@ public class FrostImporter extends Spider {
 				int oid = message.getOid();
 				try {
 					// Read message-content
-					PerstString messageContent = messageContents.get(oid);
-					addFreesiteFromString(messageContent.getValue());
+					PerstString messageContentObj = messageContents.get(oid);
+					String messageContent = messageContentObj.getValue();
+					if (messageContent.contains(USK)) {
+						addFreesiteFromString(messageContent);
+						connection.commit();
+					}
 
 					if (isPrivateMessage(message.getRecipientName()) && ignorePrivateMessages) {
 						log.info("Ignore private message: {} -> {}", message.getFromName(), message.getRecipientName());
@@ -204,7 +210,11 @@ public class FrostImporter extends Spider {
 			while (messageIt.hasNext()) {
 				// Read message
 				PerstFrostArchiveMessageObject message = messageIt.next();
-				addFreesiteFromString(message.getContent());
+				String messageContent = message.getContent();
+				if (messageContent.contains(USK)) {
+					addFreesiteFromString(messageContent);
+					connection.commit();
+				}
 
 				if (isPrivateMessage(message.getRecipientName()) && ignorePrivateMessages) {
 					log.info("Ignore private message: {} -> {}", message.getFromName(), message.getRecipientName());
