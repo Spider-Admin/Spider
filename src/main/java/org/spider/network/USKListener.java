@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -206,6 +206,11 @@ public class USKListener implements FcpListener, AutoCloseable {
 			spider.updateFreesiteEdition(URLUtility.decodeURL(subscribedUSKUpdate.getURI()), false);
 			connection.commit();
 		} catch (SQLException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException er) {
+				log.error("Database-Error!", er);
+			}
 			log.error("Database-Error!", e);
 		}
 	}
