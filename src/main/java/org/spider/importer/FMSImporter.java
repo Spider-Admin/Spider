@@ -43,8 +43,8 @@ public class FMSImporter extends Spider {
 	public void addFreesiteFromFMS() throws SQLException {
 		log.info("Add freesites from FMS");
 		String filename = Path.of(Settings.getInstance().getString(Settings.IMPORT_FMS_PATH), DATABASE_FILE).toString();
-		try (Connection connection = Database.getConnection(filename, true);
-				PreparedStatement stmt = connection.prepareStatement(IMPORT);
+		try (Connection fmsConnection = Database.getConnection(filename, true);
+				PreparedStatement stmt = fmsConnection.prepareStatement(IMPORT);
 				ResultSet resultSet = stmt.executeQuery()) {
 			while (resultSet.next()) {
 				addFreesiteFromString(resultSet.getString("Body"));
