@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -114,8 +114,7 @@ public class Storage implements AutoCloseable {
 				"CREATE TABLE IF NOT EXISTS `Network` (`ID` INTEGER CONSTRAINT `PK_Network` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `TargetFreesiteID` INTEGER NOT NULL, CONSTRAINT `UQ_Network_FreesiteID_TargetFreesiteID` UNIQUE(`FreesiteID`, `TargetFreesiteID`), CONSTRAINT `UQ_Network_TargetFreesiteID_FreesiteID` UNIQUE(`TargetFreesiteID`, `FreesiteID`))");
 
 		VIEWS_V2 = new LinkedHashMap<>();
-		VIEWS_V2.put("NextURL",
-				"CREATE VIEW IF NOT EXISTS `NextURL` AS SELECT `Key`, `Edition`, `EditionHint`, `Path` FROM `Freesite` F INNER JOIN `Path` P ON F.`ID` = P.`FreesiteID` WHERE P.`Crawled` IS NULL ORDER BY F.`Crawled` DESC, F.`Added` ASC");
+		VIEWS_V2.put("NextURL", "CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
 		VIEWS_V2.put("UnknownFMS",
 				"CREATE VIEW IF NOT EXISTS `UnknownFMS` AS SELECT `ID`, `Key`, `Edition`, `Title` FROM `Freesite` WHERE `Key` LIKE '%/fms/%' AND `FMS` = 0 AND `Online` = 1");
 
@@ -155,9 +154,8 @@ public class Storage implements AutoCloseable {
 		TABLES.put("InvalidEdition", CREATE_INVALID_EDITION_V3);
 
 		VIEWS = new LinkedHashMap<>();
-		VIEWS.put("NextURL", "CREATE VIEW IF NOT EXISTS `NextURL` AS " + GET_NEXT_URL_SQL);
-		VIEWS.put("UnknownFMS",
-				"CREATE VIEW IF NOT EXISTS `UnknownFMS` AS SELECT `ID`, `Key`, `Edition`, `Title` FROM `Freesite` WHERE `Key` LIKE '%/fms/%' AND `FMS` = 0 AND `Online` = 1");
+		VIEWS.put("NextURL", VIEWS_V2.get("NextURL"));
+		VIEWS.put("UnknownFMS", VIEWS_V2.get("UnknownFMS"));
 		VIEWS.put("Categories", VIEWS_V4.get("Categories"));
 		VIEWS.put("MissingCategoryOnline", VIEWS_V4.get("MissingCategoryOnline"));
 		VIEWS.put("MissingCategoryOffline", VIEWS_V4.get("MissingCategoryOffline"));
