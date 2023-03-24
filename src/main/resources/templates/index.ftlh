@@ -26,7 +26,7 @@
 				<#t></td>
 				<#t><#if outputType != "OFFLINE"><td>
 					<#t><#if freesite.description?has_content>${freesite.description}</#if>
-					<#t><#if freesite.keywords?has_content><br>Keywords: ${freesite.keywords}</#if>
+					<#t><#if freesite.keywords?has_content><#if freesite.description?has_content><br></#if>Keywords: ${freesite.keywords}</#if>
 				</td></#if><#t>
 				<#t><td>
 					<#t>${freesite.crawled?date}<br>
