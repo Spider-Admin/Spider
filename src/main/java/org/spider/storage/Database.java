@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.Date;
@@ -114,6 +115,21 @@ public class Database {
 	public static void execute(Connection connection, String query) throws SQLException {
 		try (PreparedStatement stmt = connection.prepareStatement(query);) {
 			stmt.executeUpdate();
+		}
+	}
+
+	public static PreparedStatement prepareStatement(Connection connection, PreparedStatement statement, String query)
+			throws SQLException {
+		if (statement != null) {
+			return statement;
+		} else {
+			return connection.prepareStatement(query, Statement.NO_GENERATED_KEYS);
+		}
+	}
+
+	public static void closeStatement(PreparedStatement statement) throws SQLException {
+		if (statement != null) {
+			statement.close();
 		}
 	}
 }

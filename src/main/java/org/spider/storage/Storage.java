@@ -203,9 +203,6 @@ public class Storage implements AutoCloseable {
 
 		Database.execute(connection, TABLES.get("DatabaseVersion"));
 
-		getDatabaseVersion = connection.prepareStatement(SELECT_DATABASE_VERSION_SQL);
-		setDatabaseVersion = connection.prepareStatement(SET_DATABASE_VERSION_SQL);
-
 		switch (getDatabaseVersion()) {
 		case -1:
 		case 0: // missing version
@@ -234,34 +231,6 @@ public class Storage implements AutoCloseable {
 		default:
 			throw new SQLException("Unknown Database-Version!");
 		}
-
-		insertFreesite = connection.prepareStatement(INSERT_FREESITE_SQL);
-		updateFreesite = connection.prepareStatement(UPDATE_FREESITE_SQL);
-		updateFreesiteEdition = connection.prepareStatement(UPDATE_FREESITE_EDITION_SQL);
-		getFreesiteID = connection.prepareStatement(GET_FREESITE_ID_SQL);
-		getFreesiteKey = connection.prepareStatement(GET_FREESITE_KEY_SQL);
-		getFreesite = connection.prepareStatement(GET_FREESITE_SQL);
-		findFreesite = connection.prepareStatement(FIND_FREESITE_SQL);
-		getAllFreesite = connection.prepareStatement(GET_ALL_FREESITE_SQL);
-		resetHighlight = connection.prepareStatement(RESET_HIGHLIGHT_SQL);
-
-		insertPath = connection.prepareStatement(INSERT_PATH_SQL);
-		updatePath = connection.prepareStatement(UPDATE_PATH_SQL);
-		deleteAllPath = connection.prepareStatement(DELETE_ALL_PATH_SQL);
-		getPathID = connection.prepareStatement(GET_PATH_ID_SQL);
-		getPath = connection.prepareStatement(GET_PATH_SQL);
-		getAllPath = connection.prepareStatement(GET_ALL_PATH_SQL);
-
-		insertNetwork = connection.prepareStatement(INSERT_NETWORK_SQL);
-		deleteAllNetwork = connection.prepareStatement(DELETE_ALL_NETWORK_SQL);
-		getInNetwork = connection.prepareStatement(GET_IN_NETWORK_SQL);
-		getOutNetwork = connection.prepareStatement(GET_OUT_NETWORK_SQL);
-
-		insertInvalidEdition = connection.prepareStatement(INSERT_INVALID_EDITION_SQL);
-		deleteAllInvalidEdition = connection.prepareStatement(DELETE_ALL_INVALID_EDITION_SQL);
-		getInvalidEdition = connection.prepareStatement(GET_INVALID_EDITION_SQL);
-
-		getNextURL = connection.prepareStatement(GET_NEXT_URL_SQL);
 	}
 
 	private void renameTable(String oldName, String newName) throws SQLException {
@@ -323,6 +292,7 @@ public class Storage implements AutoCloseable {
 
 	private Integer getDatabaseVersion() throws SQLException {
 		Integer result = -1;
+		getDatabaseVersion = Database.prepareStatement(connection, getDatabaseVersion, SELECT_DATABASE_VERSION_SQL);
 		try (ResultSet resultSet = getDatabaseVersion.executeQuery()) {
 			if (resultSet.next()) {
 				result = Database.getInteger(resultSet, "Version");
@@ -332,11 +302,13 @@ public class Storage implements AutoCloseable {
 	}
 
 	private void setDatabaseVersion(Integer version) throws SQLException {
+		setDatabaseVersion = Database.prepareStatement(connection, setDatabaseVersion, SET_DATABASE_VERSION_SQL);
 		Database.setInteger(setDatabaseVersion, 1, version);
 		setDatabaseVersion.executeUpdate();
 	}
 
 	public void addFreesite(Key key, Date added) throws SQLException {
+		insertFreesite = Database.prepareStatement(connection, insertFreesite, INSERT_FREESITE_SQL);
 		insertFreesite.setString(1, key.getKey());
 		Database.setLong(insertFreesite, 2, key.getEdition());
 		Database.setLong(insertFreesite, 3, key.getEditionHint());
@@ -351,6 +323,7 @@ public class Storage implements AutoCloseable {
 			String language, Boolean FMS, Boolean sone, Boolean activeLink, Boolean online, Boolean obsolete,
 			Boolean ignoreResetOffline, Boolean highlight, Date crawled, String comment, String category)
 			throws SQLException {
+		updateFreesite = Database.prepareStatement(connection, updateFreesite, UPDATE_FREESITE_SQL);
 		updateFreesite.setString(1, author);
 		updateFreesite.setString(2, title);
 		updateFreesite.setString(3, keywords);
@@ -371,6 +344,8 @@ public class Storage implements AutoCloseable {
 	}
 
 	public void updateFreesiteEdition(Key key, Date crawled) throws SQLException {
+		updateFreesiteEdition = Database.prepareStatement(connection, updateFreesiteEdition,
+				UPDATE_FREESITE_EDITION_SQL);
 		Database.setLong(updateFreesiteEdition, 1, key.getEdition());
 		Database.setLong(updateFreesiteEdition, 2, key.getEditionHint());
 		Database.setDate(updateFreesiteEdition, 3, crawled);
@@ -380,6 +355,7 @@ public class Storage implements AutoCloseable {
 
 	public Integer getFreesiteID(Key key) throws SQLException {
 		Integer result = null;
+		getFreesiteID = Database.prepareStatement(connection, getFreesiteID, GET_FREESITE_ID_SQL);
 		getFreesiteID.setString(1, key.getKey());
 		try (ResultSet resultSet = getFreesiteID.executeQuery()) {
 			if (resultSet.next()) {
@@ -391,6 +367,7 @@ public class Storage implements AutoCloseable {
 
 	public Key getFreesiteKey(Key key) throws SQLException {
 		Key result = null;
+		getFreesiteKey = Database.prepareStatement(connection, getFreesiteKey, GET_FREESITE_KEY_SQL);
 		getFreesiteKey.setString(1, key.getKey());
 		try (ResultSet resultSet = getFreesiteKey.executeQuery()) {
 			if (resultSet.next()) {
@@ -432,6 +409,7 @@ public class Storage implements AutoCloseable {
 
 	public Freesite getFreesite(Key key, Boolean nullOnMissing) throws SQLException {
 		Freesite result = null;
+		getFreesite = Database.prepareStatement(connection, getFreesite, GET_FREESITE_SQL);
 		getFreesite.setString(1, key.getKey());
 		try (ResultSet resultSet = getFreesite.executeQuery()) {
 			if (resultSet.next()) {
@@ -451,6 +429,7 @@ public class Storage implements AutoCloseable {
 
 	public ArrayList<Freesite> findFreesite(String searchKey) throws SQLException {
 		ArrayList<Freesite> result = new ArrayList<>();
+		findFreesite = Database.prepareStatement(connection, findFreesite, FIND_FREESITE_SQL);
 		findFreesite.setString(1, "%" + searchKey + "%");
 		try (ResultSet resultSet = findFreesite.executeQuery()) {
 			while (resultSet.next()) {
@@ -463,6 +442,7 @@ public class Storage implements AutoCloseable {
 
 	public ArrayList<Freesite> getAllFreesite(Boolean getFull) throws SQLException {
 		ArrayList<Freesite> result = new ArrayList<>();
+		getAllFreesite = Database.prepareStatement(connection, getAllFreesite, GET_ALL_FREESITE_SQL);
 		try (ResultSet resultSet = getAllFreesite.executeQuery()) {
 			while (resultSet.next()) {
 				Freesite freesite = getFreesite(resultSet);
@@ -480,6 +460,7 @@ public class Storage implements AutoCloseable {
 
 	public void addPath(Key key, Date added) throws SQLException {
 		Integer id = getFreesiteID(key);
+		insertPath = Database.prepareStatement(connection, insertPath, INSERT_PATH_SQL);
 		Database.setInteger(insertPath, 1, id);
 		insertPath.setString(2, key.getPath());
 		Database.setDate(insertPath, 3, added);
@@ -488,6 +469,7 @@ public class Storage implements AutoCloseable {
 
 	public void updatePath(Key key, Boolean online, Date crawled) throws SQLException {
 		Integer id = getFreesiteID(key);
+		updatePath = Database.prepareStatement(connection, updatePath, UPDATE_PATH_SQL);
 		Database.setBoolean(updatePath, 1, online);
 		Database.setDate(updatePath, 2, crawled);
 		Database.setInteger(updatePath, 3, id);
@@ -497,6 +479,7 @@ public class Storage implements AutoCloseable {
 
 	public void deleteAllPath(Key key) throws SQLException {
 		Integer id = getFreesiteID(key);
+		deleteAllPath = Database.prepareStatement(connection, deleteAllPath, DELETE_ALL_PATH_SQL);
 		Database.setInteger(deleteAllPath, 1, id);
 		deleteAllPath.executeUpdate();
 	}
@@ -504,6 +487,7 @@ public class Storage implements AutoCloseable {
 	public Integer getPathID(Key key) throws SQLException {
 		Integer result = null;
 		Integer id = getFreesiteID(key);
+		getPathID = Database.prepareStatement(connection, getPathID, GET_PATH_ID_SQL);
 		Database.setInteger(getPathID, 1, id);
 		getPathID.setString(2, key.getPath());
 		try (ResultSet resultSet = getPathID.executeQuery()) {
@@ -525,6 +509,7 @@ public class Storage implements AutoCloseable {
 	public Path getPath(Key key) throws SQLException {
 		Path result = null;
 		Integer id = getFreesiteID(key);
+		getPath = Database.prepareStatement(connection, getPath, GET_PATH_SQL);
 		Database.setInteger(getPath, 1, id);
 		getPath.setString(2, key.getPath());
 		try (ResultSet resultSet = getPath.executeQuery()) {
@@ -538,6 +523,7 @@ public class Storage implements AutoCloseable {
 	public ArrayList<Path> getAllPath(Key key) throws SQLException {
 		ArrayList<Path> result = new ArrayList<>();
 		Integer id = getFreesiteID(key);
+		getAllPath = Database.prepareStatement(connection, getAllPath, GET_ALL_PATH_SQL);
 		Database.setInteger(getAllPath, 1, id);
 		try (ResultSet resultSet = getAllPath.executeQuery()) {
 			while (resultSet.next()) {
@@ -550,6 +536,7 @@ public class Storage implements AutoCloseable {
 	public void addNetwork(Key key, Key targetKey) throws SQLException {
 		Integer id = getFreesiteID(key);
 		Integer targetID = getFreesiteID(targetKey);
+		insertNetwork = Database.prepareStatement(connection, insertNetwork, INSERT_NETWORK_SQL);
 		Database.setInteger(insertNetwork, 1, id);
 		Database.setInteger(insertNetwork, 2, targetID);
 		insertNetwork.executeUpdate();
@@ -557,6 +544,7 @@ public class Storage implements AutoCloseable {
 
 	public void deleteAllNetwork(Key key) throws SQLException {
 		Integer id = getFreesiteID(key);
+		deleteAllNetwork = Database.prepareStatement(connection, deleteAllNetwork, DELETE_ALL_NETWORK_SQL);
 		Database.setInteger(deleteAllNetwork, 1, id);
 		deleteAllNetwork.executeUpdate();
 	}
@@ -564,6 +552,7 @@ public class Storage implements AutoCloseable {
 	public ArrayList<Integer> getInNetwork(Key key) throws SQLException {
 		ArrayList<Integer> result = new ArrayList<>();
 		Integer id = getFreesiteID(key);
+		getInNetwork = Database.prepareStatement(connection, getInNetwork, GET_IN_NETWORK_SQL);
 		Database.setInteger(getInNetwork, 1, id);
 		try (ResultSet resultSet = getInNetwork.executeQuery()) {
 			while (resultSet.next()) {
@@ -577,6 +566,7 @@ public class Storage implements AutoCloseable {
 	public ArrayList<Integer> getOutNetwork(Key key) throws SQLException {
 		ArrayList<Integer> result = new ArrayList<>();
 		Integer id = getFreesiteID(key);
+		getOutNetwork = Database.prepareStatement(connection, getOutNetwork, GET_OUT_NETWORK_SQL);
 		Database.setInteger(getOutNetwork, 1, id);
 		try (ResultSet resultSet = getOutNetwork.executeQuery()) {
 			while (resultSet.next()) {
@@ -589,6 +579,7 @@ public class Storage implements AutoCloseable {
 
 	public void addInvalidEdition(Key key) throws SQLException {
 		Integer id = getFreesiteID(key);
+		insertInvalidEdition = Database.prepareStatement(connection, insertInvalidEdition, INSERT_INVALID_EDITION_SQL);
 		Database.setInteger(insertInvalidEdition, 1, id);
 		Database.setLong(insertInvalidEdition, 2, Math.abs(key.getEdition()));
 		insertInvalidEdition.executeUpdate();
@@ -596,12 +587,15 @@ public class Storage implements AutoCloseable {
 
 	public void deleteAllInvalidEdition(Key key) throws SQLException {
 		Integer id = getFreesiteID(key);
+		deleteAllInvalidEdition = Database.prepareStatement(connection, deleteAllInvalidEdition,
+				DELETE_ALL_INVALID_EDITION_SQL);
 		Database.setInteger(deleteAllInvalidEdition, 1, id);
 		deleteAllInvalidEdition.executeUpdate();
 	}
 
 	public Boolean isEditionInvalid(Key key) throws SQLException {
 		Integer id = getFreesiteID(key);
+		getInvalidEdition = Database.prepareStatement(connection, getInvalidEdition, GET_INVALID_EDITION_SQL);
 		Database.setInteger(getInvalidEdition, 1, id);
 		Database.setLong(getInvalidEdition, 2, Math.abs(key.getEdition()));
 		try (ResultSet resultSet = getInvalidEdition.executeQuery()) {
@@ -611,6 +605,7 @@ public class Storage implements AutoCloseable {
 
 	public Key getNextURL() throws SQLException {
 		Key result = null;
+		getNextURL = Database.prepareStatement(connection, getNextURL, GET_NEXT_URL_SQL);
 		try (ResultSet resultSet = getNextURL.executeQuery()) {
 			if (resultSet.next()) {
 				String key = resultSet.getString("Key");
@@ -625,6 +620,7 @@ public class Storage implements AutoCloseable {
 	}
 
 	public void resetHighlight(Key key) throws SQLException {
+		resetHighlight = Database.prepareStatement(connection, resetHighlight, RESET_HIGHLIGHT_SQL);
 		Database.setBoolean(resetHighlight, 1, false);
 		resetHighlight.setString(2, key.getKey());
 		resetHighlight.executeUpdate();
@@ -632,30 +628,30 @@ public class Storage implements AutoCloseable {
 
 	@Override
 	public void close() throws SQLException {
-		getDatabaseVersion.close();
-		setDatabaseVersion.close();
-		insertFreesite.close();
-		updateFreesite.close();
-		updateFreesiteEdition.close();
-		getFreesiteID.close();
-		getFreesiteKey.close();
-		getFreesite.close();
-		findFreesite.close();
-		getAllFreesite.close();
-		resetHighlight.close();
-		insertPath.close();
-		updatePath.close();
-		deleteAllPath.close();
-		getPathID.close();
-		getPath.close();
-		getAllPath.close();
-		insertNetwork.close();
-		deleteAllNetwork.close();
-		getInNetwork.close();
-		getOutNetwork.close();
-		insertInvalidEdition.close();
-		deleteAllInvalidEdition.close();
-		getInvalidEdition.close();
-		getNextURL.close();
+		Database.closeStatement(getDatabaseVersion);
+		Database.closeStatement(setDatabaseVersion);
+		Database.closeStatement(insertFreesite);
+		Database.closeStatement(updateFreesite);
+		Database.closeStatement(updateFreesiteEdition);
+		Database.closeStatement(getFreesiteID);
+		Database.closeStatement(getFreesiteKey);
+		Database.closeStatement(getFreesite);
+		Database.closeStatement(findFreesite);
+		Database.closeStatement(getAllFreesite);
+		Database.closeStatement(resetHighlight);
+		Database.closeStatement(insertPath);
+		Database.closeStatement(updatePath);
+		Database.closeStatement(deleteAllPath);
+		Database.closeStatement(getPathID);
+		Database.closeStatement(getPath);
+		Database.closeStatement(getAllPath);
+		Database.closeStatement(insertNetwork);
+		Database.closeStatement(deleteAllNetwork);
+		Database.closeStatement(getInNetwork);
+		Database.closeStatement(getOutNetwork);
+		Database.closeStatement(insertInvalidEdition);
+		Database.closeStatement(deleteAllInvalidEdition);
+		Database.closeStatement(getInvalidEdition);
+		Database.closeStatement(getNextURL);
 	}
 }
