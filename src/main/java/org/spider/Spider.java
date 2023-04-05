@@ -31,9 +31,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spider.data.Freesite;
+import org.spider.data.Key;
 import org.spider.network.Freenet;
 import org.spider.storage.Export;
-import org.spider.storage.Freesite;
 import org.spider.storage.Storage;
 import org.spider.utility.URLUtility;
 

@@ -15,7 +15,9 @@ import java.util.Date;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.spider.Key;
+import org.spider.data.Freesite;
+import org.spider.data.Key;
+import org.spider.data.Path;
 import org.spider.utility.DateUtility;
 
 public class StorageTest {

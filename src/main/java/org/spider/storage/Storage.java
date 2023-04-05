@@ -26,8 +26,10 @@ import java.util.LinkedHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.spider.Key;
 import org.spider.Settings;
+import org.spider.data.Freesite;
+import org.spider.data.Key;
+import org.spider.data.Path;
 
 public class Storage implements AutoCloseable {
 
