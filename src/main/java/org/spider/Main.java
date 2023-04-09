@@ -18,60 +18,18 @@ package org.spider;
 
 import java.io.IOException;
 import java.nio.file.InvalidPathException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.StringJoiner;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
-import org.spider.Spider.UpdateType;
-import org.spider.importer.FMSImporter;
-import org.spider.importer.FrostImporter;
-import org.spider.network.Freenet;
-import org.spider.network.USKListener;
-import org.spider.storage.Database;
 
 import freemarker.template.TemplateException;
-import net.pterodactylus.fcp.highlevel.FcpClient;
 import net.pterodactylus.fcp.highlevel.FcpException;
 
 public class Main {
 
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
-
-	private static final String HELP_FORMAT = "%-38s %s";
-	private static final String HELP_FORMAT_EXTRA = "%-22s %-15s %s";
-	private static final Integer HELP_WIDTH = 80;
-
-	public enum Task {
-		INIT("init"), ADD_FREESITE("add-freesite"), ADD_FREESITE_FROM_FILE("add-freesite-from-file"),
-		ADD_FREESITE_FROM_FMS("add-freesite-from-fms"), ADD_FREESITE_FROM_FROST("add-freesite-from-frost"),
-		RESET_ALL_OFFLINE("reset-all-offline"), RESET_OFFLINE("reset-offline"), UPDATE("update"), UPDATE_0("update-0"),
-		UPDATE_ONLINE("update-online"), UPDATE_OFFLINE("update-offline"), CRAWL("crawl"), OUTPUT_TEST("output-test"),
-		OUTPUT_RELEASE("output-release"), HELP("help"), RESET_ALL_HIGHLIGHT("reset-all-highlight"),
-		RESET_HIGHLIGHT("reset-highlight"), EXPORT_DATABASE("export-database");
-
-		private String name;
-
-		private Task(String name) {
-			this.name = name;
-		}
-
-		public String toString() {
-			return name;
-		}
-
-		public static Task getTask(String task) {
-			for (Task value : values()) {
-				if (value.name.equalsIgnoreCase(task)) {
-					return value;
-				}
-			}
-			throw new IllegalArgumentException(String.format("Unknown task \"%s\"!", task));
-		}
-	}
 
 	public static void main(String[] args) {
 		// Redirect java.util.logging (JUL) to SL4J
@@ -91,163 +49,17 @@ public class Main {
 		});
 
 		try {
-			Task defaultTask = Task.CRAWL;
-			Task task = defaultTask;
+			TaskManager taskManager = new TaskManager();
+			String defaultTask = taskManager.getDefaultTask();
+			String task = defaultTask;
 			if (args.length >= 1) {
-				task = Task.getTask(args[0]);
+				task = args[0];
 			}
 			String extra = "";
 			if (args.length >= 2) {
 				extra = args[1];
 			}
-
-			switch (task) {
-			case INIT:
-			case ADD_FREESITE:
-			case ADD_FREESITE_FROM_FILE:
-			case RESET_ALL_OFFLINE:
-			case RESET_OFFLINE:
-			case RESET_ALL_HIGHLIGHT:
-			case RESET_HIGHLIGHT:
-			case EXPORT_DATABASE:
-				try (Connection connection = Database.getConnection(); Spider spider = new Spider(connection);) {
-					if (task == Task.INIT) {
-						spider.init();
-					} else if (task == Task.ADD_FREESITE) {
-						spider.addFreesite(extra);
-					} else if (task == Task.ADD_FREESITE_FROM_FILE) {
-						spider.addFreesiteFromFile(extra);
-					} else if (task == Task.RESET_ALL_OFFLINE) {
-						spider.resetAllOfflineFreesites();
-					} else if (task == Task.RESET_OFFLINE) {
-						spider.resetCertainOfflineFreesites(extra);
-					} else if (task == Task.RESET_ALL_HIGHLIGHT) {
-						spider.resetAllHighlight();
-					} else if (task == Task.RESET_HIGHLIGHT) {
-						spider.resetCertainHighlight(extra);
-					} else if (task == Task.EXPORT_DATABASE) {
-						spider.exportDatabase();
-					}
-					connection.commit();
-				}
-				break;
-			case ADD_FREESITE_FROM_FMS:
-				try (Connection connection = Database.getConnection();
-						FMSImporter importer = new FMSImporter(connection);) {
-					importer.addFreesiteFromFMS();
-				}
-				break;
-			case ADD_FREESITE_FROM_FROST:
-				try (Connection connection = Database.getConnection();
-						FrostImporter importer = new FrostImporter(connection);) {
-					importer.addFreesiteFromFrost();
-				}
-				break;
-			case OUTPUT_RELEASE:
-			case OUTPUT_TEST:
-				try (Connection connection = Database.getConnection(true); Output output = new Output(connection);) {
-					if (task == Task.OUTPUT_TEST) {
-						output.writeFreesiteIndex(false);
-					} else if (task == Task.OUTPUT_RELEASE) {
-						output.writeFreesiteIndex(true);
-					}
-					connection.rollback();
-				}
-				break;
-			case CRAWL:
-				try (Connection connection = Database.getConnection();
-						Spider spider = new Spider(connection);
-						FcpClient freenet = Freenet.getConnection();) {
-					spider.crawl(freenet);
-				}
-				break;
-			case UPDATE:
-			case UPDATE_0:
-			case UPDATE_ONLINE:
-			case UPDATE_OFFLINE:
-				Settings settings = Settings.getInstance();
-				Integer updateWaitTime = settings.getInteger(Settings.UPDATE_WAIT_TIME) * 1000;
-				if (!extra.isEmpty()) {
-					try {
-						updateWaitTime = Integer.parseInt(extra) * 1000;
-					} catch (NumberFormatException e) {
-						throw new IllegalArgumentException(String.format("\"%s\" is not a valid wait-time!", extra), e);
-					}
-				}
-
-				try (Connection connection = Database.getConnection();
-						Spider spider = new Spider(connection);
-						USKListener listener = new USKListener(connection);
-						FcpClient freenet = Freenet.getConnection();) {
-					freenet.addFcpListener(listener);
-					if (task == Task.UPDATE) {
-						spider.updateFreesites(freenet, UpdateType.ALL);
-					} else if (task == Task.UPDATE_0) {
-						spider.updateFreesites(freenet, UpdateType.EDITION_ZERO);
-					} else if (task == Task.UPDATE_ONLINE) {
-						spider.updateFreesites(freenet, UpdateType.ONLINE);
-					} else if (task == Task.UPDATE_OFFLINE) {
-						spider.updateFreesites(freenet, UpdateType.OFFLINE);
-					}
-					Thread.sleep(updateWaitTime);
-					freenet.removeFcpListener(listener);
-				}
-				break;
-			case HELP:
-				StringJoiner helpPage = new StringJoiner(System.lineSeparator());
-				helpPage.add("");
-				helpPage.add("Default-Task: " + defaultTask);
-				helpPage.add("");
-				helpPage.add(StringUtils.leftPad("", HELP_WIDTH, "-"));
-				helpPage.add(String.format(HELP_FORMAT_EXTRA, "Task", "Extra", "Description"));
-				helpPage.add(String.format(HELP_FORMAT_EXTRA, "Parameter 1", "Parameter 2", ""));
-				helpPage.add(StringUtils.leftPad("", HELP_WIDTH, "-"));
-				helpPage.add(String.format(HELP_FORMAT, Task.HELP, "Show this help."));
-				helpPage.add("");
-				helpPage.add(String.format(HELP_FORMAT, Task.INIT, "Init the database by adding the seed-key."));
-				helpPage.add("");
-				helpPage.add(
-						String.format(HELP_FORMAT_EXTRA, Task.ADD_FREESITE, "<freesite>", "Add freesite <freesite>."));
-				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.ADD_FREESITE_FROM_FILE, "<filename>",
-						"Read freesites from text-file <filename> and adds them."));
-				helpPage.add(String.format(HELP_FORMAT, Task.ADD_FREESITE_FROM_FMS,
-						"Searches the database of FMS for freesites and adds them."));
-				helpPage.add(String.format(HELP_FORMAT, Task.ADD_FREESITE_FROM_FROST,
-						"Searches the logfiles of Frost for freesites and adds them."));
-				helpPage.add("");
-				helpPage.add(String.format(HELP_FORMAT, Task.RESET_ALL_OFFLINE,
-						"Resets the state of all offline freesites, such that they can be crawled again."));
-				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.RESET_OFFLINE, "<ID1>,<ID2>,...",
-						"Resets the state of freesites with the given IDs. The IDs can be seen in the test-output."));
-				helpPage.add("");
-				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.UPDATE, "[wait-time]",
-						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite with a edition."));
-				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_0, "[wait-time]",
-						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite with edition 0."));
-				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_ONLINE, "[wait-time]",
-						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite which are online."));
-				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.UPDATE_OFFLINE, "[wait-time]",
-						"Check for new editions of freesites by subscribing for wait-time seconds to all freesite which are offline."));
-				helpPage.add("");
-				helpPage.add(String.format(HELP_FORMAT, Task.CRAWL, "Crawls freesites."));
-				helpPage.add("");
-				helpPage.add(String.format(HELP_FORMAT, Task.OUTPUT_TEST,
-						"Generated the test-output. It contains the IDs of all freesites and clickable absolute links."));
-				helpPage.add(String.format(HELP_FORMAT, Task.OUTPUT_RELEASE,
-						"Generates the release-output. This version is meant to published in Freenet."));
-				helpPage.add("");
-				helpPage.add(String.format(HELP_FORMAT, Task.RESET_ALL_HIGHLIGHT,
-						"Resets the highlight-flag of all freesites. Call this after releasing an edition."));
-				helpPage.add(String.format(HELP_FORMAT_EXTRA, Task.RESET_HIGHLIGHT, "<ID1>,<ID2>,...",
-						"Resets the highlight-flag of freesites with the given IDs. The IDs can be seen in the test-output. Call this after releasing an edition."));
-				helpPage.add("");
-				helpPage.add(String.format(HELP_FORMAT, Task.EXPORT_DATABASE,
-						String.format("Exports the database as sql-dump to %s.", Spider.getExportFilename())));
-				helpPage.add(StringUtils.leftPad("", HELP_WIDTH, "-"));
-				helpPage.add("");
-				System.out.println(helpPage);
-				break;
-			}
+			taskManager.execute(task, extra);
 		} catch (SQLException e) {
 			log.error("Database-Error!", e);
 		} catch (IOException | InvalidPathException e) {
