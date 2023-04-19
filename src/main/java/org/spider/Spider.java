@@ -425,13 +425,10 @@ public class Spider implements AutoCloseable {
 		Boolean isSone = key.getSitePath().equalsIgnoreCase("Sone") && title.contains(" - Sone");
 
 		Freesite oldFreesite = storage.getFreesite(key);
-		Boolean oldIsOnline = oldFreesite.isOnline();
-		Boolean oldIsHighlight = oldFreesite.isHighlight();
-		Boolean isHighLight = (oldIsHighlight != null && oldIsHighlight) || (oldIsOnline == null && isOnline != null)
-				|| (oldIsOnline != null && isOnline != null && oldIsOnline != isOnline);
+		Boolean isOnlineOld = oldFreesite.isOnlineOld();
 
 		storage.updateFreesite(key, author, title, keywords, description, language, isFMS, isSone, hasActiveLink,
-				isOnline, isObsolete, ignoreResetOffline, isHighLight, new Date(), comment, category);
+				isOnline, isOnlineOld, isObsolete, ignoreResetOffline, new Date(), comment, category);
 	}
 
 	public Boolean updateFreesiteEdition(String freesite, Boolean searchNew) throws SQLException {

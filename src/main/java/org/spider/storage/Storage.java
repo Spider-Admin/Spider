@@ -49,7 +49,10 @@ public class Storage implements AutoCloseable {
 	private static final String SET_CATEGORY_V3;
 	private static final String CREATE_INVALID_EDITION_V3;
 
+	private static final LinkedHashMap<String, String> TABLES_V4;
 	private static final LinkedHashMap<String, String> VIEWS_V4;
+
+	private static final String TABLE_COPY_V3_TO_V4;
 
 	public static final LinkedHashMap<String, String> TABLES;
 	public static final LinkedHashMap<String, String> VIEWS;
@@ -60,19 +63,19 @@ public class Storage implements AutoCloseable {
 	private static final String SET_DATABASE_VERSION_SQL = "INSERT OR REPLACE INTO `DatabaseVersion` (`ID`, `Version`) VALUES (1, ?)";
 
 	private static final String INSERT_FREESITE_SQL = "INSERT INTO `Freesite` (`Key`, `Edition`, `EditionHint`, `Added`, `IgnoreResetOffline`, `CrawlOnlyIndex`, `Category`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-	private static final String UPDATE_FREESITE_SQL = "UPDATE `Freesite` SET `Author` = ?, `Title` = ?, `Keywords` = ?, `Description` = ?, `Language` = ?, `FMS` = ?, `Sone` = ?, `ActiveLink` = ?, `Online` = ?, `Obsolete` = ?, `IgnoreResetOffline` = ?, `Highlight` = ?, `Crawled` = ?, `Comment` = ?, `Category` = ? WHERE `Key` = ?";
+	private static final String UPDATE_FREESITE_SQL = "UPDATE `Freesite` SET `Author` = ?, `Title` = ?, `Keywords` = ?, `Description` = ?, `Language` = ?, `FMS` = ?, `Sone` = ?, `ActiveLink` = ?, `Online` = ?, `OnlineOld` = ?, `Obsolete` = ?, `IgnoreResetOffline` = ?, `Crawled` = ?, `Comment` = ?, `Category` = ? WHERE `Key` = ?";
 	private static final String UPDATE_FREESITE_EDITION_SQL = "UPDATE `Freesite` SET `Edition` = ?, `EditionHint` = ?, `Crawled` = ? WHERE `Key` = ?";
 	private static final String GET_FREESITE_ID_SQL = "SELECT `ID` FROM `Freesite` WHERE `Key` = ?";
 	private static final String GET_FREESITE_KEY_SQL = "SELECT `Key`, `Edition`, `EditionHint` FROM `Freesite` WHERE `Key` = ?";
 
-	private static final String FREESITE_FIELD_LIST = "`ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, `Sone`, `ActiveLink`, `Online`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, `Highlight`, `Added`, `Crawled`, `Comment`, `Category`";
+	private static final String FREESITE_FIELD_LIST = "`ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, `Sone`, `ActiveLink`, `Online`, `OnlineOld`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, (`Online` IS NOT `OnlineOld`) AS `Highlight`, `Added`, `Crawled`, `Comment`, `Category`";
 	private static final String GET_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST + " FROM `Freesite` WHERE `Key` = ?";
 	private static final String FIND_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST
 			+ " FROM `Freesite` WHERE `Key` LIKE ?";
 	private static final String GET_ALL_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST
 			+ " FROM `Freesite` ORDER BY `Highlight` DESC, `Crawled` DESC ";
 
-	private static final String RESET_HIGHLIGHT_SQL = "UPDATE `Freesite` SET `Highlight` = ? WHERE `Key` = ?";
+	private static final String RESET_HIGHLIGHT_SQL = "UPDATE `Freesite` SET `OnlineOld` = `Online` WHERE `Key` = ?";
 
 	private static final String INSERT_PATH_SQL = "INSERT INTO `Path` (`FreesiteID`, `Path`, `Added`) VALUES (?, ?, ?)";
 	private static final String UPDATE_PATH_SQL = "UPDATE `Path` SET `Online` = ?, `Crawled` = ? WHERE `FreesiteID` = ? AND `Path` = ?";
@@ -95,6 +98,8 @@ public class Storage implements AutoCloseable {
 	static {
 		Settings settings = Settings.getInstance();
 
+		// Tables are created for the latest version
+		// or updated to the next version.
 		TABLES_V1 = new LinkedHashMap<>();
 		TABLES_V1.put("DatabaseVersion", "");
 		TABLES_V1.put("Freesite", "");
@@ -137,6 +142,13 @@ public class Storage implements AutoCloseable {
 		SET_CATEGORY_V3 = "UPDATE `Freesite` SET `Category` = ''";
 		CREATE_INVALID_EDITION_V3 = "CREATE TABLE IF NOT EXISTS `InvalidEdition` (`ID` INTEGER CONSTRAINT `PK_InvalidEdition` PRIMARY KEY AUTOINCREMENT NOT NULL, `FreesiteID` INTEGER NOT NULL, `Edition` INTEGER NOT NULL, CONSTRAINT `UQ_InvalidEdition_FreesiteID_Edition` UNIQUE(`FreesiteID`, `Edition`))";
 
+		TABLE_COPY_V3_TO_V4 = "INSERT INTO `Freesite` (`ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, `Sone`, `ActiveLink`, `Online`, `OnlineOld`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, `Added`, `Crawled`, `Comment`, `Category`) SELECT `ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, `Sone`, `ActiveLink`, `Online`, `Online`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, `Added`, `Crawled`, `Comment`, `Category` FROM `Freesite"
+				+ TMP_TABLE_EXT + "`";
+
+		TABLES_V4 = new LinkedHashMap<>();
+		TABLES_V4.put("Freesite",
+				"CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER CONSTRAINT `PK_Freesite` PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) CONSTRAINT `UQ_Freesite_Key` UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `Sone` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `OnlineOld` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024), `Category` VARCHAR(1024))");
+
 		VIEWS_V4 = new LinkedHashMap<>();
 		VIEWS_V4.put("Categories",
 				"CREATE VIEW IF NOT EXISTS `Categories` AS SELECT `Category`, COUNT(`ID`) AS 'Count' FROM `Freesite` WHERE `Online` = 1 OR `Category` != '' GROUP BY `Category`");
@@ -149,8 +161,7 @@ public class Storage implements AutoCloseable {
 
 		TABLES = new LinkedHashMap<>();
 		TABLES.put("DatabaseVersion", TABLES_V2.get("DatabaseVersion"));
-		TABLES.put("Freesite",
-				"CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER CONSTRAINT `PK_Freesite` PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) CONSTRAINT `UQ_Freesite_Key` UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `Sone` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Highlight` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024), `Category` VARCHAR(1024))");
+		TABLES.put("Freesite", TABLES_V4.get("Freesite"));
 		TABLES.put("Path", TABLES_V2.get("Path"));
 		TABLES.put("Network", TABLES_V2.get("Network"));
 		TABLES.put("InvalidEdition", CREATE_INVALID_EDITION_V3);
@@ -286,7 +297,19 @@ public class Storage implements AutoCloseable {
 			log.info("Add table InvalidEdition");
 			Database.execute(connection, CREATE_INVALID_EDITION_V3);
 		} else if (version == 4) {
-			for (String view : VIEWS_V4.values()) {
+			for (String view : VIEWS.keySet()) {
+				removeView(view);
+			}
+
+			String freesiteTable = "Freesite";
+			renameTable(freesiteTable, freesiteTable + TMP_TABLE_EXT);
+			for (String table : TABLES_V4.values()) {
+				Database.execute(connection, table);
+			}
+			Database.execute(connection, TABLE_COPY_V3_TO_V4);
+			removeTable(freesiteTable + TMP_TABLE_EXT);
+
+			for (String view : VIEWS.values()) {
 				Database.execute(connection, view);
 			}
 		}
@@ -322,8 +345,8 @@ public class Storage implements AutoCloseable {
 	}
 
 	public void updateFreesite(Key key, String author, String title, String keywords, String description,
-			String language, Boolean FMS, Boolean sone, Boolean activeLink, Boolean online, Boolean obsolete,
-			Boolean ignoreResetOffline, Boolean highlight, Date crawled, String comment, String category)
+			String language, Boolean FMS, Boolean sone, Boolean activeLink, Boolean online, Boolean onlineOld,
+			Boolean obsolete, Boolean ignoreResetOffline, Date crawled, String comment, String category)
 			throws SQLException {
 		updateFreesite = Database.prepareStatement(connection, updateFreesite, UPDATE_FREESITE_SQL);
 		updateFreesite.setString(1, author);
@@ -335,9 +358,9 @@ public class Storage implements AutoCloseable {
 		Database.setBoolean(updateFreesite, 7, sone);
 		Database.setBoolean(updateFreesite, 8, activeLink);
 		Database.setBoolean(updateFreesite, 9, online);
-		Database.setBoolean(updateFreesite, 10, obsolete);
-		Database.setBoolean(updateFreesite, 11, ignoreResetOffline);
-		Database.setBoolean(updateFreesite, 12, highlight);
+		Database.setBoolean(updateFreesite, 10, onlineOld);
+		Database.setBoolean(updateFreesite, 11, obsolete);
+		Database.setBoolean(updateFreesite, 12, ignoreResetOffline);
 		Database.setDate(updateFreesite, 13, crawled);
 		updateFreesite.setString(14, comment);
 		updateFreesite.setString(15, category);
@@ -396,6 +419,7 @@ public class Storage implements AutoCloseable {
 		Boolean isSone = Database.getBoolean(resultSet, "Sone");
 		Boolean hasActiveLink = Database.getBoolean(resultSet, "ActiveLink");
 		Boolean isOnline = Database.getBoolean(resultSet, "Online");
+		Boolean isOnlineOld = Database.getBoolean(resultSet, "OnlineOld");
 		Boolean isObsolete = Database.getBoolean(resultSet, "Obsolete");
 		Boolean ignoreResetOffline = Database.getBoolean(resultSet, "IgnoreResetOffline");
 		Boolean crawlOnlyIndex = Database.getBoolean(resultSet, "CrawlOnlyIndex");
@@ -406,7 +430,8 @@ public class Storage implements AutoCloseable {
 		String category = resultSet.getString("Category");
 		Key resultKey = new Key(rawKey, edition, editionHint);
 		return new Freesite(id, resultKey, author, title, keywords, description, language, isFMS, isSone, hasActiveLink,
-				isOnline, isObsolete, ignoreResetOffline, crawlOnlyIndex, highlight, added, crawled, comment, category);
+				isOnline, isOnlineOld, isObsolete, ignoreResetOffline, crawlOnlyIndex, highlight, added, crawled,
+				comment, category);
 	}
 
 	public Freesite getFreesite(Key key, Boolean nullOnMissing) throws SQLException {
@@ -420,7 +445,7 @@ public class Storage implements AutoCloseable {
 		}
 		if (result == null && !nullOnMissing) {
 			result = new Freesite(0, key, null, key.getSitePath(), null, null, null, null, null, null, null, null, null,
-					null, null, null, null, null, null);
+					null, null, null, null, null, null, null);
 		}
 		return result;
 	}
@@ -623,8 +648,7 @@ public class Storage implements AutoCloseable {
 
 	public void resetHighlight(Key key) throws SQLException {
 		resetHighlight = Database.prepareStatement(connection, resetHighlight, RESET_HIGHLIGHT_SQL);
-		Database.setBoolean(resetHighlight, 1, false);
-		resetHighlight.setString(2, key.getKey());
+		resetHighlight.setString(1, key.getKey());
 		resetHighlight.executeUpdate();
 	}
 
