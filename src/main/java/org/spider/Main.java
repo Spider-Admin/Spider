@@ -48,8 +48,7 @@ public class Main {
 			}
 		});
 
-		try {
-			TaskManager taskManager = new TaskManager();
+		try (TaskManager taskManager = new TaskManager();) {
 			String defaultTask = taskManager.getDefaultTask();
 			String task = defaultTask;
 			if (args.length >= 1) {
@@ -59,7 +58,7 @@ public class Main {
 			if (args.length >= 2) {
 				extra = args[1];
 			}
-			taskManager.execute(task, extra);
+			taskManager.execute(task, extra, false);
 		} catch (SQLException e) {
 			log.error("Database-Error!", e);
 		} catch (IOException | InvalidPathException e) {

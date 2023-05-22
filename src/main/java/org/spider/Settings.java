@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -80,6 +80,8 @@ public class Settings {
 	public static final String IGNORE_EDITION_UPDATE = "ignore.edition.update";
 
 	public static final String UPDATE_WAIT_TIME = "update.wait.time";
+
+	public static final String WAIT_STEP = "wait.step";
 
 	private static final String SETTINGS_FILENAME = "spider.properties";
 

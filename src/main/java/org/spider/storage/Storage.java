@@ -30,6 +30,7 @@ import org.spider.Settings;
 import org.spider.data.Freesite;
 import org.spider.data.Key;
 import org.spider.data.Path;
+import org.spider.data.Task;
 
 public class Storage implements AutoCloseable {
 
@@ -53,6 +54,8 @@ public class Storage implements AutoCloseable {
 	private static final LinkedHashMap<String, String> VIEWS_V4;
 
 	private static final String TABLE_COPY_V3_TO_V4;
+
+	private static final String INSERT_TASK_LIST;
 
 	public static final LinkedHashMap<String, String> TABLES;
 	public static final LinkedHashMap<String, String> VIEWS;
@@ -94,6 +97,13 @@ public class Storage implements AutoCloseable {
 	private static final String GET_INVALID_EDITION_SQL = "SELECT `Edition` FROM `InvalidEdition` WHERE `FreesiteID` = ? AND `Edition` = ?";
 
 	private static final String GET_NEXT_URL_SQL = "SELECT `Key`, `Edition`, `EditionHint`, `Path` FROM `Freesite` F INNER JOIN `Path` P ON F.`ID` = P.`FreesiteID` WHERE P.`Crawled` IS NULL ORDER BY F.`Crawled` DESC, F.`Added` ASC";
+
+	private static final String GET_TASK_LIST_SQL = "SELECT `ID`, `Name`, `WaitSeconds` FROM `TaskList` WHERE `Enabled` = ? ORDER BY `Order` ASC";
+	private static final String GET_CURRENT_TASK_SQL = "SELECT `CurrentTaskID` FROM `TaskState`";
+	private static final String SET_CURRENT_TASK_SQL = "INSERT OR REPLACE INTO `TaskState` (`ID`, `CurrentTaskID`, `RemainingSeconds`) VALUES (1, ?, ?)";
+
+	private static final String GET_REMAINING_SECONDS_SQL = "SELECT `RemainingSeconds` FROM `TaskState` WHERE `ID` = 1";
+	private static final String SET_REMAINING_SECONDS_SQL = "UPDATE `TaskState` SET `RemainingSeconds` = ? WHERE `ID` = 1";
 
 	static {
 		Settings settings = Settings.getInstance();
@@ -148,6 +158,10 @@ public class Storage implements AutoCloseable {
 		TABLES_V4 = new LinkedHashMap<>();
 		TABLES_V4.put("Freesite",
 				"CREATE TABLE IF NOT EXISTS `Freesite` (`ID` INTEGER CONSTRAINT `PK_Freesite` PRIMARY KEY AUTOINCREMENT NOT NULL, `Key` VARCHAR(1024) CONSTRAINT `UQ_Freesite_Key` UNIQUE NOT NULL, `Edition` INTEGER, `EditionHint` INTEGER, `Author` VARCHAR(1024), `Title` VARCHAR(1024), `Keywords` VARCHAR(10240), `Description` VARCHAR(10240), `Language` VARCHAR(1024), `FMS` BOOLEAN, `Sone` BOOLEAN, `ActiveLink` BOOLEAN, `Online` BOOLEAN, `OnlineOld` BOOLEAN, `Obsolete` BOOLEAN, `IgnoreResetOffline` BOOLEAN, `CrawlOnlyIndex` BOOLEAN, `Added` DATETIME, `Crawled` DATETIME, `Comment` VARCHAR(1024), `Category` VARCHAR(1024))");
+		TABLES_V4.put("TaskList",
+				"CREATE TABLE IF NOT EXISTS `TaskList` (`ID` INTEGER CONSTRAINT `PK_TaskList` PRIMARY KEY AUTOINCREMENT NOT NULL, `Name` VARCHAR (1024) NOT NULL, `Enabled` BOOLEAN NOT NULL, `Order` INTEGER NOT NULL, `WaitSeconds` INTEGER)");
+		TABLES_V4.put("TaskState",
+				"CREATE TABLE IF NOT EXISTS `TaskState` (`ID` INTEGER CONSTRAINT `PK_TaskState` PRIMARY KEY AUTOINCREMENT NOT NULL, `CurrentTaskID` INTEGER NULL, `RemainingSeconds` INTEGER NULL)");
 
 		VIEWS_V4 = new LinkedHashMap<>();
 		VIEWS_V4.put("Categories",
@@ -159,12 +173,24 @@ public class Storage implements AutoCloseable {
 				"CREATE VIEW IF NOT EXISTS `MissingCategoryOffline` AS SELECT `ID`, 'http://%s:%d/' || `Key` || `Edition` || '/' AS 'Link', `Title`, `Category` FROM `Freesite` WHERE `Category` = '' AND `Online` = 0 ORDER BY `Crawled` DESC",
 				settings.getString(Settings.FREENET_HOST), settings.getInteger(Settings.FREENET_PORT_FPROXY)));
 
+		Integer waitTime = settings.getInteger(Settings.UPDATE_WAIT_TIME);
+		INSERT_TASK_LIST = String
+				.format("INSERT OR REPLACE INTO `TaskList` (`ID`, `Name`, `Enabled`, `Order`, `WaitSeconds`) VALUES "
+						+ "(1, 'reset-all-highlight', 1, 1, NULL)," + "(2, 'update-online', 1, 2, 60),"
+						+ "(3, 'crawl', 1, 3, NULL)," + "(4, 'update-offline', 1, 4, %d)," + "(5, 'crawl', 1, 5, NULL),"
+						+ "(6, 'reset-all-offline', 0, 6, NULL)," + "(7, 'crawl', 0, 7, NULL),"
+						+ "(8, 'add-freesite-from-fms', 1, 8, NULL)," + "(9, 'add-freesite-from-frost', 1, 9, NULL),"
+						+ "(10, 'crawl', 1, 10, NULL)," + "(11, 'update-online', 1, 11, %d),"
+						+ "(12, 'crawl', 1, 12, NULL)," + "(13, 'export-database', 1, 13, NULL)", waitTime, waitTime);
+
 		TABLES = new LinkedHashMap<>();
 		TABLES.put("DatabaseVersion", TABLES_V2.get("DatabaseVersion"));
 		TABLES.put("Freesite", TABLES_V4.get("Freesite"));
 		TABLES.put("Path", TABLES_V2.get("Path"));
 		TABLES.put("Network", TABLES_V2.get("Network"));
 		TABLES.put("InvalidEdition", CREATE_INVALID_EDITION_V3);
+		TABLES.put("TaskList", TABLES_V4.get("TaskList"));
+		TABLES.put("TaskState", TABLES_V4.get("TaskState"));
 
 		VIEWS = new LinkedHashMap<>();
 		VIEWS.put("NextURL", VIEWS_V2.get("NextURL"));
@@ -199,6 +225,11 @@ public class Storage implements AutoCloseable {
 	private PreparedStatement deleteAllInvalidEdition;
 	private PreparedStatement getInvalidEdition;
 	private PreparedStatement getNextURL;
+	private PreparedStatement getTaskList;
+	private PreparedStatement getCurrentTaskID;
+	private PreparedStatement setCurrentTask;
+	private PreparedStatement getRemainingSeconds;
+	private PreparedStatement setRemainingSeconds;
 
 	private Connection connection;
 
@@ -226,6 +257,8 @@ public class Storage implements AutoCloseable {
 			for (String query : VIEWS.values()) {
 				Database.execute(connection, query);
 			}
+			Database.execute(connection, INSERT_TASK_LIST);
+			resetTaskList();
 			setDatabaseVersion(currentDatabaseVersion);
 			connection.commit();
 			break;
@@ -240,6 +273,7 @@ public class Storage implements AutoCloseable {
 			}
 			break;
 		case currentDatabaseVersion: // nothing to do
+			connection.rollback();
 			break;
 		default:
 			throw new SQLException("Unknown Database-Version!");
@@ -312,6 +346,8 @@ public class Storage implements AutoCloseable {
 			for (String view : VIEWS.values()) {
 				Database.execute(connection, view);
 			}
+
+			Database.execute(connection, INSERT_TASK_LIST);
 		}
 	}
 
@@ -652,6 +688,97 @@ public class Storage implements AutoCloseable {
 		resetHighlight.executeUpdate();
 	}
 
+	private ArrayList<Task> getTaskList() throws SQLException {
+		ArrayList<Task> taskList = new ArrayList<>();
+		getTaskList = Database.prepareStatement(connection, getTaskList, GET_TASK_LIST_SQL);
+		Database.setBoolean(getTaskList, 1, true);
+		try (ResultSet resultSet = getTaskList.executeQuery()) {
+			while (resultSet.next()) {
+				Integer id = Database.getInteger(resultSet, "ID");
+				String name = resultSet.getString("Name");
+				Integer waitSeconds = Database.getInteger(resultSet, "WaitSeconds");
+				taskList.add(new Task(id, name, waitSeconds));
+			}
+		}
+		return taskList;
+	}
+
+	private Integer getCurrentTaskID() throws SQLException {
+		Integer currentTaskID = null;
+		getCurrentTaskID = Database.prepareStatement(connection, getCurrentTaskID, GET_CURRENT_TASK_SQL);
+		try (ResultSet resultSet = getCurrentTaskID.executeQuery()) {
+			if (resultSet.next()) {
+				currentTaskID = Database.getInteger(resultSet, "CurrentTaskID");
+			}
+		}
+		return currentTaskID;
+	}
+
+	private void setCurrentTask(Task task) throws SQLException {
+		Integer taskID = null;
+		Integer waitSeconds = null;
+		if (task != null) {
+			taskID = task.getID();
+			waitSeconds = task.getWaitSeconds();
+		}
+		setCurrentTask = Database.prepareStatement(connection, setCurrentTask, SET_CURRENT_TASK_SQL);
+		Database.setInteger(setCurrentTask, 1, taskID);
+		Database.setInteger(setCurrentTask, 2, waitSeconds);
+		setCurrentTask.executeUpdate();
+	}
+
+	public Task getCurrentTask() throws SQLException {
+		Task currentTask = null;
+		ArrayList<Task> list = getTaskList();
+		Integer currentTaskID = getCurrentTaskID();
+		for (Task task : list) {
+			if (task.getID().equals(currentTaskID)) {
+				currentTask = task;
+			}
+		}
+		return currentTask;
+	}
+
+	public void finishCurrentTask() throws SQLException {
+		ArrayList<Task> list = getTaskList();
+		Integer currentTaskID = getCurrentTaskID();
+		Boolean currentTaskFound = false;
+		for (Task task : list) {
+			if (currentTaskFound) {
+				setCurrentTask(task);
+				currentTaskFound = false;
+			}
+			if (task.getID().equals(currentTaskID)) {
+				currentTaskFound = true;
+			}
+		}
+		if (currentTaskFound) {
+			setCurrentTask(null);
+		}
+	}
+
+	public void resetTaskList() throws SQLException {
+		ArrayList<Task> list = getTaskList();
+		setCurrentTask(list.get(0));
+	}
+
+	public Integer getWaitSeconds() throws SQLException {
+		Integer waitSeconds = 0;
+		getRemainingSeconds = Database.prepareStatement(connection, getRemainingSeconds, GET_REMAINING_SECONDS_SQL);
+		try (ResultSet resultSet = getRemainingSeconds.executeQuery()) {
+			if (resultSet.next()) {
+				waitSeconds = Database.getInteger(resultSet, "RemainingSeconds");
+			}
+		}
+		return waitSeconds;
+	}
+
+	public void setWaitSeconds(Integer seconds) throws SQLException {
+		setRemainingSeconds = Database.prepareStatement(connection, setRemainingSeconds, SET_REMAINING_SECONDS_SQL);
+		Database.setInteger(setRemainingSeconds, 1, seconds);
+		setRemainingSeconds.executeUpdate();
+	}
+
 	@Override
 	public void close() throws SQLException {
 		Database.closeStatement(getDatabaseVersion);
@@ -679,5 +806,10 @@ public class Storage implements AutoCloseable {
 		Database.closeStatement(deleteAllInvalidEdition);
 		Database.closeStatement(getInvalidEdition);
 		Database.closeStatement(getNextURL);
+		Database.closeStatement(getTaskList);
+		Database.closeStatement(getCurrentTaskID);
+		Database.closeStatement(setCurrentTask);
+		Database.closeStatement(getRemainingSeconds);
+		Database.closeStatement(setRemainingSeconds);
 	}
 }
