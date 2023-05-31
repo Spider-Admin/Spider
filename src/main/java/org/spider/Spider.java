@@ -510,10 +510,22 @@ public class Spider implements AutoCloseable {
 	}
 
 	private void addPath(String freesite, String path, String sourceFreesite) throws SQLException {
-		Key key = new Key(freesite);
-		key.setPath(path);
-
 		addFreesite(freesite, sourceFreesite);
+		Key key = new Key(freesite);
+
+		// Detect double encoded keys and fix them
+		Integer freesiteID = storage.getFreesiteID(key);
+		if (freesiteID == null) {
+			String decodedFreesite = URLUtility.decodeURL(freesite);
+			Key decodedKey = new Key(decodedFreesite);
+			Integer decodedFreesiteID = storage.getFreesiteID(decodedKey);
+			if (decodedFreesiteID != null) {
+				log.debug("Fix double encoded key {}", freesite);
+				key = decodedKey;
+			}
+		}
+
+		key.setPath(path);
 		Integer id = storage.getPathID(key);
 
 		if (id == null) {
