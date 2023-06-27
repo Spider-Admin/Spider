@@ -81,7 +81,7 @@ public class Key {
 			}
 		}
 
-		if (!path.isEmpty()) {
+		if (path != null && !path.isEmpty()) {
 			String fullFilename = path;
 			Integer pathPos = path.lastIndexOf("/");
 			if (pathPos != -1) {
