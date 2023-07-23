@@ -48,6 +48,9 @@ public class TaskManager implements AutoCloseable {
 	private static final String HELP_FORMAT_EXTRA = "%-23s  %-15s  %s";
 	private static final Integer HELP_WIDTH = 80;
 
+	private static final String TASK_LIST_FORMAT = "%-6s  %-23s  %-8s  %-13s";
+	private static final Integer TASK_LIST_WIDTH = 56;
+
 	private Integer waitStep;
 	private TaskType defaultTask = TaskType.CRAWL;
 
@@ -61,7 +64,7 @@ public class TaskManager implements AutoCloseable {
 		UPDATE_ONLINE("update-online"), UPDATE_OFFLINE("update-offline"), CRAWL("crawl"), OUTPUT_TEST("output-test"),
 		OUTPUT_RELEASE("output-release"), HELP("help"), RESET_ALL_HIGHLIGHT("reset-all-highlight"),
 		RESET_HIGHLIGHT("reset-highlight"), EXPORT_DATABASE("export-database"), RUN_TASK_LIST("run-task-list"),
-		RESET_TASK_LIST("reset-task-list");
+		RESET_TASK_LIST("reset-task-list"), SHOW_TASK_LIST("show-task-list");
 
 		private String name;
 
@@ -231,6 +234,38 @@ public class TaskManager implements AutoCloseable {
 			storage.resetTaskList();
 			getConnection().commit();
 			break;
+		case SHOW_TASK_LIST:
+			currentTask = storage.getCurrentTask();
+			ArrayList<Task> taskList = storage.getTaskList();
+			Integer remaining = storage.getWaitSeconds();
+			getConnection().rollback();
+			StringJoiner showPage = new StringJoiner(System.lineSeparator());
+			showPage.add("");
+			showPage.add("Task list:");
+			showPage.add("");
+			showPage.add(StringUtils.leftPad("", TASK_LIST_WIDTH, "-"));
+			showPage.add(String.format(TASK_LIST_FORMAT, "Active", "Task", "Wait (s)", "Remaining (s)"));
+			showPage.add(StringUtils.leftPad("", TASK_LIST_WIDTH, "-"));
+			for (Task printTask : taskList) {
+				String formattedActive = "";
+				String formattedWait = "";
+				String formattedRemaining = "";
+				if (printTask.getWaitSeconds() != null) {
+					formattedWait = printTask.getWaitSeconds().toString();
+				}
+				if (currentTask.getID().equals(printTask.getID())) {
+					formattedActive = "x";
+					if (remaining != null) {
+						formattedRemaining = remaining.toString();
+					}
+				}
+				showPage.add(String.format(TASK_LIST_FORMAT, formattedActive, printTask.getName(), formattedWait,
+						formattedRemaining));
+			}
+			showPage.add(StringUtils.leftPad("", TASK_LIST_WIDTH, "-"));
+			showPage.add("");
+			System.out.println(showPage);
+			break;
 		case HELP:
 			StringJoiner helpPage = new StringJoiner(System.lineSeparator());
 			helpPage.add("");
@@ -242,7 +277,8 @@ public class TaskManager implements AutoCloseable {
 			helpPage.add(StringUtils.leftPad("", HELP_WIDTH, "-"));
 			helpPage.add(String.format(HELP_FORMAT, TaskType.HELP, "Show this help."));
 			helpPage.add("");
-			helpPage.add(String.format(HELP_FORMAT, TaskType.RUN_TASK_LIST, "Executes a predefined list of tasks."));
+			helpPage.add(String.format(HELP_FORMAT, TaskType.RUN_TASK_LIST, "Executes the predefined list of tasks."));
+			helpPage.add(String.format(HELP_FORMAT, TaskType.SHOW_TASK_LIST, "Shows the predefined list of tasks."));
 			helpPage.add(String.format(HELP_FORMAT, TaskType.RESET_TASK_LIST,
 					"Resets the task list such that it will start from the beginning on the next launch."));
 			helpPage.add("");

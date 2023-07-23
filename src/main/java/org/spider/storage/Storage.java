@@ -688,7 +688,7 @@ public class Storage implements AutoCloseable {
 		resetHighlight.executeUpdate();
 	}
 
-	private ArrayList<Task> getTaskList() throws SQLException {
+	public ArrayList<Task> getTaskList() throws SQLException {
 		ArrayList<Task> taskList = new ArrayList<>();
 		getTaskList = Database.prepareStatement(connection, getTaskList, GET_TASK_LIST_SQL);
 		Database.setBoolean(getTaskList, 1, true);
