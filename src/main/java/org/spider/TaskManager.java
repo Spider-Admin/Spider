@@ -44,8 +44,8 @@ public class TaskManager implements AutoCloseable {
 
 	private static final Logger log = LoggerFactory.getLogger(TaskManager.class);
 
-	private static final String HELP_FORMAT = "%-38s %s";
-	private static final String HELP_FORMAT_EXTRA = "%-22s %-15s %s";
+	private static final String HELP_FORMAT = "%-40s  %s";
+	private static final String HELP_FORMAT_EXTRA = "%-23s  %-15s  %s";
 	private static final Integer HELP_WIDTH = 80;
 
 	private Integer waitStep;
