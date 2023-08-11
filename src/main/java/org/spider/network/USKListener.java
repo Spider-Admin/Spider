@@ -203,14 +203,12 @@ public class USKListener implements FcpListener, AutoCloseable {
 		log.debug("Check: Update edition of {} to {}", subscribedUSKUpdate.getURI(), subscribedUSKUpdate.getEdition());
 
 		try (Spider spider = new Spider(connection);) {
-			spider.updateFreesiteEdition(URLUtility.decodeURL(subscribedUSKUpdate.getURI()), false);
-			connection.commit();
-		} catch (SQLException e) {
-			try {
+			if (spider.updateFreesiteEdition(URLUtility.decodeURL(subscribedUSKUpdate.getURI()), false)) {
+				connection.commit();
+			} else {
 				connection.rollback();
-			} catch (SQLException er) {
-				log.error("Database-Error!", er);
 			}
+		} catch (SQLException e) {
 			log.error("Database-Error!", e);
 		}
 	}
