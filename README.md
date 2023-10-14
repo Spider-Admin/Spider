@@ -42,6 +42,14 @@ You can either run these tasks individually or you can run them as task list.
 
 Run the above tasks as task list using `bin/spider run-task-list`. Spider will execute each task in the given order one by another. Additionally Spider will save the state such that you can interrupt the process at any time and can continue where you previously interrupted it. You can restart the task list with `bin/spider reset-task-list` (once the task list is finished it will automatically reset itself) and show the current progress with `bin/spider show-task-list`.
 
+## Set up a development environment
+
+1. Run `git clone https://github.com/Spider-Admin/Spider.git`.
+2. Change to the cloned repository.
+3. Run `gradlew clean cleanEclipse eclipse`.
+4. Copy all files from `src/main/dist` to the current directory.
+5. Import the project from the current directory into [Eclipse](https://eclipseide.org/).
+
 ## Contact
 
 Author: Spider-Admin

@@ -2,10 +2,13 @@
 /.gradle/
 /.project
 /.settings/
+/activelink.png
 /bin/
 /build/
 /logs/
 /output/
 /release/
 /spider.db3
+/spider.properties
 /spider.test.db3
+/style.css

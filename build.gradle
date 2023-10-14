@@ -23,15 +23,6 @@ application {
 	mainClass = "org.spider.Main"
 }
 
-distZip {
-	into(project.name) {
-		from "."
-		include "activelink.png"
-		include "spider.properties"
-		include "style.css"
-	}
-}
-
 dependencies {
 	implementation("org.slf4j:slf4j-api:2.0.7")
 	implementation("org.slf4j:jul-to-slf4j:2.0.7");
