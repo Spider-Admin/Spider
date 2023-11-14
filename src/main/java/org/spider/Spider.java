@@ -532,6 +532,10 @@ public class Spider implements AutoCloseable {
 			Key oldKey = storage.getFreesiteKey(key);
 			Freesite freesiteObj = storage.getFreesite(key);
 
+			if (freesiteObj == null) {
+				log.warn("Ignore path {} because of invalid freesite {}", path, freesite);
+				return;
+			}
 			if (freesiteObj.crawlOnlyIndex() && !path.equals(INDEX_PATH)) {
 				log.warn("Ignore path {}", path);
 				return;
