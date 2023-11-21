@@ -69,10 +69,8 @@ public class FrostImporter extends Spider {
 	private void copyFileToTemp(Path source) throws IOException {
 		String tempDir = getTempDir();
 
-		Path destination = Path.of(tempDir, source.getFileName().toString());
-		destination.toFile().deleteOnExit();
-
 		log.info("Copy {} to temporary folder...", source.getFileName());
+		Path destination = Path.of(tempDir, source.getFileName().toString());
 		Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
 	}
 
@@ -96,16 +94,23 @@ public class FrostImporter extends Spider {
 		Boolean ignorePrivateMessages = settings.getBoolean(Settings.IMPORT_FROST_IGNORE_PRIVATE_MESSAGES);
 		Boolean ignoreMessageArchive = settings.getBoolean(Settings.IMPORT_FROST_IGNORE_MESSAGE_ARCHIVE);
 
-		copyFileToTemp(Path.of(path, STORE_PATH, MESSAGE_FILE));
-		copyFileToTemp(Path.of(path, STORE_PATH, MESSAGE_CONTENT_FILE));
-		if (!ignoreMessageArchive) {
-			copyFileToTemp(Path.of(path, STORE_PATH, MESSAGE_ARCHIVE_FILE));
-		}
-
 		String tempDir = getTempDir();
-		importMessages(Path.of(tempDir, MESSAGE_FILE), Path.of(tempDir, MESSAGE_CONTENT_FILE), ignorePrivateMessages);
-		if (!ignoreMessageArchive) {
-			importMessageArchive(Path.of(tempDir, MESSAGE_ARCHIVE_FILE), ignorePrivateMessages);
+		try {
+			copyFileToTemp(Path.of(path, STORE_PATH, MESSAGE_FILE));
+			copyFileToTemp(Path.of(path, STORE_PATH, MESSAGE_CONTENT_FILE));
+			if (!ignoreMessageArchive) {
+				copyFileToTemp(Path.of(path, STORE_PATH, MESSAGE_ARCHIVE_FILE));
+			}
+
+			importMessages(Path.of(tempDir, MESSAGE_FILE), Path.of(tempDir, MESSAGE_CONTENT_FILE),
+					ignorePrivateMessages);
+			if (!ignoreMessageArchive) {
+				importMessageArchive(Path.of(tempDir, MESSAGE_ARCHIVE_FILE), ignorePrivateMessages);
+			}
+		} finally {
+			Files.deleteIfExists(Path.of(tempDir, MESSAGE_FILE));
+			Files.deleteIfExists(Path.of(tempDir, MESSAGE_CONTENT_FILE));
+			Files.deleteIfExists(Path.of(tempDir, MESSAGE_ARCHIVE_FILE));
 		}
 	}
 
