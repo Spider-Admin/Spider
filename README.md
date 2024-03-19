@@ -4,7 +4,7 @@ Spider crawls freesites in [Freenet](https://freenetproject.org/), extracts vari
 
 ## Requirements
 
-- [OpenJDK](https://openjdk.org/) 11 or newer.
+- [OpenJDK](https://openjdk.org/) 17 or newer.
 - [Freenet](https://freenetproject.org/)
 
 ## Build
