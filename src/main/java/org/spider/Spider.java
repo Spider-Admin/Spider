@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -301,6 +301,7 @@ public class Spider implements AutoCloseable {
 							continue;
 						} else {
 							key = realKey;
+							connection.commit();
 						}
 					}
 				} else {
@@ -317,6 +318,7 @@ public class Spider implements AutoCloseable {
 				// Update: editionHint = 0 -> edition = 0
 				if (key.getEdition() == 0 && key.getPath().isEmpty()) {
 					updateFreesiteEdition(key.toString(), false);
+					connection.commit();
 				}
 			}
 
