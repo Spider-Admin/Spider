@@ -16,7 +16,28 @@ Spider crawls freesites in [Freenet](https://freenetproject.org/), extracts vari
 
 ## Run
 
-Run Spider with `bin/spider help` to view short usage information. Before the first start, the database of Spider must be initialized with `bin/spider init`.
+Run Spider with `bin/spider help` to view short usage information. Before the first start, the database of Spider must be initialized with `bin/spider init`. Alternatively you can use my database of Spider, a key to the recent SQL-dump can be found on the About / FAQ page in (Clean-)Spider.
+
+## Important files
+
+### Activelink
+
+All [activelink](https://github.com/hyphanet/wiki/wiki/Activelink) images can be found in the folder `activelink`.
+
+- activelink.xcf = Activelink for Spider
+- activelink-clean.xcf = Activelink for Clean-Spider
+- activelink-source.xcf = Activelink for the source code of Spider
+
+The xcf files can be opened with [GIMP](https://www.gimp.org/).
+
+### Settings
+
+All settings files can be found in the folder `src/main/dist`.
+
+- spider.properties = Settings file for Spider
+- spider-clean.properties = Settings file for Clean-Spider
+
+Spider always uses the settings file `spider.properties', so you have to rename the files for the usage in Clean-Spider.
 
 ## Tasks
 
