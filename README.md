@@ -1,11 +1,11 @@
 # Spider
 
-Spider crawls freesites in [Freenet](https://freenetproject.org/), extracts various information and creates an index of these freesites. It is currently used by me to create my uncensored index [Spider](http://localhost:8888/USK@nLTpFO0hKAp9AaaChDzk~hA95CRPOipmVjilxEVrwl4,68PXzK2-NeGmyyjz8lyWXRqvWBkuUfl0QAWMyyyjKRw,AQACAAE/spider/363/) [^1] and to create my censored index [Clean-Spider](http://localhost:8888/USK@5ijbfKSJ4kPZTRDzq363CHteEUiSZjrO-E36vbHvnIU,ZEZqPXeuYiyokY2r0wkhJr5cy7KBH9omkuWDqSC6PLs,AQACAAE/clean-spider/270/) [^1].
+Spider crawls freesites in [Hyphanet](https://www.hyphanet.org/), extracts various information and creates an index of these freesites. It is currently used by me to create my uncensored index [Spider](http://localhost:8888/USK@nLTpFO0hKAp9AaaChDzk~hA95CRPOipmVjilxEVrwl4,68PXzK2-NeGmyyjz8lyWXRqvWBkuUfl0QAWMyyyjKRw,AQACAAE/spider/363/) [^1] and to create my censored index [Clean-Spider](http://localhost:8888/USK@5ijbfKSJ4kPZTRDzq363CHteEUiSZjrO-E36vbHvnIU,ZEZqPXeuYiyokY2r0wkhJr5cy7KBH9omkuWDqSC6PLs,AQACAAE/clean-spider/270/) [^1].
 
 ## Requirements
 
 - [OpenJDK](https://openjdk.org/) 17 or newer.
-- [Freenet](https://freenetproject.org/)
+- [Hyphanet](https://www.hyphanet.org/)
 
 ## Build
 
@@ -96,5 +96,5 @@ I do not regularly read the email associated with GitHub.
 
 Spider by Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs is licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
-[^1]: Link requires a running Freenet node at http://localhost:8888/
-[^2]: Freemail requires a running Freenet node
+[^1]: Link requires a running Hyphanet node at http://localhost:8888/
+[^2]: Freemail requires a running Hyphanet node
