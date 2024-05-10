@@ -71,6 +71,13 @@ Run the above tasks as task list using `bin/spider run-task-list`. Spider will e
 4. Copy all files from `src/main/dist` to the current directory.
 5. Import the project from the current directory into [Eclipse](https://eclipseide.org/).
 
+
+## Publish the freesite
+
+I used [jSite](http://localhost:8888/USK@1waTsw46L9-JEQ8yX1khjkfHcn--g0MlMsTlYHax9zQ,oYyxr5jyFnaTsVGDQWk9e3ddOWGKnqEASxAk08MHT2Y,AQACAAE/jSite/17/) [^1] to publish (Clean-)Spider. Just create a new project for (Clean-)Spider in jSite and publish it with `java -cp path/to/jSite/jSite-0.14-jar-with-dependencies.jar de.todesbaum.jsite.main.CLI --project=projectname`.
+
+Additionally I shared the private key of Clean-Spider with ArneBab, Bombe, xor and nextgens. I splitted the private key with [ssss](http://point-at-infinity.org/ssss/) using `ssss-split -t 2 -n 4` and send one part to each of them. You need at least 2 parts to recover the private key.
+
 ## Contact
 
 Author: Spider-Admin
