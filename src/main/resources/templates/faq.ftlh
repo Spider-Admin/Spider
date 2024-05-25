@@ -90,7 +90,7 @@
 		<h3>How can I create and insert my own freesite?</h3>
 		<p>
 			<a href="<@format.key freesite=publishFreesite/>"><@format.title freesite=publishFreesite/></a> explains how to create a freesite.
-			Once created, you can insert your freesite with <a href="<@format.key freesite=jsiteFreesite/>"><@format.title freesite=jsiteFreesite/></a> into freenet.
+			Once created, you can insert your freesite with <a href="<@format.key freesite=jsiteFreesite/>"><@format.title freesite=jsiteFreesite/></a> into Hyphanet.
 		</p>
 
 		<h3>How can I add author, language, description or keywords to my freesite?</h3>
