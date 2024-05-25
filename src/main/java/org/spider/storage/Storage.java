@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -168,10 +168,10 @@ public class Storage implements AutoCloseable {
 				"CREATE VIEW IF NOT EXISTS `Categories` AS SELECT `Category`, COUNT(`ID`) AS 'Count' FROM `Freesite` WHERE `Online` = 1 OR `Category` != '' GROUP BY `Category`");
 		VIEWS_V4.put("MissingCategoryOnline", String.format(
 				"CREATE VIEW IF NOT EXISTS `MissingCategoryOnline` AS SELECT `ID`, 'http://%s:%d/' || `Key` || `Edition` || '/' AS 'Link', `Title`, `Category` FROM `Freesite` WHERE `Category` = '' AND `Online` = 1 ORDER BY `Crawled` DESC",
-				settings.getString(Settings.FREENET_HOST), settings.getInteger(Settings.FREENET_PORT_FPROXY)));
+				settings.getString(Settings.HYPHANET_HOST), settings.getInteger(Settings.HYPHANET_PORT_FPROXY)));
 		VIEWS_V4.put("MissingCategoryOffline", String.format(
 				"CREATE VIEW IF NOT EXISTS `MissingCategoryOffline` AS SELECT `ID`, 'http://%s:%d/' || `Key` || `Edition` || '/' AS 'Link', `Title`, `Category` FROM `Freesite` WHERE `Category` = '' AND `Online` = 0 ORDER BY `Crawled` DESC",
-				settings.getString(Settings.FREENET_HOST), settings.getInteger(Settings.FREENET_PORT_FPROXY)));
+				settings.getString(Settings.HYPHANET_HOST), settings.getInteger(Settings.HYPHANET_PORT_FPROXY)));
 
 		Integer waitTime = settings.getInteger(Settings.UPDATE_WAIT_TIME);
 		INSERT_TASK_LIST = String

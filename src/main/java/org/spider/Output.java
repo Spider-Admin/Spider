@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -258,8 +258,8 @@ public class Output implements AutoCloseable {
 
 		String keyPrefix = "";
 		if (!isRelease) {
-			keyPrefix = "http://" + settings.getString(Settings.FREENET_HOST) + ":"
-					+ settings.getInteger(Settings.FREENET_PORT_FPROXY);
+			keyPrefix = "http://" + settings.getString(Settings.HYPHANET_HOST) + ":"
+					+ settings.getInteger(Settings.HYPHANET_PORT_FPROXY);
 		}
 
 		params.put("countTotal", freesiteList.size());

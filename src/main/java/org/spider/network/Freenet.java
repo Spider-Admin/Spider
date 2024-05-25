@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2022 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -108,13 +108,13 @@ public class Freenet {
 		Settings settings = Settings.getInstance();
 
 		try {
-			FcpClient connection = new FcpClient(settings.getString(Settings.FREENET_HOST),
-					settings.getInteger(Settings.FREENET_PORT_FCP));
+			FcpClient connection = new FcpClient(settings.getString(Settings.HYPHANET_HOST),
+					settings.getInteger(Settings.HYPHANET_PORT_FCP));
 			connection.connect(getClientName());
 			return connection;
 		} catch (NumberFormatException e) {
-			throw new FcpException(String.format("Invalid port \"%s\"!", settings.getString(Settings.FREENET_PORT_FCP)),
-					e);
+			throw new FcpException(
+					String.format("Invalid port \"%s\"!", settings.getString(Settings.HYPHANET_PORT_FCP)), e);
 		}
 	}
 

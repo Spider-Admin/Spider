@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -44,9 +44,9 @@ public class Settings {
 	public static final String DATABASE_FILE = "database.file";
 	public static final String DATABASE_FILE_TEST = "database.file.test";
 
-	public static final String FREENET_HOST = "freenet.host";
-	public static final String FREENET_PORT_FCP = "freenet.port.fcp";
-	public static final String FREENET_PORT_FPROXY = "freenet.port.fproxy";
+	public static final String HYPHANET_HOST = "hyphanet.host";
+	public static final String HYPHANET_PORT_FCP = "hyphanet.port.fcp";
+	public static final String HYPHANET_PORT_FPROXY = "hyphanet.port.fproxy";
 
 	public static final String IMPORT_FMS_PATH = "import.fms.path";
 	public static final String IMPORT_FROST_PATH = "import.frost.path";
