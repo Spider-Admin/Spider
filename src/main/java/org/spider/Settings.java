@@ -75,6 +75,8 @@ public class Settings {
 
 	public static final String FAKE_KEY_MAX_DIFF = "fake.key.max.diff";
 
+	public static final String ERROR_MAX_COUNT = "error.max.count";
+
 	public static final String HIDDEN_CATEGORIES = "hidden.categories";
 
 	public static final String IGNORE_EDITION_UPDATE = "ignore.edition.update";

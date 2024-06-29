@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ public class Main {
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) {
+		Settings settings = Settings.getInstance();
+
 		// Redirect java.util.logging (JUL) to SL4J
 		// -> Required for FcpClient
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
@@ -43,7 +45,6 @@ public class Main {
 		// - Linux platforms support a normal (non-forcible) kill signal.
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				Settings settings = Settings.getInstance();
 				log.info("{} finished.", settings.getString(Settings.INDEX_NAME));
 			}
 		});
@@ -58,7 +59,27 @@ public class Main {
 			if (args.length >= 2) {
 				extra = args[1];
 			}
-			taskManager.execute(task, extra, false);
+
+			Integer errorCount = 0;
+			Integer maxErrorCount = settings.getInteger(Settings.ERROR_MAX_COUNT);
+			Boolean shouldRetry = true;
+			do {
+				try {
+					taskManager.execute(task, extra, false);
+					shouldRetry = false;
+				} catch (SQLException e) {
+					if (e.getMessage().contains("SQLITE_BUSY")) {
+						errorCount = errorCount + 1;
+						if (errorCount.equals(maxErrorCount)) {
+							throw e;
+						} else {
+							log.error("Database-Error, retry!", e);
+						}
+					} else {
+						throw e;
+					}
+				}
+			} while (shouldRetry);
 		} catch (SQLException e) {
 			log.error("Database-Error!", e);
 		} catch (IOException | InvalidPathException e) {
