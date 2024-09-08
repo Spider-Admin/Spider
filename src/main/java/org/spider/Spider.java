@@ -541,7 +541,7 @@ public class Spider implements AutoCloseable {
 				return;
 			}
 			if (freesiteObj.crawlOnlyIndex() && !path.equals(INDEX_PATH)) {
-				log.warn("Ignore path {}", path);
+				log.info("Ignore path {}", path);
 				return;
 			}
 
