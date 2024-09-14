@@ -1,5 +1,5 @@
 /*
-  Copyright 2022 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2022 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Iterator;
 
 import org.slf4j.Logger;
@@ -183,8 +182,7 @@ public class FrostImporter extends Spider {
 //					}
 				} catch (StorageError e) {
 					if (e.getErrorCode() == StorageError.DELETED_OBJECT) {
-						log.error("Deleted Message {} {} {}", oid, message.getSubject(),
-								new Date(message.getDateAndTime()));
+						log.error("Deleted Message {} {}", oid, message.getSubject());
 					} else {
 						throw e;
 					}

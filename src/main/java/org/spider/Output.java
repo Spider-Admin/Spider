@@ -26,7 +26,6 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -37,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.spider.data.Freesite;
 import org.spider.data.Key;
 import org.spider.storage.Storage;
+import org.spider.utility.DateUtility;
 
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
@@ -265,7 +265,7 @@ public class Output implements AutoCloseable {
 		params.put("countTotal", freesiteList.size());
 		params.put("isRelease", isRelease);
 		params.put("countOnline", countOnline);
-		params.put("lastUpdate", new Date());
+		params.put("lastUpdate", DateUtility.getNow());
 		params.put("keyPrefix", keyPrefix);
 
 		writeFreesiteIndex(new ArrayList<Freesite>(freesiteList), Page.ONLINE);

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
 
 package org.spider.data;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 public class Path {
 
 	private String path;
 	private Boolean online;
-	private Date added;
-	private Date crawled;
+	private OffsetDateTime added;
+	private OffsetDateTime crawled;
 
-	public Path(String path, Boolean online, Date added, Date crawled) {
+	public Path(String path, Boolean online, OffsetDateTime added, OffsetDateTime crawled) {
 		this.path = path;
 		this.online = online;
 		this.added = added;
@@ -40,11 +40,11 @@ public class Path {
 		return online;
 	}
 
-	public Date getAdded() {
+	public OffsetDateTime getAdded() {
 		return added;
 	}
 
-	public Date getCrawled() {
+	public OffsetDateTime getCrawled() {
 		return crawled;
 	}
 }

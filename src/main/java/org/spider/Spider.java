@@ -22,8 +22,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,6 +36,7 @@ import org.spider.data.Key;
 import org.spider.network.Freenet;
 import org.spider.storage.Export;
 import org.spider.storage.Storage;
+import org.spider.utility.DateUtility;
 import org.spider.utility.URLUtility;
 
 import net.pterodactylus.fcp.SubscribeUSK;
@@ -92,8 +93,8 @@ public class Spider implements AutoCloseable {
 				key.setEdition(null);
 				key.setPath(INDEX_PATH);
 				log.info("Add freesite {}{}/", key.getKey(), key.getEditionHint());
-				storage.addFreesite(key, new Date());
-				storage.addPath(key, new Date());
+				storage.addFreesite(key, DateUtility.getNow());
+				storage.addPath(key, DateUtility.getNow());
 			} else {
 				log.error("Ignore freesite {} without edition!", freesite);
 				return;
@@ -430,7 +431,7 @@ public class Spider implements AutoCloseable {
 		Boolean isOnlineOld = oldFreesite.isOnlineOld();
 
 		storage.updateFreesite(key, author, title, keywords, description, language, isFMS, isSone, hasActiveLink,
-				isOnline, isOnlineOld, isObsolete, ignoreResetOffline, new Date(), comment, category);
+				isOnline, isOnlineOld, isObsolete, ignoreResetOffline, DateUtility.getNow(), comment, category);
 	}
 
 	public Boolean updateFreesiteEdition(String freesite, Boolean searchNew) throws SQLException {
@@ -450,7 +451,7 @@ public class Spider implements AutoCloseable {
 		}
 
 		Key oldKey = oldFreesite.getKeyObj();
-		Date crawledDate = oldFreesite.getCrawled();
+		OffsetDateTime crawledDate = oldFreesite.getCrawled();
 
 		// Fake EditionHint:
 		// E.g. A freesite links to edition -10, but only edition 5 is available.
@@ -498,7 +499,7 @@ public class Spider implements AutoCloseable {
 						storage.deleteAllPath(key);
 						storage.deleteAllInvalidEdition(key);
 						key.setPath(INDEX_PATH);
-						storage.addPath(key, new Date());
+						storage.addPath(key, DateUtility.getNow());
 					}
 					isUpdated = true;
 					crawledDate = null;
@@ -547,7 +548,7 @@ public class Spider implements AutoCloseable {
 
 			if (oldKey.getEdition() != null && oldKey.getEdition().equals(key.getEdition())) {
 				log.info("Add path {}", key.getPath());
-				storage.addPath(key, new Date());
+				storage.addPath(key, DateUtility.getNow());
 			} else {
 				log.warn("Path {} not added. Edition does not match: {} != {}", key.getPath(), oldKey.getEdition(),
 						key.getEdition());
@@ -558,7 +559,7 @@ public class Spider implements AutoCloseable {
 	private void updatePath(String freesite, String path, Boolean online) throws SQLException {
 		Key key = new Key(freesite);
 		key.setPath(path);
-		storage.updatePath(key, online, new Date());
+		storage.updatePath(key, online, DateUtility.getNow());
 	}
 
 	public void subscribeUSK(FcpClient freenet, Key key) throws IOException {

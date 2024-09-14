@@ -20,8 +20,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 
 import org.slf4j.Logger;
@@ -368,7 +368,7 @@ public class Storage implements AutoCloseable {
 		setDatabaseVersion.executeUpdate();
 	}
 
-	public void addFreesite(Key key, Date added) throws SQLException {
+	public void addFreesite(Key key, OffsetDateTime added) throws SQLException {
 		insertFreesite = Database.prepareStatement(connection, insertFreesite, INSERT_FREESITE_SQL);
 		insertFreesite.setString(1, key.getKey());
 		Database.setLong(insertFreesite, 2, key.getEdition());
@@ -382,7 +382,7 @@ public class Storage implements AutoCloseable {
 
 	public void updateFreesite(Key key, String author, String title, String keywords, String description,
 			String language, Boolean FMS, Boolean sone, Boolean activeLink, Boolean online, Boolean onlineOld,
-			Boolean obsolete, Boolean ignoreResetOffline, Date crawled, String comment, String category)
+			Boolean obsolete, Boolean ignoreResetOffline, OffsetDateTime crawled, String comment, String category)
 			throws SQLException {
 		updateFreesite = Database.prepareStatement(connection, updateFreesite, UPDATE_FREESITE_SQL);
 		updateFreesite.setString(1, author);
@@ -404,7 +404,7 @@ public class Storage implements AutoCloseable {
 		updateFreesite.executeUpdate();
 	}
 
-	public void updateFreesiteEdition(Key key, Date crawled) throws SQLException {
+	public void updateFreesiteEdition(Key key, OffsetDateTime crawled) throws SQLException {
 		updateFreesiteEdition = Database.prepareStatement(connection, updateFreesiteEdition,
 				UPDATE_FREESITE_EDITION_SQL);
 		Database.setLong(updateFreesiteEdition, 1, key.getEdition());
@@ -460,8 +460,8 @@ public class Storage implements AutoCloseable {
 		Boolean ignoreResetOffline = Database.getBoolean(resultSet, "IgnoreResetOffline");
 		Boolean crawlOnlyIndex = Database.getBoolean(resultSet, "CrawlOnlyIndex");
 		Boolean highlight = Database.getBoolean(resultSet, "Highlight");
-		Date added = Database.getDate(resultSet, "Added");
-		Date crawled = Database.getDate(resultSet, "Crawled");
+		OffsetDateTime added = Database.getDate(resultSet, "Added");
+		OffsetDateTime crawled = Database.getDate(resultSet, "Crawled");
 		String comment = resultSet.getString("Comment");
 		String category = resultSet.getString("Category");
 		Key resultKey = new Key(rawKey, edition, editionHint);
@@ -521,7 +521,7 @@ public class Storage implements AutoCloseable {
 		return result;
 	}
 
-	public void addPath(Key key, Date added) throws SQLException {
+	public void addPath(Key key, OffsetDateTime added) throws SQLException {
 		Integer id = getFreesiteID(key);
 		insertPath = Database.prepareStatement(connection, insertPath, INSERT_PATH_SQL);
 		Database.setInteger(insertPath, 1, id);
@@ -530,7 +530,7 @@ public class Storage implements AutoCloseable {
 		insertPath.executeUpdate();
 	}
 
-	public void updatePath(Key key, Boolean online, Date crawled) throws SQLException {
+	public void updatePath(Key key, Boolean online, OffsetDateTime crawled) throws SQLException {
 		Integer id = getFreesiteID(key);
 		updatePath = Database.prepareStatement(connection, updatePath, UPDATE_PATH_SQL);
 		Database.setBoolean(updatePath, 1, online);
@@ -564,8 +564,8 @@ public class Storage implements AutoCloseable {
 	private Path getPath(ResultSet resultSet) throws SQLException {
 		String path = resultSet.getString("Path");
 		Boolean online = Database.getBoolean(resultSet, "Online");
-		Date added = Database.getDate(resultSet, "Added");
-		Date crawled = Database.getDate(resultSet, "Crawled");
+		OffsetDateTime added = Database.getDate(resultSet, "Added");
+		OffsetDateTime crawled = Database.getDate(resultSet, "Crawled");
 		return new Path(path, online, added, crawled);
 	}
 

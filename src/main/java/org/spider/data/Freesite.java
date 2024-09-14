@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package org.spider.data;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.spider.network.Freenet;
@@ -41,8 +41,8 @@ public class Freesite {
 	private Boolean ignoreResetOffline;
 	private Boolean crawlOnlyIndex;
 	private Boolean highlight;
-	private Date added;
-	private Date crawled;
+	private OffsetDateTime added;
+	private OffsetDateTime crawled;
 	private String comment;
 	private String category;
 
@@ -55,8 +55,8 @@ public class Freesite {
 
 	public Freesite(Integer id, Key key, String author, String title, String keywords, String description,
 			String language, Boolean fms, Boolean sone, Boolean activeLink, Boolean online, Boolean onlineOld,
-			Boolean obsolete, Boolean ignoreResetOffline, Boolean crawlOnlyIndex, Boolean highlight, Date added,
-			Date crawled, String comment, String category) {
+			Boolean obsolete, Boolean ignoreResetOffline, Boolean crawlOnlyIndex, Boolean highlight,
+			OffsetDateTime added, OffsetDateTime crawled, String comment, String category) {
 		this.id = id;
 		this.key = key;
 		this.author = author;
@@ -156,11 +156,11 @@ public class Freesite {
 		return highlight;
 	}
 
-	public Date getAdded() {
+	public OffsetDateTime getAdded() {
 		return added;
 	}
 
-	public Date getCrawled() {
+	public OffsetDateTime getCrawled() {
 		return crawled;
 	}
 

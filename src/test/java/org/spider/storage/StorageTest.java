@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -430,16 +429,16 @@ public class StorageTest {
 
 			// Add some extra stuff
 			key2.setPath("index.htm");
-			storage.addPath(key2, new Date());
-			storage.updatePath(key2, true, new Date());
+			storage.addPath(key2, DateUtility.getNow());
+			storage.updatePath(key2, true, DateUtility.getNow());
 			key2.setPath("content.htm");
-			storage.addPath(key2, new Date());
-			storage.updatePath(key2, true, new Date());
+			storage.addPath(key2, DateUtility.getNow());
+			storage.updatePath(key2, true, DateUtility.getNow());
 			key2.setPath("offlline.htm");
-			storage.addPath(key2, new Date());
-			storage.updatePath(key2, false, new Date());
+			storage.addPath(key2, DateUtility.getNow());
+			storage.updatePath(key2, false, DateUtility.getNow());
 			key2.setPath("not-crawled.htm");
-			storage.addPath(key2, new Date());
+			storage.addPath(key2, DateUtility.getNow());
 			storage.addNetwork(key2, key1);
 			storage.addNetwork(key2, key3);
 			storage.addNetwork(key3, key2);
@@ -644,9 +643,9 @@ public class StorageTest {
 			Key targetKey1 = new Key("USK@something2/site/2/");
 			Key targetKey2 = new Key("USK@something3/site/3/");
 
-			storage.addFreesite(key, new Date());
-			storage.addFreesite(targetKey1, new Date());
-			storage.addFreesite(targetKey2, new Date());
+			storage.addFreesite(key, DateUtility.getNow());
+			storage.addFreesite(targetKey1, DateUtility.getNow());
+			storage.addFreesite(targetKey2, DateUtility.getNow());
 
 			ArrayList<Integer> inNetwork = storage.getInNetwork(key);
 			ArrayList<Integer> outNetwork = storage.getOutNetwork(key);
@@ -694,7 +693,7 @@ public class StorageTest {
 		try (Storage storage = new Storage(connection);) {
 			Key key = new Key("USK@something1/site/1/");
 
-			storage.addFreesite(key, new Date());
+			storage.addFreesite(key, DateUtility.getNow());
 
 			assertFalse(storage.isEditionInvalid(key));
 

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import org.spider.Settings;
 import org.spider.utility.DateUtility;
@@ -94,22 +94,22 @@ public class Database {
 		statement.setObject(position, value, Types.BOOLEAN);
 	}
 
-	public static Date getDate(ResultSet resultSet, String columnName) throws SQLException {
-		Timestamp result = resultSet.getTimestamp(columnName, DateUtility.getUTCCalendar());
+	public static OffsetDateTime getDate(ResultSet resultSet, String columnName) throws SQLException {
+		Timestamp result = resultSet.getTimestamp(columnName);
 		if (resultSet.wasNull()) {
 			return null;
 		} else {
-			return new Date(result.getTime());
+			return OffsetDateTime.ofInstant(result.toInstant(), DateUtility.getTimeZone());
 		}
 	}
 
-	public static void setDate(PreparedStatement statement, Integer position, Date value) throws SQLException {
+	public static void setDate(PreparedStatement statement, Integer position, OffsetDateTime value)
+			throws SQLException {
 		Timestamp timestamp = null;
 		if (value != null) {
-			timestamp = new Timestamp(value.getTime());
+			timestamp = Timestamp.from(value.toInstant());
 		}
-
-		statement.setTimestamp(position, timestamp, DateUtility.getUTCCalendar());
+		statement.setTimestamp(position, timestamp);
 	}
 
 	public static void execute(Connection connection, String query) throws SQLException {

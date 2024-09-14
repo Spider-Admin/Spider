@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -16,23 +16,21 @@
 
 package org.spider.utility;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 public class DateUtility {
 
-	public static final String UTC = "UTC";
-
-	public static Calendar getUTCCalendar() {
-		return Calendar.getInstance(TimeZone.getTimeZone(UTC));
+	public static ZoneOffset getTimeZone() {
+		return ZoneOffset.UTC;
 	}
 
-	public static Date getDate(Integer year, Integer month, Integer day, Integer hour, Integer minute, Integer second) {
-		Calendar calendar = getUTCCalendar();
+	public static OffsetDateTime getNow() {
+		return OffsetDateTime.now(getTimeZone());
+	}
 
-		calendar.set(year, month - 1, day, hour, minute, second);
-		calendar.set(Calendar.MILLISECOND, 0);
-		return calendar.getTime();
+	public static OffsetDateTime getDate(Integer year, Integer month, Integer day, Integer hour, Integer minute,
+			Integer second) {
+		return OffsetDateTime.of(year, month, day, hour, minute, second, 0, getTimeZone());
 	}
 }
