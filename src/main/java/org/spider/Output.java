@@ -50,8 +50,10 @@ public class Output implements AutoCloseable {
 	private static final Logger log = LoggerFactory.getLogger(Output.class);
 
 	private enum Page {
-		ONLINE, ONLINE_IMG, FMS, FMS_IMG, SONE, OFFLINE, FAQ
+		ONLINE, ONLINE_IMG, FMS, FMS_IMG, GIT, SONE, OFFLINE, FAQ
 	};
+
+	private static final String GIT_CATEGORY = "Git-Repository-Using-Dgof";
 
 	private Settings settings;
 
@@ -75,6 +77,7 @@ public class Output implements AutoCloseable {
 		filenames.put(Page.ONLINE_IMG, "index-img.htm");
 		filenames.put(Page.FMS, "fms.htm");
 		filenames.put(Page.FMS_IMG, "fms-img.htm");
+		filenames.put(Page.GIT, "git.htm");
 		filenames.put(Page.SONE, "sone.htm");
 		filenames.put(Page.OFFLINE, "offline.htm");
 		filenames.put(Page.FAQ, "faq.htm");
@@ -84,6 +87,7 @@ public class Output implements AutoCloseable {
 		titles.put(Page.ONLINE_IMG, "Online (Gallery)");
 		titles.put(Page.FMS, "FMS");
 		titles.put(Page.FMS_IMG, "FMS (Gallery)");
+		titles.put(Page.GIT, "Git");
 		titles.put(Page.SONE, "Sone");
 		titles.put(Page.OFFLINE, "Offline");
 		titles.put(Page.FAQ, "About / FAQ");
@@ -93,6 +97,7 @@ public class Output implements AutoCloseable {
 		templateNames.put(Page.ONLINE_IMG, "gallery.ftlh");
 		templateNames.put(Page.FMS, "index.ftlh");
 		templateNames.put(Page.FMS_IMG, "gallery.ftlh");
+		templateNames.put(Page.GIT, "index.ftlh");
 		templateNames.put(Page.SONE, "index.ftlh");
 		templateNames.put(Page.OFFLINE, "index.ftlh");
 		templateNames.put(Page.FAQ, "faq.ftlh");
@@ -163,7 +168,8 @@ public class Output implements AutoCloseable {
 			} else {
 				switch (type) {
 				case ONLINE:
-					if (freesite.isFMS() || freesite.isSone() || !freesite.isOnline()) {
+					if (freesite.isFMS() || freesite.isSone() || !freesite.isOnline()
+							|| freesite.getCategory().contains(GIT_CATEGORY)) {
 						shouldRemove = true;
 					}
 					break;
@@ -179,6 +185,11 @@ public class Output implements AutoCloseable {
 					break;
 				case FMS_IMG:
 					if (!freesite.isFMS() || !freesite.isOnline() || !freesite.hasActiveLink()) {
+						shouldRemove = true;
+					}
+					break;
+				case GIT:
+					if (!freesite.getCategory().contains(GIT_CATEGORY)) {
 						shouldRemove = true;
 					}
 					break;
@@ -272,6 +283,7 @@ public class Output implements AutoCloseable {
 		writeFreesiteIndex(new ArrayList<Freesite>(freesiteList), Page.ONLINE_IMG);
 		writeFreesiteIndex(new ArrayList<Freesite>(freesiteList), Page.FMS);
 		writeFreesiteIndex(new ArrayList<Freesite>(freesiteList), Page.FMS_IMG);
+		writeFreesiteIndex(new ArrayList<Freesite>(freesiteList), Page.GIT);
 		writeFreesiteIndex(new ArrayList<Freesite>(freesiteList), Page.SONE);
 		writeFreesiteIndex(new ArrayList<Freesite>(freesiteList), Page.OFFLINE);
 		writePage(Page.FAQ);
