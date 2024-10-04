@@ -102,7 +102,7 @@ public class Output implements AutoCloseable {
 		this.storage = new Storage(connection);
 		this.settings = Settings.getInstance();
 
-		templateConfig = new Configuration(Configuration.VERSION_2_3_30);
+		templateConfig = new Configuration(Configuration.VERSION_2_3_33);
 		templateConfig.setDefaultEncoding(settings.getCharset().name());
 		templateConfig.setLocale(Locale.US);
 		templateConfig.setDateTimeFormat("yyyy-MM-dd HH:mm:ss");
