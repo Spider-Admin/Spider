@@ -239,7 +239,7 @@ public class Storage implements AutoCloseable {
 	// 1.1 = 2
 	// 1.2 = 3
 	// 1.3 = 4
-	private static final int currentDatabaseVersion = 4;
+	private static final int latestDatabaseVersion = 4;
 
 	public Storage(Connection connection) throws SQLException {
 
@@ -250,7 +250,7 @@ public class Storage implements AutoCloseable {
 		switch (getDatabaseVersion()) {
 		case -1:
 		case 0: // missing version
-			log.info("Create database for version {}", currentDatabaseVersion);
+			log.info("Create database for version {}", latestDatabaseVersion);
 			for (String query : TABLES.values()) {
 				Database.execute(connection, query);
 			}
@@ -259,20 +259,20 @@ public class Storage implements AutoCloseable {
 			}
 			Database.execute(connection, INSERT_TASK_LIST);
 			resetTaskList();
-			setDatabaseVersion(currentDatabaseVersion);
+			setDatabaseVersion(latestDatabaseVersion);
 			connection.commit();
 			break;
 		case 1:
 		case 2:
 		case 3:
-			while (getDatabaseVersion() < currentDatabaseVersion) {
+			while (getDatabaseVersion() < latestDatabaseVersion) {
 				Integer nextVersion = getDatabaseVersion() + 1;
 				updateDatebase(nextVersion);
 				setDatabaseVersion(nextVersion);
 				connection.commit();
 			}
 			break;
-		case currentDatabaseVersion: // nothing to do
+		case latestDatabaseVersion: // nothing to do
 			connection.rollback();
 			break;
 		default:
@@ -351,7 +351,7 @@ public class Storage implements AutoCloseable {
 		}
 	}
 
-	private Integer getDatabaseVersion() throws SQLException {
+	public Integer getDatabaseVersion() throws SQLException {
 		Integer result = -1;
 		getDatabaseVersion = Database.prepareStatement(connection, getDatabaseVersion, SELECT_DATABASE_VERSION_SQL);
 		try (ResultSet resultSet = getDatabaseVersion.executeQuery()) {
@@ -360,6 +360,10 @@ public class Storage implements AutoCloseable {
 			}
 		}
 		return result;
+	}
+
+	public Integer getLatestDatabaseVersion() {
+		return latestDatabaseVersion;
 	}
 
 	private void setDatabaseVersion(Integer version) throws SQLException {

@@ -36,6 +36,7 @@ public class StorageTest {
 	@Test
 	public void databaseVersion() throws SQLException {
 		try (Storage storage = new Storage(connection);) {
+			assertEquals(storage.getLatestDatabaseVersion(), storage.getDatabaseVersion());
 		}
 	}
 
