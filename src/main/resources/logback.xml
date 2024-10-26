@@ -1,4 +1,4 @@
-<configuration scan="true" scanPeriod="5 minutes" debug="false">
+<configuration scan="false" debug="false">
 
 	<contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator" />
 
