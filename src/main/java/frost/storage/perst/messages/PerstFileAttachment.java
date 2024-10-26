@@ -22,6 +22,8 @@ import com.mcobject.perst.Persistent;
 
 public class PerstFileAttachment extends Persistent {
 
+	private static final long serialVersionUID = 1L;
+
 	private String name;
 	private long size;
 	private String chkKey;

@@ -22,6 +22,8 @@ import com.mcobject.perst.Persistent;
 
 public class PerstString extends Persistent {
 
+	private static final long serialVersionUID = 1L;
+
 	private String value;
 
 	public PerstString(String value) {

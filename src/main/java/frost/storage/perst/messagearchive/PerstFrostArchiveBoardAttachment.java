@@ -22,6 +22,8 @@ import com.mcobject.perst.Persistent;
 
 public class PerstFrostArchiveBoardAttachment extends Persistent {
 
+	private static final long serialVersionUID = 1L;
+
 	private String name;
 	private String pubKey;
 	private String privKey;

@@ -24,6 +24,8 @@ import com.mcobject.perst.Storage;
 
 public class MessageStorageRoot extends Persistent {
 
+	private static final long serialVersionUID = 1L;
+
 	private Index<PerstFrostBoardObject> boardsByName;
 	private Index<PerstFrostBoardObject> boardsById;
 

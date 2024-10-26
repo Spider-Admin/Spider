@@ -24,6 +24,8 @@ import com.mcobject.perst.Storage;
 
 public class PerstFrostUnsentMessageObject extends Persistent {
 
+	private static final long serialVersionUID = 1L;
+
 	private String messageId;
 	private String inReplyTo;
 
@@ -111,6 +113,8 @@ public class PerstFrostUnsentMessageObject extends Persistent {
 
 	public class PerstFrostUnsentFileAttachment extends Persistent {
 
+		private static final long serialVersionUID = 1L;
+
 		private String name;
 		private long size;
 		private String chkKey;
@@ -135,6 +139,8 @@ public class PerstFrostUnsentMessageObject extends Persistent {
 	}
 
 	public class PerstFrostUnsentBoardAttachment extends Persistent {
+
+		private static final long serialVersionUID = 1L;
 
 		private String name;
 		private String pubKey;

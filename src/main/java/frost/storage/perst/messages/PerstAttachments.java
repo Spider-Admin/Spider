@@ -26,6 +26,8 @@ import com.mcobject.perst.Storage;
 
 public class PerstAttachments extends Persistent {
 
+	private static final long serialVersionUID = 1L;
+
 	private IPersistentList<PerstBoardAttachment> boardAttachments;
 	private IPersistentList<PerstFileAttachment> fileAttachments;
 

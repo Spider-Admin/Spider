@@ -24,6 +24,8 @@ import com.mcobject.perst.Storage;
 
 public class PerstIdentitiesMessages extends Persistent {
 
+	private static final long serialVersionUID = 1L;
+
 	private String uniqueName;
 	private IPersistentList<PerstFrostMessageObject> messagesFromIdentity;
 

@@ -26,6 +26,8 @@ import com.mcobject.perst.Persistent;
  */
 public class PerstFrostMessageObject extends Persistent {
 
+	private static final long serialVersionUID = 1L;
+
 	private String messageId;
 	private String inReplyTo;
 
