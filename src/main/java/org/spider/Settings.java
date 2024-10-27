@@ -20,6 +20,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Properties;
@@ -87,12 +89,19 @@ public class Settings {
 
 	private static final String SETTINGS_FILENAME = "spider.properties";
 
+	private static final String SETTINGS_DISTRIBUTION_PATH = "src/main/dist/";
+
 	private static final String NO_CATEGORY = "NO_CATEGORY";
 
 	protected Settings() {
-		log.info("Loading settings from {}", SETTINGS_FILENAME);
+		String settingsFilename = SETTINGS_FILENAME;
+		if (!Files.exists(Path.of(settingsFilename))) {
+			settingsFilename = Path.of(SETTINGS_DISTRIBUTION_PATH, SETTINGS_FILENAME).toString();
+		}
 
-		try (FileReader reader = new FileReader(SETTINGS_FILENAME, getCharset())) {
+		log.info("Loading settings from {}", settingsFilename);
+
+		try (FileReader reader = new FileReader(settingsFilename, getCharset())) {
 			properties = new Properties();
 			properties.load(reader);
 		} catch (IOException e) {
