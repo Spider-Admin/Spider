@@ -73,8 +73,6 @@ public class Storage implements AutoCloseable {
 
 	private static final String FREESITE_FIELD_LIST = "`ID`, `Key`, `Edition`, `EditionHint`, `Author`, `Title`, `Keywords`, `Description`, `Language`, `FMS`, `Sone`, `ActiveLink`, `Online`, `OnlineOld`, `Obsolete`, `IgnoreResetOffline`, `CrawlOnlyIndex`, (`Online` IS NOT `OnlineOld`) AS `Highlight`, `Added`, `Crawled`, `Comment`, `Category`";
 	private static final String GET_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST + " FROM `Freesite` WHERE `Key` = ?";
-	private static final String FIND_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST
-			+ " FROM `Freesite` WHERE `Key` LIKE ?";
 	private static final String GET_ALL_FREESITE_SQL = "SELECT " + FREESITE_FIELD_LIST
 			+ " FROM `Freesite` ORDER BY `Highlight` DESC, `Crawled` DESC ";
 
@@ -492,19 +490,6 @@ public class Storage implements AutoCloseable {
 
 	public Freesite getFreesite(Key key) throws SQLException {
 		return getFreesite(key, true);
-	}
-
-	public ArrayList<Freesite> findFreesite(String searchKey) throws SQLException {
-		ArrayList<Freesite> result = new ArrayList<>();
-		findFreesite = Database.prepareStatement(connection, findFreesite, FIND_FREESITE_SQL);
-		findFreesite.setString(1, "%" + searchKey + "%");
-		try (ResultSet resultSet = findFreesite.executeQuery()) {
-			while (resultSet.next()) {
-				Freesite freesite = getFreesite(resultSet);
-				result.add(freesite);
-			}
-		}
-		return result;
 	}
 
 	public ArrayList<Freesite> getAllFreesite(Boolean getFull) throws SQLException {
