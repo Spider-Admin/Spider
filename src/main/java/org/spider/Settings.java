@@ -128,7 +128,7 @@ public class Settings {
 		return Boolean.valueOf(getString(key));
 	}
 
-	public Charset getCharset() {
+	public final Charset getCharset() {
 		return StandardCharsets.UTF_8;
 	}
 

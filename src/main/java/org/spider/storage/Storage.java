@@ -349,7 +349,7 @@ public class Storage implements AutoCloseable {
 		}
 	}
 
-	public Integer getDatabaseVersion() throws SQLException {
+	public final Integer getDatabaseVersion() throws SQLException {
 		Integer result = -1;
 		getDatabaseVersion = Database.prepareStatement(connection, getDatabaseVersion, SELECT_DATABASE_VERSION_SQL);
 		try (ResultSet resultSet = getDatabaseVersion.executeQuery()) {
@@ -677,7 +677,7 @@ public class Storage implements AutoCloseable {
 		resetHighlight.executeUpdate();
 	}
 
-	public ArrayList<Task> getTaskList() throws SQLException {
+	public final ArrayList<Task> getTaskList() throws SQLException {
 		ArrayList<Task> taskList = new ArrayList<>();
 		getTaskList = Database.prepareStatement(connection, getTaskList, GET_TASK_LIST_SQL);
 		Database.setBoolean(getTaskList, 1, true);
@@ -746,7 +746,7 @@ public class Storage implements AutoCloseable {
 		}
 	}
 
-	public void resetTaskList() throws SQLException {
+	public final void resetTaskList() throws SQLException {
 		ArrayList<Task> list = getTaskList();
 		setCurrentTask(list.get(0));
 	}

@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ public class Key {
 		this(key, edition, editionHint, "");
 	}
 
-	private void updateKeyParts() {
+	private final void updateKeyParts() {
 		keyOnly = "";
 		sitePath = "";
 		folder = "";
@@ -101,7 +101,7 @@ public class Key {
 		return key;
 	}
 
-	public Boolean isUSK() {
+	public final Boolean isUSK() {
 		return key != null && key.startsWith("USK@");
 	}
 

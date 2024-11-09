@@ -1,5 +1,5 @@
 /*
-  Copyright 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2023 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ public class TaskManager implements AutoCloseable {
 		return defaultTask.toString();
 	}
 
-	public Connection getConnection() {
+	public final Connection getConnection() {
 		return connection;
 	}
 
