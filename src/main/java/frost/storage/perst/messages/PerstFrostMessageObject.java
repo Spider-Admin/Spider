@@ -55,6 +55,9 @@ public class PerstFrostMessageObject extends Persistent {
 	private int idLinePos;
 	private int idLineLen;
 
+	public PerstFrostMessageObject() {
+	}
+
 	public PerstFrostMessageObject(String messageId, String inReplyTo, long dateAndTime, int msgIndex,
 			String invalidReason, String fromName, String subject, String recipientName, int signatureStatus,
 			boolean isDeleted, boolean isNew, boolean isReplied, boolean isJunk, boolean isFlagged, boolean isStarred,

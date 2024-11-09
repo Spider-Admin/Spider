@@ -31,6 +31,9 @@ public class PerstFrostArchiveBoardObject extends Persistent {
 	private Index<PerstFrostArchiveMessageObject> messageIndex;
 	private Index<PerstFrostArchiveMessageObject> messageIdIndex;
 
+	public PerstFrostArchiveBoardObject() {
+	}
+
 	public PerstFrostArchiveBoardObject(Storage storage, String name) {
 		boardName = name;
 

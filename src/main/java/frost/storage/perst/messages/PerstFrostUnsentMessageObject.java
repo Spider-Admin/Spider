@@ -37,14 +37,17 @@ public class PerstFrostUnsentMessageObject extends Persistent {
 	private int idLinePos;
 	private int idLineLen;
 
-	private Link<PerstFrostUnsentBoardAttachment> boardAttachments;
-	private Link<PerstFrostUnsentFileAttachment> fileAttachments;
+	private transient Link<PerstFrostUnsentBoardAttachment> boardAttachments;
+	private transient Link<PerstFrostUnsentFileAttachment> fileAttachments;
 
 	private String content;
 
 	private long timeAdded;
 
 	private long sendAfterTime;
+
+	public PerstFrostUnsentMessageObject() {
+	}
 
 	public PerstFrostUnsentMessageObject(Storage storage, String messageId, String inReplyTo, String fromName,
 			String subject, String recipientName, int idLinePos, int idLineLen, String content, long timeAdded,
@@ -119,6 +122,9 @@ public class PerstFrostUnsentMessageObject extends Persistent {
 		private long size;
 		private String chkKey;
 
+		public PerstFrostUnsentFileAttachment() {
+		}
+
 		public PerstFrostUnsentFileAttachment(String name, long size, String chkKey) {
 			this.name = name;
 			this.size = size;
@@ -146,6 +152,9 @@ public class PerstFrostUnsentMessageObject extends Persistent {
 		private String pubKey;
 		private String privKey;
 		private String description;
+
+		public PerstFrostUnsentBoardAttachment() {
+		}
 
 		public PerstFrostUnsentBoardAttachment(String name, String pubKey, String privKey, String description) {
 			this.name = name;

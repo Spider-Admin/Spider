@@ -31,6 +31,9 @@ public class PerstAttachments extends Persistent {
 	private IPersistentList<PerstBoardAttachment> boardAttachments;
 	private IPersistentList<PerstFileAttachment> fileAttachments;
 
+	public PerstAttachments() {
+	}
+
 	public PerstAttachments(Storage storage, IPersistentList<PerstBoardAttachment> otherBoardAttachments,
 			IPersistentList<PerstFileAttachment> otherFileAttachments) {
 		if (otherBoardAttachments != null && otherBoardAttachments.size() > 0) {

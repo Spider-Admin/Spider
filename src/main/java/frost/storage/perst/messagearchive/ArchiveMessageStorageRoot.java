@@ -28,6 +28,9 @@ public class ArchiveMessageStorageRoot extends Persistent {
 
 	private Index<PerstFrostArchiveBoardObject> boardsByName;
 
+	public ArchiveMessageStorageRoot() {
+	}
+
 	public ArchiveMessageStorageRoot(Storage storage) {
 		boardsByName = storage.createIndex(String.class, true);
 	}

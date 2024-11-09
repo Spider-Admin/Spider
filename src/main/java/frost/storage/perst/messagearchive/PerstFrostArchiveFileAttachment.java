@@ -28,6 +28,9 @@ public class PerstFrostArchiveFileAttachment extends Persistent {
 	private long size;
 	private String chkKey;
 
+	public PerstFrostArchiveFileAttachment() {
+	}
+
 	public PerstFrostArchiveFileAttachment(String name, long size, String chkKey) {
 		this.name = name;
 		this.size = size;

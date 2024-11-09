@@ -26,6 +26,9 @@ public class PerstString extends Persistent {
 
 	private String value;
 
+	public PerstString() {
+	}
+
 	public PerstString(String value) {
 		this.value = value;
 	}

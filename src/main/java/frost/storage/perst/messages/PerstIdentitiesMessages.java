@@ -29,6 +29,9 @@ public class PerstIdentitiesMessages extends Persistent {
 	private String uniqueName;
 	private IPersistentList<PerstFrostMessageObject> messagesFromIdentity;
 
+	public PerstIdentitiesMessages() {
+	}
+
 	public PerstIdentitiesMessages(Storage storage, String uniqueName) {
 		this.uniqueName = uniqueName;
 		messagesFromIdentity = storage.createScalableList();

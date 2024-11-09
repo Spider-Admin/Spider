@@ -29,6 +29,9 @@ public class PerstFrostArchiveBoardAttachment extends Persistent {
 	private String privKey;
 	private String description;
 
+	public PerstFrostArchiveBoardAttachment() {
+	}
+
 	public PerstFrostArchiveBoardAttachment(String name, String pubKey, String privKey, String description) {
 		this.name = name;
 		this.pubKey = pubKey;

@@ -48,8 +48,11 @@ public class PerstFrostArchiveMessageObject extends Persistent {
 	private String content;
 	private String publicKey;
 
-	private Link<PerstFrostArchiveBoardAttachment> boardAttachments;
-	private Link<PerstFrostArchiveFileAttachment> fileAttachments;
+	private transient Link<PerstFrostArchiveBoardAttachment> boardAttachments;
+	private transient Link<PerstFrostArchiveFileAttachment> fileAttachments;
+
+	public PerstFrostArchiveMessageObject() {
+	}
 
 	public PerstFrostArchiveMessageObject(Storage storage, String messageId, String inReplyTo, long dateAndTime,
 			int msgIndex, String fromName, String subject, String recipientName, int signatureStatus, boolean isReplied,

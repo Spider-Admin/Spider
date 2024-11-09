@@ -31,6 +31,9 @@ public class MessageStorageRoot extends Persistent {
 
 	private Index<PerstIdentitiesMessages> identitiesMessages;
 
+	public MessageStorageRoot() {
+	}
+
 	public MessageStorageRoot(final Storage storage) {
 		boardsByName = storage.createIndex(String.class, true);
 		boardsById = storage.createIndex(int.class, true);

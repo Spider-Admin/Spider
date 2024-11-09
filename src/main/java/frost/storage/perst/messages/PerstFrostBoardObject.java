@@ -51,6 +51,9 @@ public class PerstFrostBoardObject extends Persistent {
 	private IPersistentList<PerstFrostUnsentMessageObject> unsentMessagesList;
 	private IPersistentList<PerstFrostUnsentMessageObject> draftMessagesList;
 
+	public PerstFrostBoardObject() {
+	}
+
 	public PerstFrostBoardObject(Storage storage, String boardName, int boardId) {
 		this.boardName = boardName;
 		this.boardId = boardId;

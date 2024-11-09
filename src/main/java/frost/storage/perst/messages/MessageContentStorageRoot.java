@@ -33,6 +33,9 @@ public class MessageContentStorageRoot extends Persistent {
 	private Index<PerstString> signatureByMsgOid;
 	private Index<PerstAttachments> attachmentsByMsgOid;
 
+	public MessageContentStorageRoot() {
+	}
+
 	public MessageContentStorageRoot(Storage storage) {
 		contentByMsgOid = storage.createIndex(int.class, true);
 		publickeyByMsgOid = storage.createIndex(int.class, true);

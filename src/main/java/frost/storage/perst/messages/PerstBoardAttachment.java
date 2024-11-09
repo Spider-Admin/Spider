@@ -29,6 +29,9 @@ public class PerstBoardAttachment extends Persistent {
 	private String privKey;
 	private String description;
 
+	public PerstBoardAttachment() {
+	}
+
 	public PerstBoardAttachment(String name, String pubKey, String privKey, String description) {
 		this.name = name;
 		this.pubKey = pubKey;
