@@ -37,8 +37,8 @@ public class PerstFrostUnsentMessageObject extends Persistent {
 	private int idLinePos;
 	private int idLineLen;
 
-	private transient Link<PerstFrostUnsentBoardAttachment> boardAttachments;
-	private transient Link<PerstFrostUnsentFileAttachment> fileAttachments;
+	private Link<PerstFrostUnsentBoardAttachment> boardAttachments;
+	private Link<PerstFrostUnsentFileAttachment> fileAttachments;
 
 	private String content;
 

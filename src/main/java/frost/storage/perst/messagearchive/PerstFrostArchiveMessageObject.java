@@ -48,8 +48,8 @@ public class PerstFrostArchiveMessageObject extends Persistent {
 	private String content;
 	private String publicKey;
 
-	private transient Link<PerstFrostArchiveBoardAttachment> boardAttachments;
-	private transient Link<PerstFrostArchiveFileAttachment> fileAttachments;
+	private Link<PerstFrostArchiveBoardAttachment> boardAttachments;
+	private Link<PerstFrostArchiveFileAttachment> fileAttachments;
 
 	public PerstFrostArchiveMessageObject() {
 	}
