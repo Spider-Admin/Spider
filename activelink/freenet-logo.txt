@@ -1,1 +1,1 @@
-http://localhost:8888/static/logo.png
+https://github.com/hyphanet/fred/blob/next/src/freenet/clients/http/staticfiles/logo.png
