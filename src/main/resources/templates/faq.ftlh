@@ -146,7 +146,8 @@
 <#if selfDatabaseKey?has_content>
 		<h3 id="database">Where can I get the database of your index?</h3>
 		<p>
-			Download a <abbr title="Structured Query Language">SQL</abbr>-dump using this key <a href="${keyPrefix}/${selfDatabaseKey}">${selfDatabaseKey}</a>.
+			<#t>Download a <abbr title="Structured Query Language">SQL</abbr>-dump using this key <a href="<@format.key freesite=selfDatabaseFreesite key=selfDatabaseKey/>"><@format.title freesite=selfDatabaseFreesite key=selfDatabaseKey/></a>.
+
 		</p>
 </#if>
 	</body>

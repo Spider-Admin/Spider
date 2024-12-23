@@ -125,6 +125,13 @@ public class Output implements AutoCloseable {
 		Freesite publishFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_PUBLISH_KEY)), false);
 		Freesite jsiteFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_JSITE_KEY)), false);
 
+		String databaseKeyRaw = settings.getString(Settings.INDEX_DATABASE_KEY);
+		Key databaseKey = new Key(databaseKeyRaw);
+		Freesite databaseFreesite = null;
+		if (databaseKey.isUSK()) {
+			databaseFreesite = storage.getFreesite(databaseKey);
+		}
+
 		params = new HashMap<>();
 		params.put("metaAuthor", settings.getString(Settings.META_AUTHOR));
 		params.put("metaDescription", settings.getString(Settings.META_DESCRIPTION));
@@ -138,7 +145,8 @@ public class Output implements AutoCloseable {
 		params.put("selfName", settings.getString(Settings.INDEX_NAME));
 		params.put("selfFreesite", selfFreesite);
 		params.put("selfSourceFreesite", selfSourceFreesite);
-		params.put("selfDatabaseKey", settings.getString(Settings.INDEX_DATABASE_KEY));
+		params.put("selfDatabaseKey", databaseKeyRaw);
+		params.put("selfDatabaseFreesite", databaseFreesite);
 		params.put("faqAbout", settings.getString(Settings.FAQ_ABOUT));
 		params.put("publishFreesite", publishFreesite);
 		params.put("jsiteFreesite", jsiteFreesite);

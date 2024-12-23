@@ -1,13 +1,21 @@
-<#macro title freesite>
-	<#if freesite.title?has_content>
-		<#t>${freesite.title}
-	<#else>
-		<#t>${freesite.sitePath}/${freesite.editionWithHint}
+<#macro title freesite="" key="">
+	<#if freesite != "">
+		<#if freesite.title?has_content>
+			<#t>${freesite.title}
+		<#else>
+			<#t>${freesite.sitePath}/${freesite.editionWithHint}
+		</#if>
+	<#else><#t>
+		<#t>${key}
 	</#if>
 </#macro>
 
-<#macro key freesite>
-	<#t>${keyPrefix}/${freesite.key?replace(" ", "%20")?replace("\t", "%09")}/${freesite.sitePath?url}/${freesite.editionWithHint}/
+<#macro key freesite="" key="">
+	<#if freesite != "">
+		<#t>${keyPrefix}/${freesite.key?replace(" ", "%20")?replace("\t", "%09")}/${freesite.sitePath?url}/${freesite.editionWithHint}/
+	<#else><#t>
+		<#t>${keyPrefix}/${key}
+	</#if>
 </#macro>
 
 <#macro activelink freesite>
