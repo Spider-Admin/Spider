@@ -607,7 +607,7 @@ public class Spider implements AutoCloseable {
 		Integer minDiff = Integer.MAX_VALUE;
 		Integer maxDiff = settings.getInteger(Settings.FAKE_KEY_MAX_DIFF);
 
-		LevenshteinDistance distance = new LevenshteinDistance();
+		LevenshteinDistance distance = LevenshteinDistance.getDefaultInstance();
 
 		ArrayList<Freesite> freesites = storage.getAllFreesite(false);
 		for (Freesite orgFreesite : freesites) {
