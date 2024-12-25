@@ -176,33 +176,34 @@ public class Output implements AutoCloseable {
 			} else {
 				switch (type) {
 				case ONLINE:
-					if (freesite.isFMS() || freesite.isSone() || !freesite.isOnline()
+					if (!freesite.isOnline() || freesite.isFMS() || freesite.isSone()
 							|| freesite.getCategory().contains(GIT_CATEGORY)) {
 						shouldRemove = true;
 					}
 					break;
 				case ONLINE_IMG:
-					if (freesite.isFMS() || freesite.isSone() || !freesite.isOnline() || !freesite.hasActiveLink()) {
+					if (!freesite.isOnline() || freesite.isFMS() || freesite.isSone()
+							|| freesite.getCategory().contains(GIT_CATEGORY) || !freesite.hasActiveLink()) {
 						shouldRemove = true;
 					}
 					break;
 				case FMS:
-					if (!freesite.isFMS() || !freesite.isOnline()) {
+					if (!freesite.isOnline() || !freesite.isFMS()) {
 						shouldRemove = true;
 					}
 					break;
 				case FMS_IMG:
-					if (!freesite.isFMS() || !freesite.isOnline() || !freesite.hasActiveLink()) {
+					if (!freesite.isOnline() || !freesite.isFMS() || !freesite.hasActiveLink()) {
 						shouldRemove = true;
 					}
 					break;
 				case GIT:
-					if (!freesite.getCategory().contains(GIT_CATEGORY)) {
+					if (!freesite.isOnline() || !freesite.getCategory().contains(GIT_CATEGORY)) {
 						shouldRemove = true;
 					}
 					break;
 				case SONE:
-					if (!freesite.isSone() || !freesite.isOnline()) {
+					if (!freesite.isOnline() || !freesite.isSone()) {
 						shouldRemove = true;
 					}
 					break;
