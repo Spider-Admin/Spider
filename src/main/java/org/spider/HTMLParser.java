@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ public class HTMLParser {
 	public HTMLParser() {
 	}
 
-	public void parseStream(InputStream stream) throws IOException {
+	public void reset() {
 		author = "";
 		title = "";
 		description = "";
@@ -56,7 +56,10 @@ public class HTMLParser {
 		language = "";
 		redirect = "";
 		paths = new ArrayList<>();
+	}
 
+	public void parseStream(InputStream stream) throws IOException {
+		reset();
 		doc = Jsoup.parse(stream, null, "");
 
 		title = filter(doc.title());

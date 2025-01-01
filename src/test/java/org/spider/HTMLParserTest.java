@@ -87,6 +87,49 @@ public class HTMLParserTest {
 	}
 
 	@Test
+	public void multipleCalls() throws FileNotFoundException, IOException {
+		HTMLParser parser = new HTMLParser();
+		parser.parseStream(new FileInputStream(TEST_PATH + "normal.htm"));
+		assertEquals("author образец", parser.getAuthor());
+		assertEquals("title образец", parser.getTitle());
+		assertEquals("description образец", parser.getDescription());
+		assertEquals("keyword1, keyword2 образец", parser.getKeywords());
+		assertEquals("en образец", parser.getLanguage());
+		assertEquals("redirect-образец.htm", parser.getRedirect());
+
+		ArrayList<String> paths = parser.getPaths();
+		assertEquals(4, paths.size());
+		assertEquals("index-образец.htm", paths.get(0));
+		assertEquals("test.htm", paths.get(1));
+		assertEquals("iframe-образец.htm", paths.get(2));
+		assertEquals("iframe2.htm", paths.get(3));
+
+		parser.reset();
+		assertEquals("", parser.getAuthor());
+		assertEquals("", parser.getTitle());
+		assertEquals("", parser.getDescription());
+		assertEquals("", parser.getKeywords());
+		assertEquals("", parser.getLanguage());
+		assertEquals("", parser.getRedirect());
+		assertEquals(0, parser.getPaths().size());
+
+		parser.parseStream(new FileInputStream(TEST_PATH + "special.htm"));
+		assertEquals("author образец", parser.getAuthor());
+		assertEquals("title образец", parser.getTitle());
+		assertEquals("description образец", parser.getDescription());
+		assertEquals("keyword1, keyword2 образец", parser.getKeywords());
+		assertEquals("en2 образец", parser.getLanguage());
+		assertEquals("redirect-образец.htm", parser.getRedirect());
+
+		paths = parser.getPaths();
+		assertEquals(4, paths.size());
+		assertEquals("index-образец.htm", paths.get(0));
+		assertEquals("test.htm", paths.get(1));
+		assertEquals("iframe-образец.htm", paths.get(2));
+		assertEquals("iframe2.htm", paths.get(3));
+	}
+
+	@Test
 	public void ignoredLinks() {
 		assertTrue(HTMLParser.isIgnored("/?newbookmark=USK@something/site/1/&desc=Something&hasAnActivelink=true"));
 		assertTrue(HTMLParser.isIgnored("/external-link/?_CHECKED_HTTP_=https://www.apache.org/licenses/LICENSE-2.0"));
