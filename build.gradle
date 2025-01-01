@@ -31,7 +31,7 @@ dependencies {
 	implementation("ch.qos.logback:logback-classic:1.5.15")
 	implementation("org.jsoup:jsoup:1.18.3")
 	implementation("org.xerial:sqlite-jdbc:3.47.1.0")
-	implementation("com.github.Bombe:jFCPlib:v0.1.6")
+	implementation("com.github.Bombe:jFCPlib:d279579ea44425b779fbf8220897aa1dc147ed26")
 	implementation("org.freemarker:freemarker:2.3.33") // Keep version in Output.java up to date: Configuration.VERSION_...
 	implementation("org.apache.commons:commons-text:1.13.0")
 	implementation("com.mcobject:com.mcobject.perst:1.3-SNAPSHOT")
