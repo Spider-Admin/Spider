@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -125,6 +126,9 @@ public class Output implements AutoCloseable {
 		Freesite publishFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_PUBLISH_KEY)), false);
 		Freesite jsiteFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_JSITE_KEY)), false);
 
+		ArrayList<String> hiddenCategories = settings.getHiddenCategories();
+		Collections.sort(hiddenCategories);
+
 		String databaseKeyRaw = settings.getString(Settings.INDEX_DATABASE_KEY);
 		Key databaseKey = new Key(databaseKeyRaw);
 		Freesite databaseFreesite = null;
@@ -150,7 +154,7 @@ public class Output implements AutoCloseable {
 		params.put("faqAbout", settings.getString(Settings.FAQ_ABOUT));
 		params.put("publishFreesite", publishFreesite);
 		params.put("jsiteFreesite", jsiteFreesite);
-		params.put("hiddenCategories", settings.getHiddenCategories());
+		params.put("hiddenCategories", hiddenCategories);
 	}
 
 	public void setMode(Boolean isRelease) {
