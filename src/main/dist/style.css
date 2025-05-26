@@ -42,6 +42,11 @@ td {
 	padding: 0.25em 0.5em 0.25em 0.5em;
 }
 
+tbody tr td:first-child dfn {
+	margin-left: 0.25em;
+	font-style: normal;
+}
+
 tbody tr:hover, tbody tr:focus-within {
 	background-color: lightgray;
 }

@@ -43,8 +43,11 @@ public class ListUtility {
 		return new ArrayList<String>(Arrays.asList(listRaw.split(splitChar)));
 	}
 
-	public static String formatList(String listRaw) {
-		List<String> list = getList(listRaw);
+	public static Boolean containsAny(List<String> source, List<String> search) {
+		return source.stream().anyMatch(search::contains);
+	}
+
+	public static String formatList(List<String> list) {
 		String splitter = "";
 		StringBuilder result = new StringBuilder();
 		for (String element : list) {
@@ -56,5 +59,9 @@ public class ListUtility {
 			}
 		}
 		return result.toString();
+	}
+
+	public static String formatList(String listRaw) {
+		return formatList(getList(listRaw));
 	}
 }

@@ -80,6 +80,7 @@ public class Settings {
 	public static final String ERROR_MAX_COUNT = "error.max.count";
 
 	public static final String CATEGORIES_HIDDEN = "categories.hidden";
+	public static final String CATEGORIES_WARNING = "categories.warning";
 
 	public static final String IGNORE_EDITION_UPDATE = "ignore.edition.update";
 

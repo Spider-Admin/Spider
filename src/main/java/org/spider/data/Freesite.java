@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,8 +18,10 @@ package org.spider.data;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.spider.Settings;
 import org.spider.network.Freenet;
 import org.spider.utility.ListUtility;
 
@@ -53,6 +55,8 @@ public class Freesite {
 	private Integer pathOnlineSize;
 	private Integer pathOnOfflineSize;
 
+	private List<String> categoriesWarning;
+
 	public Freesite(Integer id, Key key, String author, String title, String keywords, String description,
 			String language, Boolean fms, Boolean sone, Boolean activeLink, Boolean online, Boolean onlineOld,
 			Boolean obsolete, Boolean ignoreResetOffline, Boolean crawlOnlyIndex, Boolean highlight,
@@ -82,6 +86,8 @@ public class Freesite {
 		outNetwork = null;
 		pathOnlineSize = 0;
 		pathOnOfflineSize = 0;
+
+		categoriesWarning = Settings.getInstance().getStringList(Settings.CATEGORIES_WARNING);
 	}
 
 	public Integer getID() {
@@ -165,7 +171,26 @@ public class Freesite {
 	}
 
 	public String getComment() {
-		return comment;
+		List<String> commentWarnings = new ArrayList<>();
+		for (String categoryWarning : categoriesWarning) {
+			if (getCategory().contains(categoryWarning)) {
+				commentWarnings.add(categoryWarning);
+			}
+		}
+		if (!commentWarnings.isEmpty()) {
+			return "Warning: " + ListUtility.formatList(commentWarnings) + "\n" + comment;
+		} else {
+			return comment;
+		}
+	}
+
+	public String getCommentIcon() {
+		List<String> categories = ListUtility.getList(getCategory());
+		if (ListUtility.containsAny(categories, categoriesWarning)) {
+			return "⚠️";
+		} else {
+			return "ℹ️";
+		}
 	}
 
 	public String getCategory() {
