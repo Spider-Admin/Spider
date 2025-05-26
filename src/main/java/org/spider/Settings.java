@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ public class Settings {
 
 	public static final String ERROR_MAX_COUNT = "error.max.count";
 
-	public static final String HIDDEN_CATEGORIES = "hidden.categories";
+	public static final String CATEGORIES_HIDDEN = "categories.hidden";
 
 	public static final String IGNORE_EDITION_UPDATE = "ignore.edition.update";
 
@@ -133,7 +133,7 @@ public class Settings {
 	}
 
 	public ArrayList<String> getHiddenCategories() {
-		ArrayList<String> result = ListUtility.getList(getString(Settings.HIDDEN_CATEGORIES));
+		ArrayList<String> result = ListUtility.getList(getString(Settings.CATEGORIES_HIDDEN));
 		if (result.contains(NO_CATEGORY)) {
 			result.remove(NO_CATEGORY);
 			result.add("");
