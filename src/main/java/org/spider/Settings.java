@@ -22,7 +22,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
@@ -120,6 +120,10 @@ public class Settings {
 		return properties.getProperty(key);
 	}
 
+	public List<String> getStringList(String key) {
+		return ListUtility.getList(getString(key));
+	}
+
 	public Integer getInteger(String key) {
 		return Integer.valueOf(getString(key));
 	}
@@ -132,8 +136,8 @@ public class Settings {
 		return StandardCharsets.UTF_8;
 	}
 
-	public ArrayList<String> getHiddenCategories() {
-		ArrayList<String> result = ListUtility.getList(getString(Settings.CATEGORIES_HIDDEN));
+	public List<String> getHiddenCategories() {
+		List<String> result = getStringList(Settings.CATEGORIES_HIDDEN);
 		if (result.contains(NO_CATEGORY)) {
 			result.remove(NO_CATEGORY);
 			result.add("");

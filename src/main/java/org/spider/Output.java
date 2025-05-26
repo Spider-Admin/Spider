@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -126,7 +127,7 @@ public class Output implements AutoCloseable {
 		Freesite publishFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_PUBLISH_KEY)), false);
 		Freesite jsiteFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_JSITE_KEY)), false);
 
-		ArrayList<String> hiddenCategories = settings.getHiddenCategories();
+		List<String> hiddenCategories = settings.getHiddenCategories();
 		Collections.sort(hiddenCategories);
 
 		String databaseKeyRaw = settings.getString(Settings.INDEX_DATABASE_KEY);
@@ -260,7 +261,7 @@ public class Output implements AutoCloseable {
 		log.info("Loading content");
 		ArrayList<Freesite> freesiteList = storage.getAllFreesite(true);
 
-		ArrayList<String> hiddenCategories = settings.getHiddenCategories();
+		List<String> hiddenCategories = settings.getHiddenCategories();
 
 		Integer countOnline = 0;
 		Iterator<Freesite> iterator = freesiteList.iterator();

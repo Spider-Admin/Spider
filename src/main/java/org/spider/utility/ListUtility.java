@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2021 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -18,10 +18,15 @@ package org.spider.utility;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ListUtility {
 
-	public static ArrayList<String> getList(String listRaw) {
+	/**
+	 * Splits a string into a List<String> by using the separator ",". To increase
+	 * compatibility with meta.keywords other separators are allowed too.
+	 */
+	public static List<String> getList(String listRaw) {
 		if (listRaw == null || listRaw.isBlank()) {
 			return new ArrayList<String>();
 		}
@@ -39,7 +44,7 @@ public class ListUtility {
 	}
 
 	public static String formatList(String listRaw) {
-		ArrayList<String> list = getList(listRaw);
+		List<String> list = getList(listRaw);
 		String splitter = "";
 		StringBuilder result = new StringBuilder();
 		for (String element : list) {
