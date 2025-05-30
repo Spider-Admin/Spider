@@ -171,17 +171,19 @@ public class Freesite {
 	}
 
 	public String getComment() {
-		List<String> commentWarnings = new ArrayList<>();
-		for (String categoryWarning : categoriesWarning) {
-			if (getCategory().contains(categoryWarning)) {
-				commentWarnings.add(categoryWarning);
+		String result = comment;
+		if (getCategory() != null) {
+			List<String> commentWarnings = new ArrayList<>();
+			for (String categoryWarning : categoriesWarning) {
+				if (getCategory().contains(categoryWarning)) {
+					commentWarnings.add(categoryWarning);
+				}
+			}
+			if (!commentWarnings.isEmpty()) {
+				result = "Warning: " + ListUtility.formatList(commentWarnings) + "\n" + comment;
 			}
 		}
-		if (!commentWarnings.isEmpty()) {
-			return "Warning: " + ListUtility.formatList(commentWarnings) + "\n" + comment;
-		} else {
-			return comment;
-		}
+		return result;
 	}
 
 	public String getCommentIcon() {
