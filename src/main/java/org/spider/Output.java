@@ -128,7 +128,9 @@ public class Output implements AutoCloseable {
 		Freesite jsiteFreesite = storage.getFreesite(new Key(settings.getString(Settings.FAQ_JSITE_KEY)), false);
 
 		List<String> hiddenCategories = settings.getHiddenCategories();
+		List<String> warningCategories = settings.getStringList(Settings.CATEGORIES_WARNING);
 		Collections.sort(hiddenCategories);
+		Collections.sort(warningCategories);
 
 		String databaseKeyRaw = settings.getString(Settings.INDEX_DATABASE_KEY);
 		Key databaseKey = new Key(databaseKeyRaw);
@@ -156,6 +158,7 @@ public class Output implements AutoCloseable {
 		params.put("publishFreesite", publishFreesite);
 		params.put("jsiteFreesite", jsiteFreesite);
 		params.put("hiddenCategories", hiddenCategories);
+		params.put("warningCategories", warningCategories);
 	}
 
 	public void setMode(Boolean isRelease) {

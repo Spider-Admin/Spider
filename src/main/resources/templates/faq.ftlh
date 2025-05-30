@@ -25,6 +25,20 @@
 </#list>
 		</ul>
 
+		<h3 id="warning-categories">What is the meaning of ℹ️ and ⚠️?</h3>
+		<p>
+			These icons indicate that a comment is available with either information (ℹ️) or a warning (⚠️) about the freesite.
+			Hover over the icon to see the comment. In the case of a warning, the comment always explains the reason.
+			A warning is shown, if a freesite is categorized under any of the following:
+		</p>
+		<ul>
+<#list warningCategories as warningCategory>
+			<li>${warningCategory}</li>
+<#else>
+			<li>No categories for warnings defined!</li>
+</#list>
+		</ul>
+
 		<h3>How can I contact you?</h3>
 		<dl>
 			<dt>Author:</dt>
