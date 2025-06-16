@@ -1,5 +1,5 @@
 /*
-  Copyright 2023 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2023 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -213,7 +212,7 @@ public class TaskManager implements AutoCloseable {
 		case RUN_TASK_LIST:
 			Task currentTask = null;
 			List<TaskType> updateTasks = new ArrayList<>(
-					Arrays.asList(TaskType.UPDATE, TaskType.UPDATE_0, TaskType.UPDATE_ONLINE, TaskType.UPDATE_OFFLINE));
+					List.of(TaskType.UPDATE, TaskType.UPDATE_0, TaskType.UPDATE_ONLINE, TaskType.UPDATE_OFFLINE));
 			while ((currentTask = storage.getCurrentTask()) != null) {
 
 				String waitTime = "";
