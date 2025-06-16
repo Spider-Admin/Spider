@@ -106,11 +106,11 @@ public class Freesite {
 		return title;
 	}
 
-	public String getKeywordsRaw() {
+	public String getKeywords() {
 		return keywords;
 	}
 
-	public String getKeywords() {
+	public String getKeywordsFormated() {
 		if (keywords == null) {
 			return null;
 		} else {
@@ -171,6 +171,10 @@ public class Freesite {
 	}
 
 	public String getComment() {
+		return comment;
+	}
+
+	public String getCommentFormated() {
 		String result = comment;
 		if (getCategory() != null) {
 			List<String> commentWarnings = new ArrayList<>();

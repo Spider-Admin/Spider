@@ -55,7 +55,7 @@ public class SpiderTest {
 
 			assertNull(freesite.getAuthor());
 			assertNull(freesite.getTitle());
-			assertNull(freesite.getKeywordsRaw());
+			assertNull(freesite.getKeywords());
 			assertNull(freesite.getDescription());
 			assertNull(freesite.getLanguage());
 			assertNull(freesite.isFMS());
@@ -93,7 +93,7 @@ public class SpiderTest {
 
 			assertNull(freesite.getAuthor());
 			assertNull(freesite.getTitle());
-			assertNull(freesite.getKeywordsRaw());
+			assertNull(freesite.getKeywords());
 			assertNull(freesite.getDescription());
 			assertNull(freesite.getLanguage());
 			assertNull(freesite.isFMS());
