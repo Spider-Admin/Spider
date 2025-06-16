@@ -5,15 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.sql.SQLException;
-
 import org.junit.jupiter.api.Test;
 import org.spider.data.Key;
 
 public class KeyTest {
 
 	@Test
-	public void invalidKeys() throws SQLException {
+	public void invalidKeys() {
 		Key key = new Key("file.ext");
 		assertFalse(key.isKey());
 		assertEquals("file.ext", key.getPath());
@@ -52,7 +50,7 @@ public class KeyTest {
 	}
 
 	@Test
-	public void validKeys() throws SQLException {
+	public void validKeys() {
 		Key key = new Key("/USK@something/site/1/");
 		assertTrue(key.isKey());
 		assertTrue(key.isUSK());
@@ -265,7 +263,7 @@ public class KeyTest {
 	}
 
 	@Test
-	public void validSpecialKeys() throws SQLException {
+	public void validSpecialKeys() {
 		// No edition
 		Key key = new Key("/USK@something/site/");
 		assertTrue(key.isKey());
