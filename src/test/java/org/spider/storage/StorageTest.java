@@ -18,6 +18,7 @@ import org.spider.data.Freesite;
 import org.spider.data.Key;
 import org.spider.data.Path;
 import org.spider.utility.DateUtility;
+import org.spider.utility.ListUtility;
 
 public class StorageTest {
 	private Connection connection;
@@ -68,8 +69,8 @@ public class StorageTest {
 			assertNull(freesite.getKeyObj().getEditionHint());
 			assertNull(freesite.getAuthor());
 			assertNull(freesite.getTitle());
-			assertNull(freesite.getKeywords());
-			assertNull(freesite.getKeywordsFormated());
+			assertEquals(ListUtility.toList(""), freesite.getKeywords());
+			assertEquals("", freesite.getKeywordsFormated());
 			assertNull(freesite.getDescription());
 			assertNull(freesite.getLanguage());
 			assertNull(freesite.isFMS());
@@ -96,8 +97,9 @@ public class StorageTest {
 
 			storage.addFreesite(key1, DateUtility.getDate(2020, 4, 1, 0, 0, 0));
 
-			storage.updateFreesite(key1, "author", "title", "keywords", "description", "language", true, false, true,
-					false, null, true, false, DateUtility.getDate(2020, 4, 1, 12, 0, 0), "comment", "category");
+			storage.updateFreesite(key1, "author", "title", ListUtility.toList("keywords"), "description", "language",
+					true, false, true, false, null, true, false, DateUtility.getDate(2020, 4, 1, 12, 0, 0), "comment",
+					ListUtility.toList("category"));
 
 			Integer id = storage.getFreesiteID(key1);
 
@@ -116,7 +118,7 @@ public class StorageTest {
 			assertNull(freesite.getKeyObj().getEditionHint());
 			assertEquals("author", freesite.getAuthor());
 			assertEquals("title", freesite.getTitle());
-			assertEquals("keywords", freesite.getKeywords());
+			assertEquals(ListUtility.toList("keywords"), freesite.getKeywords());
 			assertEquals("keywords", freesite.getKeywordsFormated());
 			assertEquals("description", freesite.getDescription());
 			assertEquals("language", freesite.getLanguage());
@@ -132,22 +134,24 @@ public class StorageTest {
 			assertEquals(DateUtility.getDate(2020, 4, 1, 0, 0, 0), freesite.getAdded());
 			assertEquals(DateUtility.getDate(2020, 4, 1, 12, 0, 0), freesite.getCrawled());
 			assertEquals("comment", freesite.getComment());
-			assertEquals("category", freesite.getCategory());
+			assertEquals(ListUtility.toList("category"), freesite.getCategory());
 			assertNull(freesite.getPathList());
 			assertNull(freesite.getInNetwork());
 			assertNull(freesite.getOutNetwork());
 
 			// OnlineOld = false -> no Highlight
-			storage.updateFreesite(key1, "author", "title", "keywords", "description", "language", true, false, true,
-					false, false, true, false, DateUtility.getDate(2020, 4, 1, 12, 0, 0), "comment", "category");
+			storage.updateFreesite(key1, "author", "title", ListUtility.toList("keywords"), "description", "language",
+					true, false, true, false, false, true, false, DateUtility.getDate(2020, 4, 1, 12, 0, 0), "comment",
+					ListUtility.toList("category"));
 			freesite = storage.getFreesite(key1);
 			assertFalse(freesite.isOnline());
 			assertFalse(freesite.isOnlineOld());
 			assertFalse(freesite.isHighlight());
 
 			// OnlineOld = true -> Highlight
-			storage.updateFreesite(key1, "author", "title", "keywords", "description", "language", true, false, true,
-					false, true, true, false, DateUtility.getDate(2020, 4, 1, 12, 0, 0), "comment", "category");
+			storage.updateFreesite(key1, "author", "title", ListUtility.toList("keywords"), "description", "language",
+					true, false, true, false, true, true, false, DateUtility.getDate(2020, 4, 1, 12, 0, 0), "comment",
+					ListUtility.toList("category"));
 			freesite = storage.getFreesite(key1);
 			assertFalse(freesite.isOnline());
 			assertTrue(freesite.isOnlineOld());
@@ -182,8 +186,8 @@ public class StorageTest {
 			assertNull(freesite.getKeyObj().getEditionHint());
 			assertNull(freesite.getAuthor());
 			assertNull(freesite.getTitle());
-			assertNull(freesite.getKeywords());
-			assertNull(freesite.getKeywordsFormated());
+			assertEquals(ListUtility.toList(""), freesite.getKeywords());
+			assertEquals("", freesite.getKeywordsFormated());
 			assertNull(freesite.getDescription());
 			assertNull(freesite.getLanguage());
 			assertNull(freesite.isFMS());
@@ -219,8 +223,8 @@ public class StorageTest {
 			assertEquals(-3, freesite.getKeyObj().getEditionHint());
 			assertNull(freesite.getAuthor());
 			assertNull(freesite.getTitle());
-			assertNull(freesite.getKeywords());
-			assertNull(freesite.getKeywordsFormated());
+			assertEquals(ListUtility.toList(""), freesite.getKeywords());
+			assertEquals("", freesite.getKeywordsFormated());
 			assertNull(freesite.getDescription());
 			assertNull(freesite.getLanguage());
 			assertNull(freesite.isFMS());
@@ -415,18 +419,21 @@ public class StorageTest {
 		try (Storage storage = new Storage(connection);) {
 			Key key1 = new Key("USK@something1/site/1/");
 			storage.addFreesite(key1, DateUtility.getDate(2020, 4, 1, 0, 0, 0));
-			storage.updateFreesite(key1, "author1", "title1", "k11,k12,k13 k14", "description1", "language1", true,
-					true, true, true, false, true, true, DateUtility.getDate(2020, 4, 1, 12, 0, 0), null, null);
+			storage.updateFreesite(key1, "author1", "title1", ListUtility.toList("k11,k12,k13 k14"), "description1",
+					"language1", true, true, true, true, false, true, true, DateUtility.getDate(2020, 4, 1, 12, 0, 0),
+					null, ListUtility.toList(""));
 
 			Key key2 = new Key("USK@something2/site/2/");
 			storage.addFreesite(key2, DateUtility.getDate(2020, 4, 2, 0, 0, 0));
-			storage.updateFreesite(key2, "author2", "title2", "k21 k22", "description2", "language2", false, false,
-					false, false, false, false, false, DateUtility.getDate(2020, 4, 2, 12, 0, 0), null, null);
+			storage.updateFreesite(key2, "author2", "title2", ListUtility.toList("k21 k22"), "description2",
+					"language2", false, false, false, false, false, false, false,
+					DateUtility.getDate(2020, 4, 2, 12, 0, 0), null, ListUtility.toList(""));
 
 			Key key3 = new Key("USK@something3/site/3/");
 			storage.addFreesite(key3, DateUtility.getDate(2020, 4, 3, 0, 0, 0));
-			storage.updateFreesite(key3, "author3", "title3", "k31, k32", "description3", "language3", null, null, null,
-					null, null, null, null, DateUtility.getDate(2020, 4, 3, 12, 0, 0), null, null);
+			storage.updateFreesite(key3, "author3", "title3", ListUtility.toList("k31,k32"), "description3",
+					"language3", null, null, null, null, null, null, null, DateUtility.getDate(2020, 4, 3, 12, 0, 0),
+					null, ListUtility.toList(""));
 
 			// Add some extra stuff
 			key2.setPath("index.htm");
@@ -454,7 +461,7 @@ public class StorageTest {
 			assertEquals(1, freesite.getKeyObj().getEdition());
 			assertEquals("author1", freesite.getAuthor());
 			assertEquals("title1", freesite.getTitle());
-			assertEquals("k11,k12,k13 k14", freesite.getKeywords());
+			assertEquals(ListUtility.toList("k11,k12,k13 k14"), freesite.getKeywords());
 			assertEquals("k11, k12, k13 k14", freesite.getKeywordsFormated());
 			assertEquals("description1", freesite.getDescription());
 			assertEquals("language1", freesite.getLanguage());
@@ -470,7 +477,7 @@ public class StorageTest {
 			assertEquals(DateUtility.getDate(2020, 4, 1, 0, 0, 0), freesite.getAdded());
 			assertEquals(DateUtility.getDate(2020, 4, 1, 12, 0, 0), freesite.getCrawled());
 			assertNull(freesite.getComment());
-			assertNull(freesite.getCategory());
+			assertEquals(ListUtility.toList(""), freesite.getCategory());
 			assertEquals(storage.getAllPath(freesite.getKeyObj()).size(), freesite.getPathList().size());
 			assertEquals(storage.getInNetwork(freesite.getKeyObj()).size(), freesite.getInNetwork().size());
 			assertEquals(storage.getOutNetwork(freesite.getKeyObj()).size(), freesite.getOutNetwork().size());
@@ -490,7 +497,7 @@ public class StorageTest {
 			assertEquals(3, freesite.getKeyObj().getEdition());
 			assertEquals("author3", freesite.getAuthor());
 			assertEquals("title3", freesite.getTitle());
-			assertEquals("k31, k32", freesite.getKeywords());
+			assertEquals(ListUtility.toList("k31,k32"), freesite.getKeywords());
 			assertEquals("k31, k32", freesite.getKeywordsFormated());
 			assertEquals("description3", freesite.getDescription());
 			assertEquals("language3", freesite.getLanguage());
@@ -506,7 +513,7 @@ public class StorageTest {
 			assertEquals(DateUtility.getDate(2020, 4, 3, 0, 0, 0), freesite.getAdded());
 			assertEquals(DateUtility.getDate(2020, 4, 3, 12, 0, 0), freesite.getCrawled());
 			assertNull(freesite.getComment());
-			assertNull(freesite.getCategory());
+			assertEquals(ListUtility.toList(""), freesite.getCategory());
 			assertEquals(storage.getAllPath(freesite.getKeyObj()).size(), freesite.getPathList().size());
 			assertEquals(storage.getInNetwork(freesite.getKeyObj()).size(), freesite.getInNetwork().size());
 			assertEquals(storage.getOutNetwork(freesite.getKeyObj()).size(), freesite.getOutNetwork().size());
@@ -520,7 +527,7 @@ public class StorageTest {
 			assertEquals(2, freesite.getKeyObj().getEdition());
 			assertEquals("author2", freesite.getAuthor());
 			assertEquals("title2", freesite.getTitle());
-			assertEquals("k21 k22", freesite.getKeywords());
+			assertEquals(ListUtility.toList("k21 k22"), freesite.getKeywords());
 			assertEquals("k21, k22", freesite.getKeywordsFormated());
 			assertEquals("description2", freesite.getDescription());
 			assertEquals("language2", freesite.getLanguage());
@@ -536,7 +543,7 @@ public class StorageTest {
 			assertEquals(DateUtility.getDate(2020, 4, 2, 0, 0, 0), freesite.getAdded());
 			assertEquals(DateUtility.getDate(2020, 4, 2, 12, 0, 0), freesite.getCrawled());
 			assertNull(freesite.getComment());
-			assertNull(freesite.getCategory());
+			assertEquals(ListUtility.toList(""), freesite.getCategory());
 			assertEquals(storage.getAllPath(freesite.getKeyObj()).size(), freesite.getPathList().size());
 			assertEquals(storage.getInNetwork(freesite.getKeyObj()).size(), freesite.getInNetwork().size());
 			assertEquals(storage.getOutNetwork(freesite.getKeyObj()).size(), freesite.getOutNetwork().size());
@@ -557,7 +564,7 @@ public class StorageTest {
 			assertEquals(3, freesite.getKeyObj().getEdition());
 			assertEquals("author3", freesite.getAuthor());
 			assertEquals("title3", freesite.getTitle());
-			assertEquals("k31, k32", freesite.getKeywords());
+			assertEquals(ListUtility.toList("k31,k32"), freesite.getKeywords());
 			assertEquals("k31, k32", freesite.getKeywordsFormated());
 			assertEquals("description3", freesite.getDescription());
 			assertEquals("language3", freesite.getLanguage());
@@ -585,7 +592,7 @@ public class StorageTest {
 			assertEquals(2, freesite.getKeyObj().getEdition());
 			assertEquals("author2", freesite.getAuthor());
 			assertEquals("title2", freesite.getTitle());
-			assertEquals("k21 k22", freesite.getKeywords());
+			assertEquals(ListUtility.toList("k21 k22"), freesite.getKeywords());
 			assertEquals("k21, k22", freesite.getKeywordsFormated());
 			assertEquals("description2", freesite.getDescription());
 			assertEquals("language2", freesite.getLanguage());
@@ -613,7 +620,7 @@ public class StorageTest {
 			assertEquals(1, freesite.getKeyObj().getEdition());
 			assertEquals("author1", freesite.getAuthor());
 			assertEquals("title1", freesite.getTitle());
-			assertEquals("k11,k12,k13 k14", freesite.getKeywords());
+			assertEquals(ListUtility.toList("k11,k12,k13 k14"), freesite.getKeywords());
 			assertEquals("k11, k12, k13 k14", freesite.getKeywordsFormated());
 			assertEquals("description1", freesite.getDescription());
 			assertEquals("language1", freesite.getLanguage());

@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +38,7 @@ import org.spider.network.Freenet;
 import org.spider.storage.Export;
 import org.spider.storage.Storage;
 import org.spider.utility.DateUtility;
+import org.spider.utility.ListUtility;
 import org.spider.utility.URLUtility;
 
 import net.pterodactylus.fcp.SubscribeUSK;
@@ -265,8 +267,8 @@ public class Spider implements AutoCloseable {
 				// Fred reports a INVALID_URI(20) in this case.
 				if (e.getMessage().equals("Protocol error (4, Error parsing freenet URI")) {
 					log.error("Broken key detected.");
-					updateFreesite(key.toString(), "", "", "", "", "", false, false, false, true,
-							Freenet.Error.INVALID_URI.toString(), "");
+					updateFreesite(key.toString(), "", "", ListUtility.toList(""), "", "", false, false, false, true,
+							Freenet.Error.INVALID_URI.toString(), ListUtility.toList(""));
 					updatePath(key.toString(), key.getPath(), false);
 					connection.commit();
 				}
@@ -310,8 +312,8 @@ public class Spider implements AutoCloseable {
 					// Change some letters of a key and Fred returns the original key
 					log.info("Invalid redirect. Mark key as fake");
 					updatePath(key.toString(), key.getPath(), false);
-					updateFreesite(key.toString(), "", "", "", "", "", false, false, false, true,
-							Freenet.Error.FAKE_KEY.toString(), Freenet.Error.FAKE_KEY.toString());
+					updateFreesite(key.toString(), "", "", ListUtility.toList(""), "", "", false, false, false, true,
+							Freenet.Error.FAKE_KEY.toString(), ListUtility.toList(Freenet.Error.FAKE_KEY.toString()));
 					connection.commit();
 					continue;
 				}
@@ -334,7 +336,7 @@ public class Spider implements AutoCloseable {
 			if (key.getPath().isEmpty()) {
 				String author = parser.getAuthor();
 				String title = parser.getTitle();
-				String keywords = parser.getKeywords();
+				List<String> keywords = ListUtility.toList(parser.getKeywords());
 				String description = parser.getDescription();
 				String language = parser.getLanguage();
 				redirect = parser.getRedirect();
@@ -346,7 +348,7 @@ public class Spider implements AutoCloseable {
 				}
 
 				Freesite freesite = storage.getFreesite(key);
-				String category = freesite.getCategory();
+				List<String> category = freesite.getCategory();
 
 				Boolean ignoreResetOffline = false;
 				String comment = "";
@@ -358,7 +360,7 @@ public class Spider implements AutoCloseable {
 							comment = comment + ". ";
 						}
 						comment = comment + Freenet.Error.FAKE_KEY.toString();
-						category = Freenet.Error.FAKE_KEY.toString();
+						category = ListUtility.toList(Freenet.Error.FAKE_KEY.toString());
 					}
 
 					ignoreResetOffline = !comment.isEmpty();
@@ -368,7 +370,7 @@ public class Spider implements AutoCloseable {
 
 				log.info("Author: {}", author);
 				log.info("Title: {}", title);
-				log.info("Keywords: {}", keywords);
+				log.info("Keywords: {}", ListUtility.formatList(keywords));
 				log.info("Description: {}", description);
 				log.info("Language: {}", language);
 				log.info("Has ActiveLink: {}", hasActiveLink);
@@ -423,9 +425,9 @@ public class Spider implements AutoCloseable {
 		}
 	}
 
-	private void updateFreesite(String freesite, String author, String title, String keywords, String description,
+	private void updateFreesite(String freesite, String author, String title, List<String> keywords, String description,
 			String language, Boolean hasActiveLink, Boolean isOnline, Boolean isObsolete, Boolean ignoreResetOffline,
-			String comment, String category) throws SQLException {
+			String comment, List<String> category) throws SQLException {
 		Key key = new Key(freesite);
 		Boolean isFMS = (title != null && (title.contains("FMS Site") || title.contains("FMS Recent Messages")))
 				|| (description != null && description.contains("FMS-generated"));

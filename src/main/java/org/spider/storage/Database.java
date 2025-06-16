@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,9 +25,11 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import org.spider.Settings;
 import org.spider.utility.DateUtility;
+import org.spider.utility.ListUtility;
 import org.sqlite.SQLiteConfig;
 
 public class Database {
@@ -92,6 +94,15 @@ public class Database {
 
 	public static void setBoolean(PreparedStatement statement, Integer position, Boolean value) throws SQLException {
 		statement.setObject(position, value, Types.BOOLEAN);
+	}
+
+	public static List<String> getStringList(ResultSet resultSet, String columnName) throws SQLException {
+		return ListUtility.toList(resultSet.getString(columnName));
+	}
+
+	public static void setStringList(PreparedStatement statement, Integer position, List<String> list)
+			throws SQLException {
+		statement.setString(position, ListUtility.toString(list));
 	}
 
 	public static OffsetDateTime getDate(ResultSet resultSet, String columnName) throws SQLException {

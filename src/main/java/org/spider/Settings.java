@@ -122,7 +122,7 @@ public class Settings {
 	}
 
 	public List<String> getStringList(String key) {
-		return ListUtility.getList(getString(key));
+		return ListUtility.toList(getString(key));
 	}
 
 	public Integer getInteger(String key) {

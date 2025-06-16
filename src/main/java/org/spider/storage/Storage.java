@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -382,14 +383,14 @@ public class Storage implements AutoCloseable {
 		insertFreesite.executeUpdate();
 	}
 
-	public void updateFreesite(Key key, String author, String title, String keywords, String description,
+	public void updateFreesite(Key key, String author, String title, List<String> keywords, String description,
 			String language, Boolean FMS, Boolean sone, Boolean activeLink, Boolean online, Boolean onlineOld,
-			Boolean obsolete, Boolean ignoreResetOffline, OffsetDateTime crawled, String comment, String category)
+			Boolean obsolete, Boolean ignoreResetOffline, OffsetDateTime crawled, String comment, List<String> category)
 			throws SQLException {
 		updateFreesite = Database.prepareStatement(connection, updateFreesite, UPDATE_FREESITE_SQL);
 		updateFreesite.setString(1, author);
 		updateFreesite.setString(2, title);
-		updateFreesite.setString(3, keywords);
+		Database.setStringList(updateFreesite, 3, keywords);
 		updateFreesite.setString(4, description);
 		updateFreesite.setString(5, language);
 		Database.setBoolean(updateFreesite, 6, FMS);
@@ -401,7 +402,7 @@ public class Storage implements AutoCloseable {
 		Database.setBoolean(updateFreesite, 12, ignoreResetOffline);
 		Database.setDate(updateFreesite, 13, crawled);
 		updateFreesite.setString(14, comment);
-		updateFreesite.setString(15, category);
+		Database.setStringList(updateFreesite, 15, category);
 		updateFreesite.setString(16, key.getKey());
 		updateFreesite.executeUpdate();
 	}
@@ -450,7 +451,7 @@ public class Storage implements AutoCloseable {
 		Long editionHint = Database.getLong(resultSet, "EditionHint");
 		String author = resultSet.getString("Author");
 		String title = resultSet.getString("Title");
-		String keywords = resultSet.getString("Keywords");
+		List<String> keywords = Database.getStringList(resultSet, "Keywords");
 		String description = resultSet.getString("Description");
 		String language = resultSet.getString("Language");
 		Boolean isFMS = Database.getBoolean(resultSet, "FMS");
@@ -465,7 +466,7 @@ public class Storage implements AutoCloseable {
 		OffsetDateTime added = Database.getDate(resultSet, "Added");
 		OffsetDateTime crawled = Database.getDate(resultSet, "Crawled");
 		String comment = resultSet.getString("Comment");
-		String category = resultSet.getString("Category");
+		List<String> category = Database.getStringList(resultSet, "Category");
 		Key resultKey = new Key(rawKey, edition, editionHint);
 		return new Freesite(id, resultKey, author, title, keywords, description, language, isFMS, isSone, hasActiveLink,
 				isOnline, isOnlineOld, isObsolete, ignoreResetOffline, crawlOnlyIndex, highlight, added, crawled,

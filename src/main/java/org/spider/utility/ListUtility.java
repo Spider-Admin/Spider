@@ -17,51 +17,48 @@
 package org.spider.utility;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ListUtility {
+
+	public static final String SPLIT_INTERNAL = ",";
+	public static final String SPLIT_INTERNAL_ALT_1 = ";";
+	public static final String SPLIT_INTERNAL_ALT_2 = "\n";
+	public static final String SPLIT_INTERNAL_ALT_3 = " ";
+	public static final String SPLIT_FORMAT = ", ";
+
+	private static String detectSplitChar(String list) {
+		String splitChar = ListUtility.SPLIT_INTERNAL;
+		if (!list.contains(ListUtility.SPLIT_INTERNAL)) {
+			splitChar = ListUtility.SPLIT_INTERNAL_ALT_1;
+			if (!list.contains(ListUtility.SPLIT_INTERNAL_ALT_1)) {
+				splitChar = ListUtility.SPLIT_INTERNAL_ALT_2;
+				if (!list.contains(ListUtility.SPLIT_INTERNAL_ALT_2)) {
+					splitChar = ListUtility.SPLIT_INTERNAL_ALT_3;
+				}
+			}
+		}
+		return splitChar;
+	}
 
 	/**
 	 * Splits a string into a List<String> by using the separator ",". To increase
 	 * compatibility with meta.keywords other separators are allowed too.
 	 */
-	public static List<String> getList(String listRaw) {
-		if (listRaw == null || listRaw.isBlank()) {
-			return new ArrayList<String>();
+	public static List<String> toList(String value) {
+		if (value == null || value.isEmpty()) {
+			return new ArrayList<>();
 		}
-		String splitChar = ",";
-		if (!listRaw.contains(",")) {
-			splitChar = ";";
-			if (!listRaw.contains(";")) {
-				splitChar = "\n";
-				if (!listRaw.contains("\n")) {
-					splitChar = " ";
-				}
-			}
-		}
-		return new ArrayList<String>(Arrays.asList(listRaw.split(splitChar)));
+		List<String> list = new ArrayList<>(List.of(value.split(detectSplitChar(value))));
+		return list.stream().map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
 	}
 
-	public static Boolean containsAny(List<String> source, List<String> search) {
-		return source.stream().anyMatch(search::contains);
+	public static String toString(List<String> list) {
+		return String.join(SPLIT_INTERNAL, list);
 	}
 
 	public static String formatList(List<String> list) {
-		String splitter = "";
-		StringBuilder result = new StringBuilder();
-		for (String element : list) {
-			element = element.trim();
-			if (!element.isEmpty()) {
-				result.append(splitter);
-				result.append(element);
-				splitter = ", ";
-			}
-		}
-		return result.toString();
-	}
-
-	public static String formatList(String listRaw) {
-		return formatList(getList(listRaw));
+		return String.join(SPLIT_FORMAT, list);
 	}
 }

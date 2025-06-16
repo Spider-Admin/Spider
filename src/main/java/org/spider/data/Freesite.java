@@ -31,7 +31,7 @@ public class Freesite {
 	private Key key;
 	private String author;
 	private String title;
-	private String keywords;
+	private List<String> keywords;
 	private String description;
 	private String language;
 	private Boolean fms;
@@ -46,7 +46,7 @@ public class Freesite {
 	private OffsetDateTime added;
 	private OffsetDateTime crawled;
 	private String comment;
-	private String category;
+	private List<String> category;
 
 	private ArrayList<Path> pathList;
 	private ArrayList<Integer> inNetwork;
@@ -57,10 +57,10 @@ public class Freesite {
 
 	private List<String> categoriesWarning;
 
-	public Freesite(Integer id, Key key, String author, String title, String keywords, String description,
+	public Freesite(Integer id, Key key, String author, String title, List<String> keywords, String description,
 			String language, Boolean fms, Boolean sone, Boolean activeLink, Boolean online, Boolean onlineOld,
 			Boolean obsolete, Boolean ignoreResetOffline, Boolean crawlOnlyIndex, Boolean highlight,
-			OffsetDateTime added, OffsetDateTime crawled, String comment, String category) {
+			OffsetDateTime added, OffsetDateTime crawled, String comment, List<String> category) {
 		this.id = id;
 		this.key = key;
 		this.author = author;
@@ -106,7 +106,7 @@ public class Freesite {
 		return title;
 	}
 
-	public String getKeywords() {
+	public List<String> getKeywords() {
 		return keywords;
 	}
 
@@ -191,15 +191,14 @@ public class Freesite {
 	}
 
 	public String getCommentIcon() {
-		List<String> categories = ListUtility.getList(getCategory());
-		if (ListUtility.containsAny(categories, categoriesWarning)) {
+		if (getCategory().stream().anyMatch(categoriesWarning::contains)) {
 			return "⚠️";
 		} else {
 			return "ℹ️";
 		}
 	}
 
-	public String getCategory() {
+	public List<String> getCategory() {
 		return category;
 	}
 

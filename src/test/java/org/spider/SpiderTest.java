@@ -16,6 +16,7 @@ import org.spider.data.Freesite;
 import org.spider.data.Key;
 import org.spider.storage.Database;
 import org.spider.storage.Storage;
+import org.spider.utility.ListUtility;
 
 public class SpiderTest {
 	private Connection connection;
@@ -55,7 +56,7 @@ public class SpiderTest {
 
 			assertNull(freesite.getAuthor());
 			assertNull(freesite.getTitle());
-			assertNull(freesite.getKeywords());
+			assertEquals(ListUtility.toList(""), freesite.getKeywords());
 			assertNull(freesite.getDescription());
 			assertNull(freesite.getLanguage());
 			assertNull(freesite.isFMS());
@@ -93,7 +94,7 @@ public class SpiderTest {
 
 			assertNull(freesite.getAuthor());
 			assertNull(freesite.getTitle());
-			assertNull(freesite.getKeywords());
+			assertEquals(ListUtility.toList(""), freesite.getKeywords());
 			assertNull(freesite.getDescription());
 			assertNull(freesite.getLanguage());
 			assertNull(freesite.isFMS());
@@ -103,7 +104,7 @@ public class SpiderTest {
 			assertNotNull(freesite.getAdded());
 			assertNull(freesite.getCrawled());
 			assertNull(freesite.getComment());
-			assertEquals("", freesite.getCategory());
+			assertEquals(ListUtility.toList(""), freesite.getCategory());
 		}
 	}
 }
