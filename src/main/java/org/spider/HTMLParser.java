@@ -95,7 +95,7 @@ public class HTMLParser {
 			if ("refresh".equalsIgnoreCase(name)) {
 				String[] redirectParts = content.split("=");
 				if (redirectParts.length > 1) {
-					redirect = redirectParts[1].trim();
+					redirect = redirectParts[1];
 				}
 			}
 		}

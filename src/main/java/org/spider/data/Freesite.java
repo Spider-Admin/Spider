@@ -20,7 +20,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.spider.Settings;
 import org.spider.network.Freenet;
 import org.spider.utility.ListUtility;
@@ -99,7 +98,7 @@ public class Freesite {
 	}
 
 	public String getAuthor() {
-		return StringUtils.normalizeSpace(author);
+		return author;
 	}
 
 	public String getTitle() {
@@ -119,7 +118,7 @@ public class Freesite {
 	}
 
 	public String getDescription() {
-		return StringUtils.normalizeSpace(description);
+		return description;
 	}
 
 	public String getLanguage() {

@@ -528,7 +528,7 @@ public class StorageTest {
 			assertEquals("author2", freesite.getAuthor());
 			assertEquals("title2", freesite.getTitle());
 			assertEquals(ListUtility.toList("k21 k22"), freesite.getKeywords());
-			assertEquals("k21, k22", freesite.getKeywordsFormated());
+			assertEquals("k21 k22", freesite.getKeywordsFormated());
 			assertEquals("description2", freesite.getDescription());
 			assertEquals("language2", freesite.getLanguage());
 			assertFalse(freesite.isFMS());
@@ -593,7 +593,7 @@ public class StorageTest {
 			assertEquals("author2", freesite.getAuthor());
 			assertEquals("title2", freesite.getTitle());
 			assertEquals(ListUtility.toList("k21 k22"), freesite.getKeywords());
-			assertEquals("k21, k22", freesite.getKeywordsFormated());
+			assertEquals("k21 k22", freesite.getKeywordsFormated());
 			assertEquals("description2", freesite.getDescription());
 			assertEquals("language2", freesite.getLanguage());
 			assertFalse(freesite.isFMS());

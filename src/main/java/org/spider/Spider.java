@@ -39,6 +39,7 @@ import org.spider.storage.Export;
 import org.spider.storage.Storage;
 import org.spider.utility.DateUtility;
 import org.spider.utility.ListUtility;
+import org.spider.utility.Normalize;
 import org.spider.utility.URLUtility;
 
 import net.pterodactylus.fcp.SubscribeUSK;
@@ -334,11 +335,11 @@ public class Spider implements AutoCloseable {
 
 			String redirect = null;
 			if (key.getPath().isEmpty()) {
-				String author = parser.getAuthor();
-				String title = parser.getTitle();
-				List<String> keywords = ListUtility.toList(parser.getKeywords());
-				String description = parser.getDescription();
-				String language = parser.getLanguage();
+				String author = Normalize.string(parser.getAuthor());
+				String title = Normalize.string(parser.getTitle());
+				List<String> keywords = Normalize.stringList(parser.getKeywords());
+				String description = Normalize.string(parser.getDescription());
+				String language = Normalize.string(parser.getLanguage());
 				redirect = parser.getRedirect();
 
 				Boolean hasActiveLink = false;

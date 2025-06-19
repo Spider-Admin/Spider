@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -32,6 +33,7 @@ import org.spider.data.Freesite;
 import org.spider.data.Key;
 import org.spider.data.Path;
 import org.spider.data.Task;
+import org.spider.utility.Normalize;
 
 public class Storage implements AutoCloseable {
 
@@ -238,7 +240,8 @@ public class Storage implements AutoCloseable {
 	// 1.1 = 2
 	// 1.2 = 3
 	// 1.3 = 4
-	private static final int latestDatabaseVersion = 4;
+	// 1.4 = 5
+	private static final int latestDatabaseVersion = 5;
 
 	public Storage(Connection connection) throws SQLException {
 
@@ -264,6 +267,7 @@ public class Storage implements AutoCloseable {
 		case 1:
 		case 2:
 		case 3:
+		case 4:
 			while (getDatabaseVersion() < latestDatabaseVersion) {
 				Integer nextVersion = getDatabaseVersion() + 1;
 				updateDatebase(nextVersion);
@@ -347,6 +351,30 @@ public class Storage implements AutoCloseable {
 			}
 
 			Database.execute(connection, INSERT_TASK_LIST);
+		} else if (version == 5) {
+			ArrayList<Freesite> freesiteList = getAllFreesite(true);
+			Iterator<Freesite> iterator = freesiteList.iterator();
+			while (iterator.hasNext()) {
+				Freesite freesite = iterator.next();
+				Key key = freesite.getKeyObj();
+				String author = Normalize.string(freesite.getAuthor());
+				String title = Normalize.string(freesite.getTitle());
+				List<String> keywords = Normalize.stringList(freesite.getKeywordsFormated());
+				String description = Normalize.string(freesite.getDescription());
+				String language = Normalize.string(freesite.getLanguage());
+				Boolean isFMS = freesite.isFMS();
+				Boolean isSone = freesite.isSone();
+				Boolean hasActiveLink = freesite.hasActiveLink();
+				Boolean isOnline = freesite.isOnline();
+				Boolean isOnlineOld = freesite.isOnlineOld();
+				Boolean isObsolete = freesite.isObsolete();
+				Boolean ignoreResetOffline = freesite.ignoreResetOffline();
+				OffsetDateTime crawled = freesite.getCrawled();
+				String comment = freesite.getComment();
+				List<String> category = freesite.getCategory();
+				updateFreesite(key, author, title, keywords, description, language, isFMS, isSone, hasActiveLink,
+						isOnline, isOnlineOld, isObsolete, ignoreResetOffline, crawled, comment, category);
+			}
 		}
 	}
 
@@ -383,7 +411,7 @@ public class Storage implements AutoCloseable {
 		insertFreesite.executeUpdate();
 	}
 
-	public void updateFreesite(Key key, String author, String title, List<String> keywords, String description,
+	public final void updateFreesite(Key key, String author, String title, List<String> keywords, String description,
 			String language, Boolean FMS, Boolean sone, Boolean activeLink, Boolean online, Boolean onlineOld,
 			Boolean obsolete, Boolean ignoreResetOffline, OffsetDateTime crawled, String comment, List<String> category)
 			throws SQLException {
@@ -417,7 +445,7 @@ public class Storage implements AutoCloseable {
 		updateFreesiteEdition.executeUpdate();
 	}
 
-	public Integer getFreesiteID(Key key) throws SQLException {
+	public final Integer getFreesiteID(Key key) throws SQLException {
 		Integer result = null;
 		getFreesiteID = Database.prepareStatement(connection, getFreesiteID, GET_FREESITE_ID_SQL);
 		getFreesiteID.setString(1, key.getKey());
@@ -493,7 +521,7 @@ public class Storage implements AutoCloseable {
 		return getFreesite(key, true);
 	}
 
-	public ArrayList<Freesite> getAllFreesite(Boolean getFull) throws SQLException {
+	public final ArrayList<Freesite> getAllFreesite(Boolean getFull) throws SQLException {
 		ArrayList<Freesite> result = new ArrayList<>();
 		getAllFreesite = Database.prepareStatement(connection, getAllFreesite, GET_ALL_FREESITE_SQL);
 		try (ResultSet resultSet = getAllFreesite.executeQuery()) {
@@ -573,7 +601,7 @@ public class Storage implements AutoCloseable {
 		return result;
 	}
 
-	public ArrayList<Path> getAllPath(Key key) throws SQLException {
+	public final ArrayList<Path> getAllPath(Key key) throws SQLException {
 		ArrayList<Path> result = new ArrayList<>();
 		Integer id = getFreesiteID(key);
 		getAllPath = Database.prepareStatement(connection, getAllPath, GET_ALL_PATH_SQL);
@@ -602,7 +630,7 @@ public class Storage implements AutoCloseable {
 		deleteAllNetwork.executeUpdate();
 	}
 
-	public ArrayList<Integer> getInNetwork(Key key) throws SQLException {
+	public final ArrayList<Integer> getInNetwork(Key key) throws SQLException {
 		ArrayList<Integer> result = new ArrayList<>();
 		Integer id = getFreesiteID(key);
 		getInNetwork = Database.prepareStatement(connection, getInNetwork, GET_IN_NETWORK_SQL);
@@ -616,7 +644,7 @@ public class Storage implements AutoCloseable {
 		return result;
 	}
 
-	public ArrayList<Integer> getOutNetwork(Key key) throws SQLException {
+	public final ArrayList<Integer> getOutNetwork(Key key) throws SQLException {
 		ArrayList<Integer> result = new ArrayList<>();
 		Integer id = getFreesiteID(key);
 		getOutNetwork = Database.prepareStatement(connection, getOutNetwork, GET_OUT_NETWORK_SQL);

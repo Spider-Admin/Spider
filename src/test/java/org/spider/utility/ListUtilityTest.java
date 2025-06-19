@@ -11,6 +11,7 @@ public class ListUtilityTest {
 	@Test
 	public void toList() {
 		assertEquals(List.of("a", "b", "c"), ListUtility.toList("a,b,c"));
+		assertEquals(List.of("a", "b", "c"), ListUtility.toList("a;b;c", ListUtility.SPLIT_INTERNAL_ALT_1));
 		assertEquals(List.of(), ListUtility.toList(""));
 		assertEquals(List.of(), ListUtility.toList(null));
 	}

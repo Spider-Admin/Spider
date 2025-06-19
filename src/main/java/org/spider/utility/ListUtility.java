@@ -18,7 +18,6 @@ package org.spider.utility;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ListUtility {
 
@@ -28,30 +27,15 @@ public class ListUtility {
 	public static final String SPLIT_INTERNAL_ALT_3 = " ";
 	public static final String SPLIT_FORMAT = ", ";
 
-	private static String detectSplitChar(String list) {
-		String splitChar = ListUtility.SPLIT_INTERNAL;
-		if (!list.contains(ListUtility.SPLIT_INTERNAL)) {
-			splitChar = ListUtility.SPLIT_INTERNAL_ALT_1;
-			if (!list.contains(ListUtility.SPLIT_INTERNAL_ALT_1)) {
-				splitChar = ListUtility.SPLIT_INTERNAL_ALT_2;
-				if (!list.contains(ListUtility.SPLIT_INTERNAL_ALT_2)) {
-					splitChar = ListUtility.SPLIT_INTERNAL_ALT_3;
-				}
-			}
-		}
-		return splitChar;
-	}
-
-	/**
-	 * Splits a string into a List<String> by using the separator ",". To increase
-	 * compatibility with meta.keywords other separators are allowed too.
-	 */
-	public static List<String> toList(String value) {
+	public static List<String> toList(String value, String splitter) {
 		if (value == null || value.isEmpty()) {
 			return new ArrayList<>();
 		}
-		List<String> list = new ArrayList<>(List.of(value.split(detectSplitChar(value))));
-		return list.stream().map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
+		return new ArrayList<>(List.of(value.split(splitter)));
+	}
+
+	public static List<String> toList(String value) {
+		return toList(value, SPLIT_INTERNAL);
 	}
 
 	public static String toString(List<String> list) {
