@@ -1,6 +1,6 @@
 # Spider
 
-Spider crawls freesites in [Hyphanet](https://www.hyphanet.org/), extracts various information and creates an index of these freesites. It is currently used by me to create my uncensored index [Spider](http://localhost:8888/USK@nLTpFO0hKAp9AaaChDzk~hA95CRPOipmVjilxEVrwl4,68PXzK2-NeGmyyjz8lyWXRqvWBkuUfl0QAWMyyyjKRw,AQACAAE/spider/418/) [^1] and to create my censored index [Clean-Spider](http://localhost:8888/USK@5ijbfKSJ4kPZTRDzq363CHteEUiSZjrO-E36vbHvnIU,ZEZqPXeuYiyokY2r0wkhJr5cy7KBH9omkuWDqSC6PLs,AQACAAE/clean-spider/326/) [^1].
+Spider crawls freesites in [Hyphanet](https://www.hyphanet.org/), extracts various information and creates multiple indexes of these freesites. It is currently used by me to create my uncensored index [Spider](http://localhost:8888/USK@nLTpFO0hKAp9AaaChDzk~hA95CRPOipmVjilxEVrwl4,68PXzK2-NeGmyyjz8lyWXRqvWBkuUfl0QAWMyyyjKRw,AQACAAE/spider/486/) [^1], my censored index [Clean-Spider](http://localhost:8888/USK@5ijbfKSJ4kPZTRDzq363CHteEUiSZjrO-E36vbHvnIU,ZEZqPXeuYiyokY2r0wkhJr5cy7KBH9omkuWDqSC6PLs,AQACAAE/clean-spider/394/) [^1] and my lightly censored index [Gentle Weaver](http://localhost:8888/USK@vl06Fb1XuqxOPAremAXxe2P89D7~sAQvIt1X-r2HzDw,GFURsB422HTZ4k9OM8M9CHLnaSkdUjlEZmsse9XX0-M,AQACAAE/sfw-spider/4/) [^1].
 
 ## Requirements
 
@@ -16,7 +16,7 @@ Spider crawls freesites in [Hyphanet](https://www.hyphanet.org/), extracts vario
 
 ## Run
 
-Run Spider with `bin/spider help` to view short usage information. Before the first start, the database of Spider must be initialized with `bin/spider init`. Alternatively you can use my database of Spider, a key to the recent SQL-dump can be found on the About / FAQ page in (Clean-)Spider.
+Run Spider with `bin/spider help` to view short usage information. Before the first start, the database of Spider must be initialized with `bin/spider init`. Alternatively you can use my database of Spider, all existing database dumps can be found on [Spider - Database](http://localhost:8888/USK@-nBg4wrsA8fSoTGCqFb0kZjAetx4V61VemQlfvJ4GB0,K~v87jvyRl85a4U6mfI8L6ByNIp4Vn~0PwSzuRNgzus,AQACAAE/spider-database/17/) [^1].
 
 ## Important files
 
@@ -26,7 +26,9 @@ All [activelink](https://github.com/hyphanet/wiki/wiki/Activelink) images can be
 
 - activelink.xcf = Activelink for Spider
 - activelink-clean.xcf = Activelink for Clean-Spider
+- activelink-sfw.xcf = Activelink for Gentle Weaver
 - activelink-source.xcf = Activelink for the source code of Spider
+- activelink-database.xcf = Activelink for the database of Spider
 
 The xcf files can be opened with [GIMP](https://www.gimp.org/).
 
@@ -36,6 +38,7 @@ All settings files can be found in the folder `src/main/dist`.
 
 - spider.properties = Settings file for Spider
 - spider-clean.properties = Settings file for Clean-Spider
+- spider-sfw.properties = Settings file for Gentle Weaver
 
 Spider always uses the settings file `spider.properties', so you have to rename the files for the usage in Clean-Spider.
 
@@ -74,7 +77,7 @@ Run the above tasks as task list using `bin/spider run-task-list`. Spider will e
 
 ## Publish the freesite
 
-I used [jSite](http://localhost:8888/USK@1waTsw46L9-JEQ8yX1khjkfHcn--g0MlMsTlYHax9zQ,oYyxr5jyFnaTsVGDQWk9e3ddOWGKnqEASxAk08MHT2Y,AQACAAE/jSite/17/) [^1] to publish (Clean-)Spider. Just create a new project for (Clean-)Spider in jSite and publish it with `java -cp path/to/jSite/jSite-0.14-jar-with-dependencies.jar de.todesbaum.jsite.main.CLI --project=projectname`.
+I used [jSite](http://localhost:8888/USK@1waTsw46L9-JEQ8yX1khjkfHcn--g0MlMsTlYHax9zQ,oYyxr5jyFnaTsVGDQWk9e3ddOWGKnqEASxAk08MHT2Y,AQACAAE/jSite/19/) [^1] to publish my indexes. Just create a new project for each index in jSite and publish it with `java -cp path/to/jSite/jSite-0.14-jar-with-dependencies.jar de.todesbaum.jsite.main.CLI --project=projectname`.
 
 Additionally I shared the private key of Clean-Spider with ArneBab, Bombe, xor and nextgens. I splitted the private key with [ssss](http://point-at-infinity.org/ssss/) using `ssss-split -t 2 -n 4` and send one part to each of them. You need at least 2 parts to recover the private key.
 
