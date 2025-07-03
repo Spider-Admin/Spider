@@ -40,7 +40,7 @@ All settings files can be found in the folder `src/main/dist`.
 - spider-clean.properties = Settings file for Clean-Spider
 - spider-sfw.properties = Settings file for Gentle Weaver
 
-Spider always uses the settings file `spider.properties', so you have to rename the files for the usage in Clean-Spider.
+Spider always uses the settings file `spider.properties`, so you have to rename the files for the usage in Clean-Spider and Gentle Weaver.
 
 ## Tasks
 
