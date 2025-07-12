@@ -86,6 +86,25 @@
 			longer shown in the index, but are still available in the database.
 		</p>
 
+		<h3>What is CSAM?</h3>
+		<p>
+			In this index, CSAM (Child Sexual Abuse Material) refers to content
+			that is illegal under §§ 184b and 184c of the German Criminal Code
+			(Strafgesetzbuch - StGB). It includes all types of visual content,
+			including photographs, videos, and realistic animations or drawings
+			depicting minors (under 18) in unnatural, sexually suggestive poses
+			or sexual activities. This covers so-called "posing images" - sexualized
+			photos of minors without explicit acts - as well as fictional content.<br>
+			While these are illegal in Germany, they may be legal in some other
+			countries. We follow German legal definitions because most developers
+			involved in Hyphanet are based in Germany.
+		</p><p>
+			Reference:
+		</p><ul>
+			<li><a href="https://www.gesetze-im-internet.de/stgb/__184b.html">§ 184b StGB</a> (<a href="https://www.gesetze-im-internet.de/englisch_stgb/englisch_stgb.html#p1813">translation</a>)</li>
+			<li><a href="https://www.gesetze-im-internet.de/stgb/__184c.html">§ 184c StGB</a> (<a href="https://www.gesetze-im-internet.de/englisch_stgb/englisch_stgb.html#p1834">translation</a>)</li>
+		</ul>
+
 		<h3>Why have some freesites a yellow background?</h3>
 		<p>
 			Freesites will be <span class="highlight">highlighted in yellow</span>, if they are new or changed their online-status (from online to offline or vice versa).
