@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -21,9 +21,15 @@ import java.util.regex.Pattern;
 
 public class Key {
 
-	private static final Pattern uskPattern = Pattern.compile(
+	private static final Pattern keyPattern = Pattern.compile(
 			"^\\/?(?:((?:CHK|SSK|USK|KSK)@(?:.*?\\/)?(?:.*?\\/)?)(?:(-?\\d+)(?:\\/|$))?)?(.*?)(?:(?:#|\\?).*?)?$",
 			Pattern.CASE_INSENSITIVE);
+	private static final String USK_START = "USK@";
+	private static final String KSK_START = "KSK@";
+	private static final String CHK_START = "CHK@";
+	private static final String SSK_START = "SSK@";
+	public static final String SONE_PATH = "Sone";
+
 	private static final Pattern newLinePattern = Pattern.compile("(\\r|\\n)");
 
 	// USK@------key-------/edition/-------path--------
@@ -43,7 +49,7 @@ public class Key {
 
 	public Key(String freesite) {
 		freesite = newLinePattern.matcher(freesite).replaceAll("");
-		Matcher uskMatcher = uskPattern.matcher(freesite);
+		Matcher uskMatcher = keyPattern.matcher(freesite);
 		if (uskMatcher.matches()) {
 			key = uskMatcher.group(1);
 			String editionRaw = uskMatcher.group(2);
@@ -102,19 +108,23 @@ public class Key {
 	}
 
 	public final Boolean isUSK() {
-		return key != null && key.startsWith("USK@");
+		return key != null && key.startsWith(USK_START);
 	}
 
 	public Boolean isKSK() {
-		return key != null && key.startsWith("KSK@");
+		return key != null && key.startsWith(KSK_START);
 	}
 
 	public Boolean isCHK() {
-		return key != null && key.startsWith("CHK@");
+		return key != null && key.startsWith(CHK_START);
 	}
 
 	public Boolean isSSK() {
-		return key != null && key.startsWith("SSK@");
+		return key != null && key.startsWith(SSK_START);
+	}
+
+	public Boolean hasSonePath() {
+		return sitePath.equalsIgnoreCase(SONE_PATH);
 	}
 
 	public Long getEdition() {

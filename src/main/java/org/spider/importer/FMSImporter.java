@@ -1,5 +1,5 @@
 /*
-  Copyright 2021 - 2023 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2021 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public class FMSImporter extends Spider {
 
 	private static final String DATABASE_FILE = "fms.db3";
 
-	private static final String IMPORT = "SELECT `Body` FROM `tblMessage` WHERE `Body` LIKE '%USK@%'";
+	private static final String READ_MESSAGES_SQL = "SELECT `Body` FROM `tblMessage` WHERE `Body` LIKE '%USK@%'";
 
 	public FMSImporter(Connection connection) throws SQLException {
 		super(connection);
@@ -44,10 +44,10 @@ public class FMSImporter extends Spider {
 		log.info("Add freesites from FMS");
 		String filename = Path.of(Settings.getInstance().getString(Settings.IMPORT_FMS_PATH), DATABASE_FILE).toString();
 		try (Connection fmsConnection = Database.getConnection(filename, true);
-				PreparedStatement stmt = fmsConnection.prepareStatement(IMPORT);
-				ResultSet resultSet = stmt.executeQuery()) {
-			while (resultSet.next()) {
-				addFreesiteFromString(resultSet.getString("Body"));
+				PreparedStatement stmtMsg = fmsConnection.prepareStatement(READ_MESSAGES_SQL);
+				ResultSet resultSetMsg = stmtMsg.executeQuery()) {
+			while (resultSetMsg.next()) {
+				addFreesiteFromString(resultSetMsg.getString("Body"));
 				connection.commit();
 			}
 		}

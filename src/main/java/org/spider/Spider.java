@@ -54,7 +54,7 @@ public class Spider implements AutoCloseable {
 	private static final Pattern addKeyPattern = Pattern.compile("(USK@[A-Z\\d-~,]*?\\/[^ \r\n]*?\\/-?\\d+)",
 			Pattern.CASE_INSENSITIVE);
 
-	private static final String ACTIVE_LINK = "activelink.png";
+	private static final String ACTIVE_LINK_FILE = "activelink.png";
 
 	private static final String INDEX_PATH = "";
 
@@ -247,7 +247,7 @@ public class Spider implements AutoCloseable {
 		log.info("Start crawling ...");
 
 		String url;
-		HTMLParser parser = new HTMLParser();
+		HTMLParser htmlParser = new HTMLParser();
 		while ((url = getNextURL()) != null) {
 			connection.rollback();
 
@@ -328,23 +328,23 @@ public class Spider implements AutoCloseable {
 
 			Boolean isOnline = site.isSuccess();
 			if (isOnline) {
-				parser.parseStream(site.getInputStream());
+				htmlParser.parseStream(site.getInputStream());
 			} else {
-				parser.reset();
+				htmlParser.reset();
 			}
 
 			String redirect = null;
 			if (key.getPath().isEmpty()) {
-				String author = Normalize.string(parser.getAuthor());
-				String title = Normalize.string(parser.getTitle());
-				List<String> keywords = Normalize.stringList(parser.getKeywords());
-				String description = Normalize.string(parser.getDescription());
-				String language = Normalize.string(parser.getLanguage());
-				redirect = parser.getRedirect();
+				String author = Normalize.string(htmlParser.getAuthor());
+				String title = Normalize.string(htmlParser.getTitle());
+				List<String> keywords = Normalize.stringList(htmlParser.getKeywords());
+				String description = Normalize.string(htmlParser.getDescription());
+				String language = Normalize.string(htmlParser.getLanguage());
+				redirect = htmlParser.getRedirect();
 
 				Boolean hasActiveLink = false;
 				if (isOnline) {
-					log.info("Check for ActiveLink");
+					log.info("Check for ActiveLink ...");
 					hasActiveLink = hasActiveLink(freenet, key);
 				}
 
@@ -383,7 +383,7 @@ public class Spider implements AutoCloseable {
 						false, ignoreResetOffline, comment, category);
 			}
 
-			ArrayList<String> paths = parser.getPaths();
+			ArrayList<String> paths = htmlParser.getPaths();
 
 			if (redirect != null && !redirect.isEmpty()) {
 				log.debug("Add redirect to path-list: {}", redirect);
@@ -432,7 +432,7 @@ public class Spider implements AutoCloseable {
 		Key key = new Key(freesite);
 		Boolean isFMS = (title != null && (title.contains("FMS Site") || title.contains("FMS Recent Messages")))
 				|| (description != null && description.contains("FMS-generated"));
-		Boolean isSone = key.getSitePath().equalsIgnoreCase("Sone") && title.contains(" - Sone");
+		Boolean isSone = key.hasSonePath() && title.contains(" - Sone");
 
 		Freesite oldFreesite = storage.getFreesite(key);
 		Boolean isOnlineOld = oldFreesite.isOnlineOld();
@@ -593,7 +593,7 @@ public class Spider implements AutoCloseable {
 	}
 
 	private Boolean hasActiveLink(FcpClient freenet, Key key) throws IOException, FcpException {
-		GetResult activeLinkSite = freenet.getURI(key.toString() + ACTIVE_LINK, true);
+		GetResult activeLinkSite = freenet.getURI(key.toString() + ACTIVE_LINK_FILE, true);
 		return activeLinkSite.isSuccess();
 	}
 
