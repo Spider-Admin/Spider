@@ -116,7 +116,7 @@ public class TaskManager implements AutoCloseable {
 				if (taskType == TaskType.INIT) {
 					spider.init();
 				} else if (taskType == TaskType.ADD_FREESITE) {
-					spider.addFreesite(extra);
+					spider.addFreesiteFromString(extra);
 				} else if (taskType == TaskType.ADD_FREESITE_FROM_FILE) {
 					spider.addFreesiteFromFile(extra);
 				} else if (taskType == TaskType.RESET_ALL_OFFLINE) {

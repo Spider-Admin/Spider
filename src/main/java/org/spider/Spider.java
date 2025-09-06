@@ -118,7 +118,7 @@ public class Spider implements AutoCloseable {
 		}
 	}
 
-	protected void addFreesiteFromString(String content) throws SQLException {
+	public void addFreesiteFromString(String content) throws SQLException {
 		Matcher addKeyMatcher = addKeyPattern.matcher(content);
 		while (addKeyMatcher.find()) {
 			String freesite = URLUtility.decodeURL(addKeyMatcher.group(0));
@@ -134,10 +134,6 @@ public class Spider implements AutoCloseable {
 				}
 			}
 		}
-	}
-
-	public void addFreesite(String freesite) throws SQLException {
-		addFreesiteFromString(freesite);
 	}
 
 	public void addFreesiteFromFile(String filename) throws IOException, SQLException {

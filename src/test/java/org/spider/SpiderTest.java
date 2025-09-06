@@ -75,11 +75,11 @@ public class SpiderTest {
 			ArrayList<Freesite> freesites = storage.getAllFreesite(false);
 			assertEquals(0, freesites.size());
 
-			spider.addFreesite("/" + DUMMY_KEY + "site1/1/file.ext");
-			spider.addFreesite("/" + DUMMY_KEY + "site2/1/");
-			spider.addFreesite("/" + DUMMY_KEY + "site3/-1/");
-			spider.addFreesite("CHK@somethingsomethingsomethingsomething/file.ext");
-			spider.addFreesite("CHK@somethingsomethingsomethingsomething/file.ext");
+			spider.addFreesiteFromString("/" + DUMMY_KEY + "site1/1/file.ext");
+			spider.addFreesiteFromString("/" + DUMMY_KEY + "site2/1/");
+			spider.addFreesiteFromString("/" + DUMMY_KEY + "site3/-1/");
+			spider.addFreesiteFromString("CHK@somethingsomethingsomethingsomething/file.ext");
+			spider.addFreesiteFromString("CHK@somethingsomethingsomethingsomething/file.ext");
 
 			freesites = storage.getAllFreesite(false);
 			assertEquals(3, freesites.size());
