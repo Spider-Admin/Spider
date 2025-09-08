@@ -217,4 +217,8 @@ public class Key {
 	public String getExtension() {
 		return extension;
 	}
+
+	public static String changeSSK2USK(String key) {
+		return key.replace(SSK_START, USK_START);
+	}
 }

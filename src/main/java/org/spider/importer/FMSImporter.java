@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.spider.Settings;
 import org.spider.Spider;
+import org.spider.data.Key;
 import org.spider.storage.Database;
 
 public class FMSImporter extends Spider {
@@ -35,6 +36,7 @@ public class FMSImporter extends Spider {
 	private static final String DATABASE_FILE = "fms.db3";
 
 	private static final String READ_MESSAGES_SQL = "SELECT `Body` FROM `tblMessage` WHERE `Body` LIKE '%USK@%'";
+	private static final String READ_SONE_SQL = "SELECT `PublicKey`, `SoneLastIndex` FROM `tblIdentity` WHERE `SoneLastIndex` IS NOT NULL";
 
 	public FMSImporter(Connection connection) throws SQLException {
 		super(connection);
@@ -49,6 +51,19 @@ public class FMSImporter extends Spider {
 			while (resultSetMsg.next()) {
 				addFreesiteFromString(resultSetMsg.getString("Body"));
 				connection.commit();
+			}
+			if (!Settings.getInstance().getBoolean(Settings.IMPORT_FMS_IGNORE_SONE)) {
+				log.info("Add Sone freesites from FMS");
+				try (PreparedStatement stmtSone = fmsConnection.prepareStatement(READ_SONE_SQL);
+						ResultSet resultSetSone = stmtSone.executeQuery()) {
+					while (resultSetSone.next()) {
+						String key = Key.changeSSK2USK(resultSetSone.getString("PublicKey"));
+						Integer edition = Database.getInteger(resultSetSone, "SoneLastIndex");
+						String freesite = String.format("%s%s/%d/", key, Key.SONE_PATH, edition);
+						addFreesiteFromString(freesite);
+						connection.commit();
+					}
+				}
 			}
 		}
 	}

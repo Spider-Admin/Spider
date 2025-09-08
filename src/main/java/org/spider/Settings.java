@@ -51,6 +51,8 @@ public class Settings {
 	public static final String HYPHANET_PORT_FPROXY = "hyphanet.port.fproxy";
 
 	public static final String IMPORT_FMS_PATH = "import.fms.path";
+	public static final String IMPORT_FMS_IGNORE_SONE = "import.fms.ignore-sone";
+
 	public static final String IMPORT_FROST_PATH = "import.frost.path";
 	public static final String IMPORT_FROST_IGNORE_PRIVATE_MESSAGES = "import.frost.ignore-private-messages";
 	public static final String IMPORT_FROST_IGNORE_MESSAGE_ARCHIVE = "import.frost.ignore-message-archive";
