@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,7 @@ import org.spider.network.Freenet;
 import org.spider.network.USKListener;
 import org.spider.storage.Database;
 import org.spider.storage.Storage;
+import org.xml.sax.SAXException;
 
 import freemarker.template.TemplateException;
 import net.pterodactylus.fcp.highlevel.FcpClient;
@@ -100,8 +103,8 @@ public class TaskManager implements AutoCloseable {
 		return connection;
 	}
 
-	public void execute(String task, String extra, Boolean isRunAsTaskList)
-			throws SQLException, IOException, TemplateException, FcpException, InterruptedException {
+	public void execute(String task, String extra, Boolean isRunAsTaskList) throws SQLException, IOException,
+			TemplateException, FcpException, InterruptedException, SAXException, ParserConfigurationException {
 		TaskType taskType = TaskType.getTask(task);
 		switch (taskType) {
 		case INIT:

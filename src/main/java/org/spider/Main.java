@@ -1,5 +1,5 @@
 /*
-  Copyright 2020 - 2024 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
+  Copyright 2020 - 2025 Spider-Admin@Z+d9Knmjd3hQeeZU6BOWPpAAxxs
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -20,9 +20,12 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.sql.SQLException;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.xml.sax.SAXException;
 
 import freemarker.template.TemplateException;
 import net.pterodactylus.fcp.highlevel.FcpException;
@@ -92,6 +95,8 @@ public class Main {
 			log.error("Template-Error!", e);
 		} catch (IllegalArgumentException e) {
 			log.error("Illegal argument!", e);
+		} catch (SAXException | ParserConfigurationException e) {
+			log.error("SAX-Error!", e);
 		}
 	}
 }

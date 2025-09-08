@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,7 @@ import org.spider.utility.DateUtility;
 import org.spider.utility.ListUtility;
 import org.spider.utility.Normalize;
 import org.spider.utility.URLUtility;
+import org.xml.sax.SAXException;
 
 import net.pterodactylus.fcp.SubscribeUSK;
 import net.pterodactylus.fcp.highlevel.FcpClient;
@@ -55,6 +58,7 @@ public class Spider implements AutoCloseable {
 			Pattern.CASE_INSENSITIVE);
 
 	private static final String ACTIVE_LINK_FILE = "activelink.png";
+	private static final String SONE_FILE = "sone.xml";
 
 	private static final String INDEX_PATH = "";
 
@@ -118,7 +122,7 @@ public class Spider implements AutoCloseable {
 		}
 	}
 
-	public void addFreesiteFromString(String content) throws SQLException {
+	private void addFreesiteFromString(String content, String sourceFreesite) throws SQLException {
 		Matcher addKeyMatcher = addKeyPattern.matcher(content);
 		while (addKeyMatcher.find()) {
 			String freesite = URLUtility.decodeURL(addKeyMatcher.group(0));
@@ -128,7 +132,7 @@ public class Spider implements AutoCloseable {
 			} else {
 				log.debug("Found freesite {}", freesite);
 				try {
-					addFreesite(freesite, null);
+					addFreesite(freesite, sourceFreesite);
 				} catch (NumberFormatException e) {
 					log.error("Invalid edition of key {}!", freesite);
 				}
@@ -140,6 +144,16 @@ public class Spider implements AutoCloseable {
 		log.info("Add freesites from file {}", filename);
 		String content = Files.readString(Paths.get(filename), settings.getCharset());
 		addFreesiteFromString(content);
+	}
+
+	public void addFreesiteFromString(String content) throws SQLException {
+		addFreesiteFromString(content, null);
+	}
+
+	private void addFreesiteFromStringList(List<String> contents, String sourceFreesite) throws SQLException {
+		for (String content : contents) {
+			addFreesiteFromString(content, sourceFreesite);
+		}
 	}
 
 	private ArrayList<Integer> extractIDs(String rawIDs) {
@@ -239,11 +253,13 @@ public class Spider implements AutoCloseable {
 		log.info("Subscribed {} freesites", freesites.size());
 	}
 
-	public void crawl(FcpClient freenet) throws SQLException, IOException, FcpException {
+	public void crawl(FcpClient freenet)
+			throws SQLException, IOException, FcpException, SAXException, ParserConfigurationException {
 		log.info("Start crawling ...");
 
 		String url;
 		HTMLParser htmlParser = new HTMLParser();
+		SoneParser soneParser = new SoneParser();
 		while ((url = getNextURL()) != null) {
 			connection.rollback();
 
@@ -342,6 +358,16 @@ public class Spider implements AutoCloseable {
 				if (isOnline) {
 					log.info("Check for ActiveLink ...");
 					hasActiveLink = hasActiveLink(freenet, key);
+
+					if (key.hasSonePath()) {
+						log.info("Check for Sone ...");
+						GetResult soneSite = freenet.getURI(key.toString() + SONE_FILE, false);
+						if (soneSite.isSuccess()) {
+							soneParser.parseStream(soneSite.getInputStream());
+							addFreesiteFromStringList(soneParser.getValues(), key.toString());
+							addFreesiteFromStringList(soneParser.getTexts(), key.toString());
+						}
+					}
 				}
 
 				Freesite freesite = storage.getFreesite(key);

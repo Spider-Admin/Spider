@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<sone>
+
+	<time>123456</time>
+	<protocol-version>0</protocol-version>
+
+	<client>
+		<name>Sone</name>
+		<version>v82</version>
+	</client>
+
+	<profile>
+		<first-name></first-name>
+		<middle-name></middle-name>
+		<last-name></last-name>
+		<birth-day></birth-day>
+		<birth-month></birth-month>
+		<birth-year></birth-year>
+		<avatar></avatar>
+		<fields>
+
+			<field>
+				<field-name>name 1</field-name>
+				<field-value>some value</field-value>
+			</field>
+
+			<field>
+				<field-name>name 2</field-name>
+				<field-value>more
+values</field-value>
+			</field>
+
+		</fields>
+	</profile>
+
+	<posts>
+
+		<post>
+			<id>id 1</id>
+			<recipient>recipient 1</recipient>
+			<time>123456</time>
+			<text>some text</text>
+		</post>
+
+		<post>
+			<id>id 2</id>
+			<recipient>recipient 2</recipient>
+			<time>123456</time>
+			<text>more
+texts</text>
+		</post>
+
+	</posts>
+
+	<replies>
+
+		<reply>
+			<id>id 3</id>
+			<post-id>id 1</post-id>
+			<time>123456</time>
+			<text>more text
+in a
+reply</text>
+		</reply>
+
+	</replies>
+
+</sone>
