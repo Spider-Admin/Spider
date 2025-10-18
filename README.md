@@ -1,6 +1,6 @@
 # Spider
 
-Spider crawls freesites in [Hyphanet](https://www.hyphanet.org/), extracts various information and creates multiple indexes of these freesites. It is currently used by me to create my uncensored index [Spider](http://localhost:8888/USK@nLTpFO0hKAp9AaaChDzk~hA95CRPOipmVjilxEVrwl4,68PXzK2-NeGmyyjz8lyWXRqvWBkuUfl0QAWMyyyjKRw,AQACAAE/spider/486/) [^1], my censored index [Clean-Spider](http://localhost:8888/USK@5ijbfKSJ4kPZTRDzq363CHteEUiSZjrO-E36vbHvnIU,ZEZqPXeuYiyokY2r0wkhJr5cy7KBH9omkuWDqSC6PLs,AQACAAE/clean-spider/394/) [^1] and my lightly censored index [Gentle Weaver](http://localhost:8888/USK@vl06Fb1XuqxOPAremAXxe2P89D7~sAQvIt1X-r2HzDw,GFURsB422HTZ4k9OM8M9CHLnaSkdUjlEZmsse9XX0-M,AQACAAE/sfw-spider/4/) [^1].
+Spider crawls freesites in [Hyphanet](https://www.hyphanet.org/), extracts various information and creates multiple indexes of these freesites. It is currently used by me to create my uncensored index [Spider](http://localhost:8888/USK@nLTpFO0hKAp9AaaChDzk~hA95CRPOipmVjilxEVrwl4,68PXzK2-NeGmyyjz8lyWXRqvWBkuUfl0QAWMyyyjKRw,AQACAAE/spider/522/) [^1], my censored index [Clean-Spider](http://localhost:8888/USK@5ijbfKSJ4kPZTRDzq363CHteEUiSZjrO-E36vbHvnIU,ZEZqPXeuYiyokY2r0wkhJr5cy7KBH9omkuWDqSC6PLs,AQACAAE/clean-spider/430/) [^1] and my lightly censored index [Gentle Weaver](http://localhost:8888/USK@vl06Fb1XuqxOPAremAXxe2P89D7~sAQvIt1X-r2HzDw,GFURsB422HTZ4k9OM8M9CHLnaSkdUjlEZmsse9XX0-M,AQACAAE/sfw-spider/39/) [^1].
 
 ## Requirements
 
@@ -16,7 +16,7 @@ Spider crawls freesites in [Hyphanet](https://www.hyphanet.org/), extracts vario
 
 ## Run
 
-Run Spider with `bin/spider help` to view short usage information. Before the first start, the database of Spider must be initialized with `bin/spider init`. Alternatively you can use my database of Spider, all existing database dumps can be found on [Spider - Database](http://localhost:8888/USK@-nBg4wrsA8fSoTGCqFb0kZjAetx4V61VemQlfvJ4GB0,K~v87jvyRl85a4U6mfI8L6ByNIp4Vn~0PwSzuRNgzus,AQACAAE/spider-database/17/) [^1].
+Run Spider with `bin/spider help` to view short usage information. Before the first start, the database of Spider must be initialized with `bin/spider init`. Alternatively you can use my database of Spider, all existing database dumps can be found on [Spider - Database](http://localhost:8888/USK@-nBg4wrsA8fSoTGCqFb0kZjAetx4V61VemQlfvJ4GB0,K~v87jvyRl85a4U6mfI8L6ByNIp4Vn~0PwSzuRNgzus,AQACAAE/spider-database/26/) [^1].
 
 ## Important files
 
@@ -68,12 +68,10 @@ Run the above tasks as task list using `bin/spider run-task-list`. Spider will e
 
 ## Set up a development environment
 
-1. Run `git clone https://github.com/Spider-Admin/Spider.git`.
-2. Change to the cloned repository.
-3. Run `gradlew clean cleanEclipse eclipse`.
-4. Copy all files from `src/main/dist` to the current directory.
-5. Import the project from the current directory into [Eclipse](https://eclipseide.org/).
-
+1. Clone the repository: `git clone https://github.com/Spider-Admin/Spider.git`.
+2. Change into the cloned repository directory.
+3. Copy all files from `src/main/dist` to the current directory.
+4. Open the project as a Gradle project in your IDE.
 
 ## Publish the freesite
 
