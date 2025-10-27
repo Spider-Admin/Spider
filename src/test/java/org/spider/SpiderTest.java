@@ -12,13 +12,17 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.spider.data.Freesite;
 import org.spider.data.Key;
+import org.spider.junit.InitExtension;
 import org.spider.storage.Database;
 import org.spider.storage.Storage;
 import org.spider.utility.ListUtility;
 
+@ExtendWith(InitExtension.class)
 public class SpiderTest {
+
 	private Connection connection;
 
 	private static final String DUMMY_KEY = "USK@0123456789012345678901234567890123456789123,0123456789012345678901234567890123456789123,1234567/";

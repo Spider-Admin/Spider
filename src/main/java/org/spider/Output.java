@@ -240,10 +240,10 @@ public class Output implements AutoCloseable {
 		params.put("outputType", type);
 
 		HashMap<String, Object> options = new HashMap<>();
-		String filename = outputPath + filenames.get(type);
-		log.debug("Write {}", filename);
-		try (Writer writer = outputCompress
-				.getWriter(new OutputStreamWriter(new FileOutputStream(filename), settings.getCharset()), options)) {
+		String fullFilename = settings.resolve(outputPath + filenames.get(type));
+		log.debug("Write {}", fullFilename);
+		try (Writer writer = outputCompress.getWriter(
+				new OutputStreamWriter(new FileOutputStream(fullFilename), settings.getCharset()), options)) {
 			Template template = templateConfig.getTemplate(templateNames.get(type));
 			Environment env = template.createProcessingEnvironment(params, writer);
 			env.setOutputEncoding(settings.getCharset().name());
@@ -252,9 +252,11 @@ public class Output implements AutoCloseable {
 	}
 
 	private void copyFile(String filename) throws IOException {
-		String targetFilename = outputPath + filename;
-		log.debug("Copy {} to {}", filename, targetFilename);
-		Files.copy(Paths.get(filename), Paths.get(targetFilename), StandardCopyOption.REPLACE_EXISTING);
+		String fullSourceFilename = settings.resolve(filename);
+		String fullTargetFilename = settings.resolve(outputPath + filename);
+
+		log.debug("Copy {} to {}", fullSourceFilename, fullTargetFilename);
+		Files.copy(Paths.get(fullSourceFilename), Paths.get(fullTargetFilename), StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	public void writeFreesiteIndex(Boolean isRelease) throws IOException, SQLException, TemplateException {
@@ -262,8 +264,9 @@ public class Output implements AutoCloseable {
 
 		setMode(isRelease);
 
-		log.debug("Create folder {}", outputPath);
-		Files.createDirectories(Paths.get(outputPath));
+		String fullPath = settings.resolve(outputPath);
+		log.debug("Create folder {}", fullPath);
+		Files.createDirectories(Paths.get(fullPath));
 
 		log.info("Loading content");
 		ArrayList<Freesite> freesiteList = storage.getAllFreesite(true);

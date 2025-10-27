@@ -10,10 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.spider.junit.InitExtension;
 
 /**
  * If some tests fail in Eclipse, set the (default) encoding to 'UTF-8'
  */
+@ExtendWith(InitExtension.class)
 public class HTMLParserTest {
 
 	private static final String TEST_PATH = "src/test/resources/HTMLParser/";

@@ -14,13 +14,17 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.spider.data.Freesite;
 import org.spider.data.Key;
 import org.spider.data.Path;
+import org.spider.junit.InitExtension;
 import org.spider.utility.DateUtility;
 import org.spider.utility.ListUtility;
 
+@ExtendWith(InitExtension.class)
 public class StorageTest {
+
 	private Connection connection;
 
 	@BeforeEach

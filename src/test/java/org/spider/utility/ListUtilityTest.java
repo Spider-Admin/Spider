@@ -5,7 +5,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.spider.junit.InitExtension;
 
+@ExtendWith(InitExtension.class)
 public class ListUtilityTest {
 
 	@Test

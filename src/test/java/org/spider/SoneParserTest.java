@@ -9,8 +9,11 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.spider.junit.InitExtension;
 import org.xml.sax.SAXException;
 
+@ExtendWith(InitExtension.class)
 public class SoneParserTest {
 
 	private static final String TEST_PATH = "src/test/resources/SoneParser/";

@@ -55,8 +55,9 @@ public class Database {
 	public static Connection getConnection(String filename, Boolean readOnly) throws SQLException {
 		SQLiteConfig config = new SQLiteConfig();
 		config.setReadOnly(readOnly);
-		log.debug("Open database {}", filename);
-		Connection connection = DriverManager.getConnection("jdbc:sqlite:" + filename, config.toProperties());
+		String fullFilename = settings.resolve(filename);
+		log.debug("Open database {}", fullFilename);
+		Connection connection = DriverManager.getConnection("jdbc:sqlite:" + fullFilename, config.toProperties());
 		connection.setAutoCommit(false);
 		return connection;
 	}

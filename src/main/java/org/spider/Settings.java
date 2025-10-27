@@ -34,6 +34,8 @@ public class Settings {
 
 	private static final Logger log = LoggerFactory.getLogger(Settings.class);
 
+	private static final Path appHome = Path.of(System.getProperty(AppHome.APP_HOME));
+
 	private static final Settings instance = new Settings();
 
 	private Properties properties;
@@ -97,10 +99,10 @@ public class Settings {
 	private static final String NO_CATEGORY = "NO_CATEGORY";
 
 	protected Settings() {
-		String settingsFilename = SETTINGS_FILENAME;
+		String settingsFilename = resolve(SETTINGS_FILENAME);
 		if (!Files.exists(Path.of(settingsFilename))) {
 			log.info("Using fallback settings!");
-			settingsFilename = Path.of(SETTINGS_DISTRIBUTION_PATH, SETTINGS_FILENAME).toString();
+			settingsFilename = resolve(Path.of(SETTINGS_DISTRIBUTION_PATH, SETTINGS_FILENAME).toString());
 		}
 
 		log.info("Loading settings from {}", settingsFilename);
@@ -115,6 +117,10 @@ public class Settings {
 
 	public static Settings getInstance() {
 		return instance;
+	}
+
+	public final String resolve(String filename) {
+		return appHome.resolve(filename).normalize().toString();
 	}
 
 	public String getString(String key) {

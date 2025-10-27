@@ -6,8 +6,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.spider.data.Key;
+import org.spider.junit.InitExtension;
 
+@ExtendWith(InitExtension.class)
 public class KeyTest {
 
 	@Test

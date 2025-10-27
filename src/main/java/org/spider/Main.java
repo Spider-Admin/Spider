@@ -32,6 +32,10 @@ import net.pterodactylus.fcp.highlevel.FcpException;
 
 public class Main {
 
+	static {
+		AppHome.init();
+	}
+
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) {
