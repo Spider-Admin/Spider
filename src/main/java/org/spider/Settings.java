@@ -99,6 +99,7 @@ public class Settings {
 	protected Settings() {
 		String settingsFilename = SETTINGS_FILENAME;
 		if (!Files.exists(Path.of(settingsFilename))) {
+			log.info("Using fallback settings!");
 			settingsFilename = Path.of(SETTINGS_DISTRIBUTION_PATH, SETTINGS_FILENAME).toString();
 		}
 

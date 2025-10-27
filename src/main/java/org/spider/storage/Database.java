@@ -27,6 +27,8 @@ import java.sql.Types;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spider.Settings;
 import org.spider.utility.DateUtility;
 import org.spider.utility.ListUtility;
@@ -34,24 +36,26 @@ import org.sqlite.SQLiteConfig;
 
 public class Database {
 
+	private static final Logger log = LoggerFactory.getLogger(Database.class);
+
+	private static Settings settings = Settings.getInstance();
+
 	public static Connection getConnection() throws SQLException {
 		return getConnection(false);
 	}
 
 	public static Connection getConnection(Boolean readOnly) throws SQLException {
-		Settings settings = Settings.getInstance();
 		return getConnection(settings.getString(Settings.DATABASE_FILE), readOnly);
 	}
 
 	public static Connection getConnectionTest() throws SQLException {
-		Settings settings = Settings.getInstance();
 		return getConnection(settings.getString(Settings.DATABASE_FILE_TEST), false);
 	}
 
 	public static Connection getConnection(String filename, Boolean readOnly) throws SQLException {
 		SQLiteConfig config = new SQLiteConfig();
 		config.setReadOnly(readOnly);
-
+		log.debug("Open database {}", filename);
 		Connection connection = DriverManager.getConnection("jdbc:sqlite:" + filename, config.toProperties());
 		connection.setAutoCommit(false);
 		return connection;

@@ -240,9 +240,10 @@ public class Output implements AutoCloseable {
 		params.put("outputType", type);
 
 		HashMap<String, Object> options = new HashMap<>();
-		try (Writer writer = outputCompress.getWriter(
-				new OutputStreamWriter(new FileOutputStream(outputPath + filenames.get(type)), settings.getCharset()),
-				options)) {
+		String filename = outputPath + filenames.get(type);
+		log.debug("Write {}", filename);
+		try (Writer writer = outputCompress
+				.getWriter(new OutputStreamWriter(new FileOutputStream(filename), settings.getCharset()), options)) {
 			Template template = templateConfig.getTemplate(templateNames.get(type));
 			Environment env = template.createProcessingEnvironment(params, writer);
 			env.setOutputEncoding(settings.getCharset().name());
@@ -251,7 +252,9 @@ public class Output implements AutoCloseable {
 	}
 
 	private void copyFile(String filename) throws IOException {
-		Files.copy(Paths.get(filename), Paths.get(outputPath + filename), StandardCopyOption.REPLACE_EXISTING);
+		String targetFilename = outputPath + filename;
+		log.debug("Copy {} to {}", filename, targetFilename);
+		Files.copy(Paths.get(filename), Paths.get(targetFilename), StandardCopyOption.REPLACE_EXISTING);
 	}
 
 	public void writeFreesiteIndex(Boolean isRelease) throws IOException, SQLException, TemplateException {
@@ -259,6 +262,7 @@ public class Output implements AutoCloseable {
 
 		setMode(isRelease);
 
+		log.debug("Create folder {}", outputPath);
 		Files.createDirectories(Paths.get(outputPath));
 
 		log.info("Loading content");
