@@ -27,7 +27,7 @@ public class AppHome {
 
 	public static void init() {
 		try {
-			Path jarPath = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+			Path jarPath = Paths.get(AppHome.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 			Path appHome = null;
 			if (Files.isRegularFile(jarPath)) {
 				// jarPath = ROOT/lib/APPNAME.jar
