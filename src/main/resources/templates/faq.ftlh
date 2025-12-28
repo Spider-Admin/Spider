@@ -115,8 +115,8 @@
 		<h3>How can I add my freesite to your index?</h3>
 		<ul>
 			<li>Add a link to your freesite to a freesite, which is already in the index.</li>
-			<li>Post a link to your freesite in the <abbr title="Freenet Message System">FMS</abbr> boards <kbd>sites</kbd> or <kbd>site.announce</kbd>.</li>
-			<li>Post a link to your freesite in the Frost board <kbd>sites</kbd>.</li>
+			<li>Post a link to your freesite in the board <kbd>sites</kbd> or in <kbd>site.announce</kbd> on <abbr title="Freenet Message System">FMS</abbr>.</li>
+			<li>Post a link to your freesite in the board <kbd>sites</kbd> on Frost.</li>
 			<li>Contact me and send me a link to your freesite.</li>
 		</ul>
 
