@@ -117,6 +117,7 @@
 			<li>Add a link to your freesite to a freesite, which is already in the index.</li>
 			<li>Post a link to your freesite in the board <kbd>sites</kbd> or in <kbd>site.announce</kbd> on <abbr title="Freenet Message System">FMS</abbr>.</li>
 			<li>Post a link to your freesite in the board <kbd>sites</kbd> on Frost.</li>
+			<li>Post a link to your freesite on Sone: either in the &quot;Custom Fields&quot; in your profile or directly in your feed.</li>
 			<li>Contact me and send me a link to your freesite.</li>
 		</ul>
 
